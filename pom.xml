@@ -29,15 +29,13 @@
         <module>wayLocation-app</module>
     </modules>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-    </dependencies>
-
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.leyuna</groupId>
+                <artifactId>waylocation-app</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.leyuna</groupId>
                 <artifactId>waylocation-start</artifactId>

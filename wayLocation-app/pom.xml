@@ -12,8 +12,12 @@
     </parent>
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
+            <groupId>com.leyuna</groupId>
+            <artifactId>waylocation-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.leyuna</groupId>
+            <artifactId>waylocation-service</artifactId>
         </dependency>
     </dependencies>
 </project>
