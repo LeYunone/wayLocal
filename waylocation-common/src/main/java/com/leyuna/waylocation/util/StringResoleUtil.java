@@ -15,7 +15,7 @@ public class StringResoleUtil {
         StringBuilder result = new StringBuilder();
         if (name != null && name.length() > 0) {
             // 循环处理字符
-            for (int i = 1; i < name.length(); i++) {
+            for (int i = 0; i < name.length(); i++) {
                 String s = name.substring(i, i + 1);
                 // 在大写字母前添加下划线
                 if (s.equals(s.toUpperCase()) && !Character.isDigit(s.charAt(0))) {
