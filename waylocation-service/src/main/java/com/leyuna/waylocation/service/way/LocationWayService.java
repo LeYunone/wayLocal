@@ -14,7 +14,14 @@ public class LocationWayService {
      * @return DataResponse
      */
     public DataResponse getWay(){
+        return DataResponse.buildSuccess();
+    }
 
+    public DataResponse getWay(String className,String methodName){
+        return DataResponse.buildSuccess();
+    }
+
+    public DataResponse getWay(String methodName){
         return DataResponse.buildSuccess();
     }
 }
