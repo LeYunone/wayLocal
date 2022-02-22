@@ -7,7 +7,10 @@ package com.leyuna.waylocation.constant.enums;
  */
 public enum  PathEnum {
 
-    PATH_METHOD_DIR(System.getProperty("user.dir")+"/dir/methodDir","方法索引库路径");
+//    PATH_METHOD_DIR(System.getProperty("user.dir")+"/dir/methodDir","方法索引库路径");
+
+    PATH_METHOD_DIR("C:/dir/methodDir","方法索引库路径");
+
 
     PathEnum(String path,String remark){
         this.path=path;

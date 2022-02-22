@@ -3,6 +3,7 @@ package com.leyuna.waylocation.command;
 import com.leyuna.waylocation.bean.dto.LuceneDTO;
 import com.leyuna.waylocation.bean.dto.MethodInfoDTO;
 import com.leyuna.waylocation.constant.enums.PathEnum;
+import com.leyuna.waylocation.util.StringResoleUtil;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -58,9 +59,10 @@ public class LuceneExe {
                 Document document=new Document();
                 //填充文档
                 document.add(new TextField("id",method.getMethodId(), Field.Store.YES));
-                document.add(new TextField("methodName",method.getMethodName(), Field.Store.YES));
+                //处理方法名 遇到大写前空格分隔，符合分词器规律
+                document.add(new TextField("methodName", StringResoleUtil.disassembleWord(method.getMethodName()), Field.Store.YES));
                 document.add(new TextField("className",method.getClassName(), Field.Store.YES));
-                document.add(new TextField("params",method.getParams(), Field.Store.NO));
+                document.add(new TextField("params",method.getParams(), Field.Store.YES));
                 document.add(new TextField("returnParams",method.getReturnParams(), Field.Store.YES));
                 documents.add(document);
             }
@@ -77,10 +79,9 @@ public class LuceneExe {
      * 关键词搜索
      * @param key 方法名
      * @param size
-     * @param index
      * @return
      */
-    public LuceneDTO getMethodDirByMethodName(String key, Integer index, Integer size){
+    public LuceneDTO getMethodDirByMethodName(String key, Integer size){
         LuceneDTO luceneDTO=new LuceneDTO();
         try {
             List<MethodInfoDTO> result=new ArrayList();
