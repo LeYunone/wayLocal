@@ -3,12 +3,14 @@ package com.leyuna.waylocation.command;
 import com.leyuna.waylocation.bean.dto.LuceneDTO;
 import com.leyuna.waylocation.bean.dto.MethodInfoDTO;
 import com.leyuna.waylocation.constant.enums.PathEnum;
+import com.leyuna.waylocation.custom.SpiltCharAnalyzer;
 import com.leyuna.waylocation.util.StringResoleUtil;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.FieldType;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.*;
 import org.apache.lucene.queryparser.classic.ParseException;
@@ -47,23 +49,29 @@ public class LuceneExe {
         try {
             List<Document> documents=new ArrayList<>();
             //创建索引库位置
-            String path=PathEnum.PATH_METHOD_DIR.getValue();
-            Directory directory= FSDirectory.open(FileSystems.getDefault().getPath(path));
+            Directory directory= FSDirectory.open(FileSystems.getDefault().getPath(PathEnum.PATH_METHOD_DIR.getValue()));
             //IK 分词器
-            Analyzer analyzer = new StandardAnalyzer();
+            Analyzer analyzer = new SpiltCharAnalyzer();
             //创建输出流 write
             IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
             IndexWriter indexWriter = new IndexWriter(directory,indexWriterConfig);
 
+            FieldType typeYes=new FieldType();
+            typeYes.setStored(true);//可存储
+            typeYes.setTokenized(true);//设置分词
+            FieldType typeNo=new FieldType();
+            typeNo.setStored(true);
+            typeNo.setTokenized(false);
+
             for(MethodInfoDTO method:methods){
                 Document document=new Document();
                 //填充文档
-                document.add(new TextField("id",method.getMethodId(), Field.Store.YES));
+                document.add(new Field("id",method.getMethodId(),typeYes));
                 //处理方法名 遇到大写前空格分隔，符合分词器规律
-                document.add(new TextField("methodName", StringResoleUtil.disassembleWord(method.getMethodName()), Field.Store.YES));
-                document.add(new TextField("className",method.getClassName(), Field.Store.YES));
-                document.add(new TextField("params",method.getParams(), Field.Store.YES));
-                document.add(new TextField("returnParams",method.getReturnParams(), Field.Store.YES));
+                document.add(new Field("methodName",method.getMethodName(), typeYes));
+                document.add(new Field("className",method.getClassName(), typeYes));
+                document.add(new Field("params",method.getParams(), typeNo));
+                document.add(new Field("returnParams",method.getReturnParams(), typeNo));
                 documents.add(document);
             }
             //一次处理
@@ -85,7 +93,7 @@ public class LuceneExe {
         LuceneDTO luceneDTO=new LuceneDTO();
         try {
             List<MethodInfoDTO> result=new ArrayList();
-            Analyzer analyzer=new StandardAnalyzer();
+            Analyzer analyzer=new SpiltCharAnalyzer();
             //关键词
             QueryParser qp = new QueryParser("methodName",analyzer);
             Query query=qp.parse(key);
@@ -111,7 +119,8 @@ public class LuceneExe {
                 ScoreDoc scoreDoc=scoreDocs[i];
                 //获得对应的文档
                 Document doc = indexSearcher.doc(scoreDoc.doc);
-                String methodName=doc.get("methodName");
+                //还原方法名
+                String methodName=StringResoleUtil.synthesisWord(doc.get("methodName"));
                 //高亮处理
                 TokenStream tokenStream = analyzer.tokenStream("methodName", new StringReader(methodName));
 
@@ -132,6 +141,54 @@ public class LuceneExe {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InvalidTokenOffsetsException e) {
+            e.printStackTrace();
+        }
+        return luceneDTO;
+    }
+
+    /**
+     * 关键词搜索 根据类名
+     * @param className
+     * @return
+     */
+    public LuceneDTO getMethodDirByClassName(String className){
+        LuceneDTO luceneDTO=new LuceneDTO();
+        try {
+            List<MethodInfoDTO> result=new ArrayList();
+            Analyzer analyzer=new StandardAnalyzer();
+            //关键词
+            QueryParser qp = new QueryParser("className",analyzer);
+            Query query=qp.parse(className);
+
+            //打开索引库输入流
+            Directory directory=FSDirectory.open(FileSystems.getDefault().getPath(PathEnum.PATH_METHOD_DIR.getValue()));
+            IndexReader indexReader = DirectoryReader.open(directory);
+            //索引库搜索指令
+            IndexSearcher indexSearcher=new IndexSearcher(indexReader);
+
+            //只查一条出来
+            TopDocs topDocs = indexSearcher.search(query,1);
+            long totle=topDocs.totalHits;
+
+            long len=totle>10?10:totle;
+            for(ScoreDoc scoreDoc:topDocs.scoreDocs){
+                //获得对应的文档
+                Document doc = indexSearcher.doc(scoreDoc.doc);
+
+                MethodInfoDTO method=new MethodInfoDTO();
+                method.setMethodName(doc.get("methodName"));
+                method.setParams(doc.get("params"));
+                method.setReturnParams(doc.get("returnParams"));
+                method.setClassName(doc.get("className"));
+                method.setMethodId(doc.get("methodId"));
+                result.add(method);
+            }
+            luceneDTO.setListData(result);
+            luceneDTO.setTotole(totle);
+            indexReader.close();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return luceneDTO;

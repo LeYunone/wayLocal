@@ -2,6 +2,7 @@ package com.leyuna.waylocation.command;
 
 import java.io.StringReader;
 
+import com.leyuna.waylocation.custom.SpiltCharAnalyzer;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.cjk.CJKAnalyzer;
@@ -34,6 +35,12 @@ public class AnalyzerTest {
         String text = "get Way Best";
         Analyzer analyzer = new StandardAnalyzer();
         displayTokens(analyzer, text);
+    }
+
+    public void myAnalyzerTest() throws Exception {
+        String text="getWay";
+        Analyzer analyzer=new SpiltCharAnalyzer();
+        displayTokens(analyzer,text);
     }
 
     /**

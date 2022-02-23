@@ -26,14 +26,14 @@ public class TestControl {
     }
 
     @RequestMapping("/test2")
-    public void test2(){
-        wayService.getWay("getW",10);
+    public void test2(String test){
+        wayService.getWay(test,10);
     }
 
     @RequestMapping("/test3")
     public void test3() throws Exception {
         AnalyzerTest analyzerTest=new AnalyzerTest();
-        analyzerTest.StandardAnalyzerTest();
+        analyzerTest.myAnalyzerTest();
     }
     
 }

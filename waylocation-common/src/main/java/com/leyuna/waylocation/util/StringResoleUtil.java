@@ -17,7 +17,7 @@ public class StringResoleUtil {
             // 循环处理字符
             for (int i = 0; i < name.length(); i++) {
                 String s = name.substring(i, i + 1);
-                // 在大写字母前添加下划线
+                // 在大写字母前添加空格
                 if (s.equals(s.toUpperCase()) && !Character.isDigit(s.charAt(0))) {
                     result.append(" ");
                 }
@@ -25,5 +25,14 @@ public class StringResoleUtil {
             }
         }
         return result.toString();
+    }
+
+    /**
+     * 合成单词 去掉空格
+     * @param word
+     * @return
+     */
+    public static String synthesisWord(String word){
+        return word.replaceAll(" ","");
     }
 }
