@@ -2,7 +2,7 @@ package com.leyuna.waylocation.start;
 
 import com.leyuna.waylocation.command.AnalyzerTest;
 import com.leyuna.waylocation.service.search.SearchService;
-import com.leyuna.waylocation.service.way.LocationWayService;
+import com.leyuna.waylocation.service.way.LocationMethodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +18,7 @@ public class TestControl {
     private SearchService searchService;
 
     @Autowired
-    private LocationWayService wayService;
+    private LocationMethodService wayService;
 
     @RequestMapping("/test")
     public void test(){
@@ -27,7 +27,7 @@ public class TestControl {
 
     @RequestMapping("/test2")
     public void test2(String test){
-        wayService.getWay(test,10);
+        wayService.getMethod(test,10);
     }
 
     @RequestMapping("/test3")

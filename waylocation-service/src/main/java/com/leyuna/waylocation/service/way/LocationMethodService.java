@@ -10,7 +10,6 @@ import com.sun.deploy.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import sun.management.MethodInfo;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ import java.util.List;
  * 定位方法接口     [根据方法名+类名组合？ 展示项目内所有条件方法？]
  */
 @Service
-public class LocationWayService {
+public class LocationMethodService {
 
     @Autowired
     private LuceneExe luceneExe;
@@ -31,7 +30,7 @@ public class LocationWayService {
      * 获得方法 最近使用的方法
      * @return DataResponse
      */
-    public DataResponse getWay(){
+    public DataResponse getMethod(){
         return DataResponse.buildSuccess();
     }
 
@@ -41,7 +40,7 @@ public class LocationWayService {
      * @param methodName
      * @return
      */
-    public DataResponse getWay(String className,String methodName){
+    public DataResponse getMethod(String className,String methodName){
         List<MethodInfoDTO> result=new ArrayList<>();
 
         //先根据类名从搜索库查到最接近的类
@@ -82,7 +81,7 @@ public class LocationWayService {
      * @param methodName
      * @return
      */
-    public DataResponse getWay(String methodName,int size){
+    public DataResponse getMethod(String methodName,int size){
 
         //默认走索引库搜索拿出最近十条匹配的数据展示
         LuceneDTO methodDirByMethodName = luceneExe.getMethodDirByMethodName(methodName, size);
