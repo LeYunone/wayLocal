@@ -1,11 +1,14 @@
-package com.leyuna.waylocation.start;
+package com.leyuna.waylocation.control;
 
 import com.leyuna.waylocation.command.AnalyzerTest;
+import com.leyuna.waylocation.config.SpringContextUtil;
 import com.leyuna.waylocation.service.search.SearchService;
 import com.leyuna.waylocation.service.way.LocationMethodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.lang.reflect.Method;
 
 /**
  * @author pengli
@@ -22,7 +25,7 @@ public class TestControl {
 
     @RequestMapping("/test")
     public void test(){
-        searchService.resoleAllMethod(this.getClass());
+        searchService.resoleAllMethod();
     }
 
     @RequestMapping("/test2")
@@ -34,6 +37,15 @@ public class TestControl {
     public void test3() throws Exception {
         AnalyzerTest analyzerTest=new AnalyzerTest();
         analyzerTest.myAnalyzerTest();
+    }
+
+    @RequestMapping("/test4")
+    public void test4() throws Exception {
+        Class<?> aClass = Class.forName("com.leyuna.waylocation.service.search.SearchService");
+        Method resoleAllMethod =
+                aClass.getMethod("resoleAllMethod");
+        Object bean = SpringContextUtil.getBean(aClass);
+        resoleAllMethod.invoke(bean);
     }
     
 }

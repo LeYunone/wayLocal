@@ -15,7 +15,6 @@ import java.util.List;
  */
 @Service
 public class SearchService {
-    
     @Autowired
     private ClassExe classExe;
 
@@ -26,6 +25,14 @@ public class SearchService {
      * 解析整理出项目内所有的方法 [只有当项目第一次启动时使用]
      * 
      */
+    public void resoleAllMethod(){
+        //拿到项目中所有方法信息
+        List<MethodInfoDTO> methodInfoDTOS = classExe.orderClassToMethod(SearchService.class.getClassLoader());
+
+        //生成本项目方法的搜索库
+        luceneExe.addMethodDir(methodInfoDTOS);
+    }
+
     public void resoleAllMethod(Class clazz){
         //拿到项目中所有方法信息
         List<MethodInfoDTO> methodInfoDTOS = classExe.orderClassToMethod(clazz.getClassLoader());
