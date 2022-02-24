@@ -8,17 +8,11 @@ import com.leyuna.waylocation.util.StringResoleUtil;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.FieldType;
-import org.apache.lucene.document.TextField;
+import org.apache.lucene.document.*;
 import org.apache.lucene.index.*;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.*;
 import org.apache.lucene.search.highlight.Highlighter;
 import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
 import org.apache.lucene.search.highlight.QueryScorer;
@@ -66,12 +60,13 @@ public class LuceneExe {
             for(MethodInfoDTO method:methods){
                 Document document=new Document();
                 //填充文档
-                document.add(new Field("id",method.getMethodId(),typeYes));
+                document.add(new TextField("methodId",method.getMethodId(), Field.Store.YES));
                 //处理方法名 遇到大写前空格分隔，符合分词器规律
-                document.add(new Field("methodName",method.getMethodName(), typeYes));
-                document.add(new Field("className",method.getClassName(), typeYes));
-                document.add(new Field("params",method.getParams(), typeNo));
-                document.add(new Field("returnParams",method.getReturnParams(), typeNo));
+                document.add(new TextField("methodName",method.getMethodName(), Field.Store.YES));
+                document.add(new TextField("className",method.getClassName(), Field.Store.YES));
+                //出入参不进行分词
+                document.add(new StringField("params",method.getParams(), Field.Store.YES));
+                document.add(new StringField("returnParams",method.getReturnParams(), Field.Store.YES));
                 documents.add(document);
             }
             //一次处理
@@ -136,11 +131,7 @@ public class LuceneExe {
             luceneDTO.setTotole(totle);
 
             indexReader.close();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvalidTokenOffsetsException e) {
+        } catch (IOException | ParseException | InvalidTokenOffsetsException e) {
             e.printStackTrace();
         }
         return luceneDTO;
