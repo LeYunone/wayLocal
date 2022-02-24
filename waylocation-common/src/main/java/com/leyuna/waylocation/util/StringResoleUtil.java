@@ -35,4 +35,8 @@ public class StringResoleUtil {
     public static String synthesisWord(String word){
         return word.replaceAll(" ","");
     }
+
+    public static String replaceString(String str,String replace){
+        return str.replaceAll(replace,"");
+    }
 }

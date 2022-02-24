@@ -109,7 +109,7 @@ public class LuceneExe {
 
             ScoreDoc[] scoreDocs=topDocs.scoreDocs;
             //只取前十条
-            long len=totle>10?10:totle;
+            long len=size>10?10:size;
             for(int i=0;i<len;i++){
                 ScoreDoc scoreDoc=scoreDocs[i];
                 //获得对应的文档

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author pengli
@@ -16,4 +17,6 @@ public class LuceneDTO {
     private long totole;
 
     private List listData;
+
+    private Map<String,Object> methodInfoDTO;
 }

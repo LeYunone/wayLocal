@@ -1,5 +1,6 @@
 package com.leyuna.waylocation.command;
 
+import com.leyuna.waylocation.bean.dto.LuceneDTO;
 import com.leyuna.waylocation.bean.dto.MethodInfoDTO;
 import com.leyuna.waylocation.util.ClassOrderUtil;
 import com.sun.deploy.util.StringUtils;
@@ -54,5 +55,9 @@ public class ClassExe {
             result.add(clazz.getName());
         }
         return result;
+    }
+
+    private void getEEEaaa(LuceneDTO luceneDTO){
+        System.out.println(1);
     }
 }
