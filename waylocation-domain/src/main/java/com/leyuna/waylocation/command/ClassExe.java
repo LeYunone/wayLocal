@@ -2,6 +2,7 @@ package com.leyuna.waylocation.command;
 
 import com.leyuna.waylocation.bean.dto.LuceneDTO;
 import com.leyuna.waylocation.bean.dto.MethodInfoDTO;
+import com.leyuna.waylocation.constant.global.ServerConstant;
 import com.leyuna.waylocation.util.ClassOrderUtil;
 import com.sun.deploy.util.StringUtils;
 import org.springframework.stereotype.Component;
@@ -36,6 +37,8 @@ public class ClassExe {
                 Method method=declaredMethods[i];
                 MethodInfoDTO methodInfoDTO=new MethodInfoDTO();
                 methodInfoDTO.setClassName(clazz.getName());
+                //记录类名到应用中
+                ServerConstant.ClassName.add(clazz.getName());
                 methodInfoDTO.setMethodId(String.valueOf(numId));
                 methodInfoDTO.setMethodName(method.getName());
                 //入参列表
@@ -57,7 +60,7 @@ public class ClassExe {
         return result;
     }
 
-    private void getEEEaaa(LuceneDTO luceneDTO){
+    private void getEEEaaa(LuceneDTO testDto){
         System.out.println(1);
     }
 }

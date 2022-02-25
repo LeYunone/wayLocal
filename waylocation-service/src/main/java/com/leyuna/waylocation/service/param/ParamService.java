@@ -1,13 +1,22 @@
 package com.leyuna.waylocation.service.param;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.leyuna.waylocation.command.ParamExe;
+import com.leyuna.waylocation.constant.global.ServerConstant;
 import com.leyuna.waylocation.response.DataResponse;
-import com.sun.xml.internal.bind.v2.TODO;
+import com.sun.deploy.util.StringUtils;
 import org.jeasy.random.EasyRandom;
+import org.mockito.internal.util.StringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,28 +27,29 @@ import java.util.Map;
 @Service
 public class ParamService {
 
+    @Autowired
+    private ParamExe paramExe;
+
     /**
      * 获取入参结构
      * @return
      */
-    public DataResponse getParam(Method method){
+    public DataResponse getParam(Method method) throws Exception {
         Parameter[] parameters = method.getParameters();
-        Map<String,Object> map=new HashMap<>();
-        Object o=null;
+        List<String> result=new ArrayList<>();
         //如果是多参数的情况
         if(parameters.length>=1){
             for(Parameter parameter:parameters){
                 Class<?> type = parameter.getType();
-//                System.out.println(type);
-                //每个参数进行单独处理，添加到map中最后转化为json
-                /**
-                 *  TODO 测试阶段   EasyRandom X
-                 *
-                 */
-//                o = new EasyRandom().nextObject(type);
+                //入参对象
+                Object obj = type.newInstance();
+                paramExe.resoleParam(obj,type);
+                String json = JSONObject.toJSONString(obj,SerializerFeature.WriteMapNullValue,SerializerFeature.WriteNullStringAsEmpty);
+                result.add(json);
             }
         }
-        return DataResponse.of(o);
+        //返回出去的是 以逗号分隔的json格式的参数结构
+        return DataResponse.of(StringUtils.join(result,","));
     }
 
     /**
