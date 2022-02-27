@@ -34,7 +34,7 @@ public class ParamService {
      * 获取入参结构
      * @return
      */
-    public DataResponse getParam(Method method) throws Exception {
+    public DataResponse getParam(Method method){
         Parameter[] parameters = method.getParameters();
         List<String> result=new ArrayList<>();
         //如果是多参数的情况
@@ -42,7 +42,15 @@ public class ParamService {
             for(Parameter parameter:parameters){
                 Class<?> type = parameter.getType();
                 //入参对象
-                Object obj = type.newInstance();
+                Object obj = null;
+                try {
+                    obj = type.newInstance();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                //深度解析对象结构  规则：如果是项目内对象则继续，否则跳过
                 paramExe.resoleParam(obj,type);
                 String json = JSONObject.toJSONString(obj,SerializerFeature.WriteMapNullValue,SerializerFeature.WriteNullStringAsEmpty);
                 result.add(json);

@@ -23,16 +23,24 @@ public class ParamExe {
                 //得到所有属性值
                 Field[] declaredFields = type.getDeclaredFields();
                 for(Field field:declaredFields){
+                    Class<?> aClass = field.getType();
+                    boolean accessible = field.isAccessible();
+                    field.setAccessible(true);
                     //如果这个属性值是项目内属性，则进行迭代继续迭代
-                    if(ServerConstant.ClassName.contains(field.getClass().getName())){
-
+                    if(ServerConstant.ClassName.contains(aClass.getName())){
+                        Object o = aClass.newInstance();
+                        resoleParam(o,aClass);
+                        field.set(obj,o);
                     }else{
                         //给属性赋值
                         field.set(obj,null);
                     }
+                    field.setAccessible(accessible);
+                    System.out.println(2);
                 }
             }
         }catch (Exception e){
+            e.printStackTrace();
         }
     }
 }

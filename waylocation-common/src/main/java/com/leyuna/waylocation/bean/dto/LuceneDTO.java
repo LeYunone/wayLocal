@@ -14,7 +14,7 @@ import java.util.Map;
 @Setter
 public class LuceneDTO {
 
-    private long totole;
+    private Long totole;
 
     private List listData;
 
