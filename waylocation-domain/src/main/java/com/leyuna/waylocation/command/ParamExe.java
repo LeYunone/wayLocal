@@ -3,10 +3,7 @@ package com.leyuna.waylocation.command;
 import com.leyuna.waylocation.constant.global.ServerConstant;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Proxy;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -50,8 +47,9 @@ public class ParamExe {
                             //如果是基本数据类型
                             continue;
                         }
-                        //判断是否是集合一类
+                        
                         Type genericType = field.getGenericType();
+                        //判断是否是集合一类
                         if (Collection.class.isAssignableFrom(aClass)) {
                             //List 逻辑
                             if(genericType  instanceof ParameterizedType){
@@ -59,14 +57,16 @@ public class ParamExe {
                                 Class<?> tempC= (Class<?>) pt.getActualTypeArguments()[0];
                                 //如果是项目内的集合泛型 则创建一个初始化状态的对象进去
                                 if(ServerConstant.ClassName.contains(tempC.getName())){
-                                    Object o = tempC.newInstance();
-                                    //TODO  创建原对象接口的实例类
-                                    MyHandler myHandler = new MyHandler();//类
-                                    Proxy.newProxyInstance(aClass.getClassLoader(),new Class[]{aClass},myHandler);
+                                    Object instance = tempC.newInstance();
+                                    //如果是list 这样的接口或抽象类
+                                    if(aClass.isInterface()|| Modifier.isAbstract(aClass.getModifiers())){
+                                        //实例化它的可用类
+                                        
+                                    }
                                     List<Object> list=new ArrayList<>();
                                     //迭代解析
-                                    resoleParam(o,o.getClass());
-                                    list.add(o);
+                                    resoleParam(instance,instance.getClass());
+                                    list.add(instance);
                                     field.set(obj,list);
                                     continue;
                                 }
