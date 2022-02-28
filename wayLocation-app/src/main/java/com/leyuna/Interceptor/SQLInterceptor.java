@@ -21,8 +21,9 @@ import org.apache.ibatis.session.RowBounds;
         args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class, CacheKey.class, BoundSql.class}
 )})
 public class SQLInterceptor implements Interceptor {
+    @Override
     public Object intercept(Invocation invocation) throws Throwable {
-        invocation.getArgs()
+        invocation.getArgs();
         return null;
     }
 }
