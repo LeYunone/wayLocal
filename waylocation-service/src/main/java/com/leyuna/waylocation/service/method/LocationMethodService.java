@@ -1,4 +1,4 @@
-package com.leyuna.waylocation.service.way;
+package com.leyuna.waylocation.service.method;
 
 import com.leyuna.waylocation.bean.dto.LuceneDTO;
 import com.leyuna.waylocation.bean.dto.MethodInfoDTO;
@@ -45,7 +45,7 @@ public class LocationMethodService {
         List<MethodInfoDTO> result=new ArrayList<>();
 
         //先根据类名从搜索库查到最接近的类
-        LuceneDTO methodDirByClassName = luceneExe.getMethodDirByClassName(className);
+        LuceneDTO methodDirByClassName = luceneExe.getMethodDir("className",className,1);
         List listData =
                 methodDirByClassName.getListData();
         AssertUtil.isFalse(CollectionUtils.isEmpty(listData), ErrorEnum.SELECT_INFO_NOT_FOUND.getName());
@@ -85,7 +85,7 @@ public class LocationMethodService {
     public DataResponse getMethod(String methodName,int size){
 
         //默认走索引库搜索拿出最近十条匹配的数据展示
-        LuceneDTO methodDirByMethodName = luceneExe.getMethodDirByMethodName(methodName, size);
+        LuceneDTO methodDirByMethodName = luceneExe.getMethodDir("methodName",methodName, size);
         return DataResponse.of(methodDirByMethodName);
     }
 
@@ -95,7 +95,7 @@ public class LocationMethodService {
      * @return
      */
     public DataResponse getMethod(String className){
-        LuceneDTO methodDirByClassName = luceneExe.getMethodDirByClassName(className);
+        LuceneDTO methodDirByClassName = luceneExe.getMethodDir("className",className,10);
         return DataResponse.of(methodDirByClassName);
     }
 

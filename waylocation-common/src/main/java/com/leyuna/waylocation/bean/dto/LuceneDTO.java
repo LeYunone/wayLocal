@@ -17,5 +17,5 @@ public class LuceneDTO {
 
     private List listData;
 
-    private MethodInfoDTO methodInfoDTO;
+    private List<MethodInfoDTO> methodInfoDTO;
 }

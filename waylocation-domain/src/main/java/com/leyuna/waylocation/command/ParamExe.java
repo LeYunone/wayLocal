@@ -40,9 +40,9 @@ public class ParamExe {
                             if(aClass.isPrimitive()){
                                 //如果是基本数据类型
                                 continue;
-                            }else{
-                                field.set(obj,null);
                             }
+                            //如果是集合类型则创建一个初始化对象进去
+                            field.set(obj,null);
                         }
                     }catch (Exception e){
                     }finally {

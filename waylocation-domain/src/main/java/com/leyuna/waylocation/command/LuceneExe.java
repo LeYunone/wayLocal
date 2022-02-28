@@ -7,7 +7,6 @@ import com.leyuna.waylocation.custom.SpiltCharAnalyzer;
 import com.leyuna.waylocation.util.StringResoleUtil;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.*;
 import org.apache.lucene.queryparser.classic.ParseException;
@@ -50,13 +49,6 @@ public class LuceneExe {
             //创建输出流 write
             IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
             IndexWriter indexWriter = new IndexWriter(directory,indexWriterConfig);
-
-            FieldType typeYes=new FieldType();
-            typeYes.setStored(true);//可存储
-            typeYes.setTokenized(true);//设置分词
-            FieldType typeNo=new FieldType();
-            typeNo.setStored(true);
-            typeNo.setTokenized(false);
 
             for(MethodInfoDTO method:methods){
                 Document document=new Document();
@@ -101,14 +93,14 @@ public class LuceneExe {
      * @param size
      * @return
      */
-    public LuceneDTO getMethodDirByMethodName(String key, Integer size){
+    public LuceneDTO getMethodDir(String key, String value,Integer size){
         LuceneDTO luceneDTO=new LuceneDTO();
         try {
             List<MethodInfoDTO> result=new ArrayList();
             Analyzer analyzer=new SpiltCharAnalyzer();
             //关键词
-            QueryParser qp = new QueryParser("methodName",analyzer);
-            Query query=qp.parse(key);
+            QueryParser qp = new QueryParser(key,analyzer);
+            Query query=qp.parse(value);
 
             //高亮关键字
             SimpleHTMLFormatter simpleHTMLFormatter = new SimpleHTMLFormatter("<span style='color:red'>", "</span>");
@@ -120,7 +112,7 @@ public class LuceneExe {
             //索引库搜索指令
             IndexSearcher indexSearcher=new IndexSearcher(indexReader);
 
-            //从上一页最后一条数据开始查询  达到分页的目的
+            //分页
             TopDocs topDocs = indexSearcher.search(query, size);
             long totle=topDocs.totalHits;
 
@@ -153,52 +145,4 @@ public class LuceneExe {
         }
         return luceneDTO;
     }
-
-    /**
-     * 关键词搜索 根据类名
-     * @param className
-     * @return
-     */
-    public LuceneDTO getMethodDirByClassName(String className){
-        LuceneDTO luceneDTO=new LuceneDTO();
-        try {
-            List<MethodInfoDTO> result=new ArrayList();
-            Analyzer analyzer=new StandardAnalyzer();
-            //关键词
-            QueryParser qp = new QueryParser("className",analyzer);
-            Query query=qp.parse(className);
-
-            //打开索引库输入流
-            Directory directory=FSDirectory.open(FileSystems.getDefault().getPath(PathEnum.PATH_METHOD_DIR.getValue()));
-            IndexReader indexReader = DirectoryReader.open(directory);
-            //索引库搜索指令
-            IndexSearcher indexSearcher=new IndexSearcher(indexReader);
-
-            //只查一条出来
-            TopDocs topDocs = indexSearcher.search(query,1);
-            long totle=topDocs.totalHits;
-
-            for(ScoreDoc scoreDoc:topDocs.scoreDocs){
-                //获得对应的文档
-                Document doc = indexSearcher.doc(scoreDoc.doc);
-
-                MethodInfoDTO method=new MethodInfoDTO();
-                method.setMethodName(doc.get("methodName"));
-                method.setParams(doc.get("params"));
-                method.setReturnParams(doc.get("returnParams"));
-                method.setClassName(doc.get("className"));
-                method.setMethodId(doc.get("methodId"));
-                result.add(method);
-            }
-            luceneDTO.setListData(result);
-            luceneDTO.setTotole(totle);
-            indexReader.close();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return luceneDTO;
-    }
-
 }

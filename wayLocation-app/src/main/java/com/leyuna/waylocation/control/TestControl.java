@@ -7,7 +7,7 @@ import com.leyuna.waylocation.config.SpringContextUtil;
 import com.leyuna.waylocation.response.DataResponse;
 import com.leyuna.waylocation.service.param.ParamService;
 import com.leyuna.waylocation.service.search.SearchService;
-import com.leyuna.waylocation.service.way.LocationMethodService;
+import com.leyuna.waylocation.service.method.LocationMethodService;
 import com.leyuna.waylocation.util.StringResoleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

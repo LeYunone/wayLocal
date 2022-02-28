@@ -41,4 +41,9 @@ public class MethodInfoDTO {
      * 出参列表 逗号分割
      */
     private String returnParams;
+
+    /**
+     * 入参值 json格式
+     */
+    private String paramJsonValue;
 }
