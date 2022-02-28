@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Queue;
 
 /**
  * @author pengli
@@ -17,5 +18,5 @@ public class LuceneDTO {
 
     private List listData;
 
-    private List<MethodInfoDTO> methodInfoDTO;
+    private Queue<MethodInfoDTO> methodInfoDTO;
 }

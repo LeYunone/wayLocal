@@ -31,14 +31,14 @@ public class ClassExe {
         //处理项目中所有的类，并且将其方法整理出来
         for(Class clazz:clazzs){
             Method[] declaredMethods = clazz.getDeclaredMethods();
-
+            clazz.getMethods();
+            ServerConstant.ClassName.add(clazz.getName());
             //封装项目内所有方法的信息
             for(int i=0;i<declaredMethods.length;i++,numId++){
                 Method method=declaredMethods[i];
                 MethodInfoDTO methodInfoDTO=new MethodInfoDTO();
                 methodInfoDTO.setClassName(clazz.getName());
                 //记录类名到应用中
-                ServerConstant.ClassName.add(clazz.getName());
                 methodInfoDTO.setMethodId(String.valueOf(numId));
                 methodInfoDTO.setMethodName(method.getName());
                 //入参列表

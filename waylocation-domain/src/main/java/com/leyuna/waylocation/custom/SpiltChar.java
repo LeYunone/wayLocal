@@ -11,6 +11,7 @@ import java.io.Reader;
 /**
  * @author pengli
  * @create 2022-02-23 11:03
+ * 自定义分词器  -  单个字符分词
  */
 public class SpiltChar extends Tokenizer {
 

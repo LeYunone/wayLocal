@@ -40,6 +40,7 @@ public class LuceneExe {
      * 创建方法索引库文档
      */
     public void addMethodDir(List<MethodInfoDTO> methods) {
+        IndexWriter indexWriter=null;
         try {
             List<Document> documents=new ArrayList<>();
             //创建索引库位置
@@ -48,13 +49,12 @@ public class LuceneExe {
             Analyzer analyzer = new SpiltCharAnalyzer();
             //创建输出流 write
             IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
-            IndexWriter indexWriter = new IndexWriter(directory,indexWriterConfig);
+            indexWriter = new IndexWriter(directory,indexWriterConfig);
 
             for(MethodInfoDTO method:methods){
                 Document document=new Document();
                 //填充文档
                 document.add(new TextField("methodId",method.getMethodId(), Field.Store.YES));
-                //处理方法名 遇到大写前空格分隔，符合分词器规律
                 document.add(new TextField("methodName",method.getMethodName(), Field.Store.YES));
                 document.add(new TextField("className",method.getClassName(), Field.Store.YES));
                 //出入参不进行分词
@@ -65,9 +65,16 @@ public class LuceneExe {
             //一次处理
             indexWriter.addDocuments(documents);
             //关闭输出流
-            indexWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            if(indexWriter!=null){
+                try {
+                    indexWriter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -95,6 +102,7 @@ public class LuceneExe {
      */
     public LuceneDTO getMethodDir(String key, String value,Integer size){
         LuceneDTO luceneDTO=new LuceneDTO();
+        IndexReader indexReader=null;
         try {
             List<MethodInfoDTO> result=new ArrayList();
             Analyzer analyzer=new SpiltCharAnalyzer();
@@ -108,7 +116,7 @@ public class LuceneExe {
 
             //打开索引库输入流
             Directory directory=FSDirectory.open(FileSystems.getDefault().getPath(PathEnum.PATH_METHOD_DIR.getValue()));
-            IndexReader indexReader = DirectoryReader.open(directory);
+            indexReader = DirectoryReader.open(directory);
             //索引库搜索指令
             IndexSearcher indexSearcher=new IndexSearcher(indexReader);
 
@@ -138,10 +146,16 @@ public class LuceneExe {
             }
             luceneDTO.setListData(result);
             luceneDTO.setTotole(totle);
-
-            indexReader.close();
         } catch (IOException | ParseException | InvalidTokenOffsetsException e) {
             e.printStackTrace();
+        }finally {
+            if(indexReader!=null){
+                try {
+                    indexReader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return luceneDTO;
     }
