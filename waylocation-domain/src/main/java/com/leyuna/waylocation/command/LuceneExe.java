@@ -178,7 +178,6 @@ public class LuceneExe {
             TopDocs topDocs = indexSearcher.search(query,1);
             long totle=topDocs.totalHits;
 
-            long len=totle>10?10:totle;
             for(ScoreDoc scoreDoc:topDocs.scoreDocs){
                 //获得对应的文档
                 Document doc = indexSearcher.doc(scoreDoc.doc);

@@ -35,7 +35,7 @@ public class LocationMethodService {
     }
 
     /**
-     * 根据类名[全类名] + 方法名 直接定位方法； 类名支持模糊
+     * 根据类名[全类名] + 方法名 直接定位方法； 类名支持模糊,方法名必须准确
      * @param className
      * @param methodName
      * @return
@@ -86,6 +86,43 @@ public class LocationMethodService {
         //默认走索引库搜索拿出最近十条匹配的数据展示
         LuceneDTO methodDirByMethodName = luceneExe.getMethodDirByMethodName(methodName, size);
         return DataResponse.of(methodDirByMethodName);
+    }
+
+    /**
+     * 只根据类名模糊查询
+     * @param className
+     * @return
+     */
+    public DataResponse getMethod(String className){
+        LuceneDTO methodDirByClassName = luceneExe.getMethodDirByClassName(className);
+        return DataResponse.of(methodDirByClassName);
+    }
+
+    /**
+     * 根据具体方法信息获取方法
+     * @param methodInfo
+     * @return
+     */
+    public DataResponse<Method> getMethod(MethodInfoDTO methodInfo){
+        try {
+            Class<?> aClass = Class.forName(methodInfo.getClassName());
+            String[] params = methodInfo.getParams().split(",");
+            Class [] cs=new Class[params.length];
+            for(int i=0;i<params.length;i++){
+                cs[i]=Class.forName(params[i]);
+            }
+            Method method = null;
+            try {
+                method = aClass.getMethod(methodInfo.getMethodName(), cs);
+            } catch (NoSuchMethodException e) {
+                method = aClass.getDeclaredMethod(methodInfo.getMethodName(),cs);
+            }
+            AssertUtil.isFalse(null==method,ErrorEnum.SELECT_INFO_NOT_FOUND.getName());
+            return DataResponse.of(method);
+        } catch (ClassNotFoundException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return DataResponse.buildSuccess();
     }
 
     private List<String> getParams(Method method){

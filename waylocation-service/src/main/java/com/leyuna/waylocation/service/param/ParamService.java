@@ -39,9 +39,7 @@ public class ParamService {
                 Object obj = null;
                 try {
                     obj = type.newInstance();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 //深度解析对象结构  规则：如果是项目内对象则继续，否则跳过
@@ -49,6 +47,8 @@ public class ParamService {
                 String json = JSONObject.toJSONString(obj,SerializerFeature.WriteMapNullValue,SerializerFeature.WriteNullStringAsEmpty);
                 result.add(json);
             }
+        }else{
+            return DataResponse.buildSuccess();
         }
         //返回出去的是 以逗号分隔的json格式的参数结构
         return DataResponse.of(StringUtils.join(result,","));
@@ -60,7 +60,15 @@ public class ParamService {
      * @return
      */
     public DataResponse getReturnParam(Method method){
-
-        return DataResponse.buildSuccess();
+        Class<?> returnType = method.getReturnType();
+        Object o=null;
+        try {
+            o = returnType.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        paramExe.resoleParam(o,returnType);
+        String json = JSONObject.toJSONString(o,SerializerFeature.WriteMapNullValue,SerializerFeature.WriteNullStringAsEmpty);
+        return DataResponse.of(json);
     }
 }
