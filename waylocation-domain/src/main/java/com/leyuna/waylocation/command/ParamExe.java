@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -60,6 +61,8 @@ public class ParamExe {
                                 if(ServerConstant.ClassName.contains(tempC.getName())){
                                     Object o = tempC.newInstance();
                                     //TODO  创建原对象接口的实例类
+                                    MyHandler myHandler = new MyHandler();//类
+                                    Proxy.newProxyInstance(aClass.getClassLoader(),new Class[]{aClass},myHandler);
                                     List<Object> list=new ArrayList<>();
                                     //迭代解析
                                     resoleParam(o,o.getClass());
