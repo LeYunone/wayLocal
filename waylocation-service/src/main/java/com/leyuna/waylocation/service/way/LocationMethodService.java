@@ -6,6 +6,7 @@ import com.leyuna.waylocation.command.LuceneExe;
 import com.leyuna.waylocation.constant.enums.ErrorEnum;
 import com.leyuna.waylocation.response.DataResponse;
 import com.leyuna.waylocation.util.AssertUtil;
+import com.leyuna.waylocation.util.StringResoleUtil;
 import com.sun.deploy.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -112,10 +113,13 @@ public class LocationMethodService {
                 cs[i]=Class.forName(params[i]);
             }
             Method method = null;
+            String methodName = methodInfo.getMethodName();
+            methodName = StringResoleUtil.replaceString(methodName, "<span style='color:red'>");
+            methodName = StringResoleUtil.replaceString(methodName,"</span>");
             try {
-                method = aClass.getMethod(methodInfo.getMethodName(), cs);
+                method = aClass.getMethod(methodName, cs);
             } catch (NoSuchMethodException e) {
-                method = aClass.getDeclaredMethod(methodInfo.getMethodName(),cs);
+                method = aClass.getDeclaredMethod(methodName,cs);
             }
             AssertUtil.isFalse(null==method,ErrorEnum.SELECT_INFO_NOT_FOUND.getName());
             return DataResponse.of(method);
