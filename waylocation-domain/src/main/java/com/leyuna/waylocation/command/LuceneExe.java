@@ -21,6 +21,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.FileSystems;
@@ -75,6 +76,22 @@ public class LuceneExe {
             indexWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 删除文件索引库文档
+     */
+    public void deleteMethodDir(){
+        File file=new File(PathEnum.PATH_METHOD_DIR.getValue());
+        if(file.exists()){
+            //删除文件下所有文件
+            File[] files = file.listFiles();
+            for(File f:files){
+                f.delete();
+            }
+            //删除文件夹
+            file.delete();
         }
     }
 
@@ -184,4 +201,5 @@ public class LuceneExe {
         }
         return luceneDTO;
     }
+
 }

@@ -40,4 +40,11 @@ public class SearchService {
         //生成本项目方法的搜索库
         luceneExe.addMethodDir(methodInfoDTOS);
     }
+
+    /**
+     * 删除索引文件库
+     */
+    public void deleteMethodDirFile(){
+        luceneExe.deleteMethodDir();
+    }
 }

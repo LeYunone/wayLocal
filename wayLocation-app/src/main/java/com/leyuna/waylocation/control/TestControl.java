@@ -37,7 +37,7 @@ public class TestControl {
      */
     @RequestMapping("/test")
     public void test(){
-        searchService.resoleAllMethod();
+        searchService.resoleAllMethod(this.getClass());
     }
 
     /**
