@@ -1,18 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>首页</title>
-    <script src="/common/common-js.js" type="application/javascript"></script>
+    <script th:src="@{js/vue.js}" type="application/javascript"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
 </head>
 <body>
 <div id="app">
-    This is the index page of activiti!
-    <el-button type="primary">测试element组件</el-button>
+    {{ message }}
 </div>
 
 <script>
-    new Vue({
+    var app = new Vue({
         el: '#app',
         data: {
             message: 'Hello Vue!'

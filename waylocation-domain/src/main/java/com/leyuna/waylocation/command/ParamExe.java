@@ -48,31 +48,37 @@ public class ParamExe {
                         Type genericType = field.getGenericType();
                         //判断是否是集合一类
                         if (Collection.class.isAssignableFrom(aClass)) {
-                            //非map 逻辑
+                            //Collection 逻辑
+
+                            //拿到该属性的实例对象
+                            Collection collection = null;
+                            //如果是接口或抽象类
+                            if(aClass.isInterface()|| Modifier.isAbstract(aClass.getModifiers())){
+                                //实例化它的可用类
+                                collection = getNewInstanceWhenCollection(aClass);
+                            }else{
+                                //如果是可实例子类，则直接调用
+                                collection = (Collection)aClass.newInstance();
+                            }
+
                             if(genericType  instanceof ParameterizedType){
+                                //泛型实例
                                 ParameterizedType pt=(ParameterizedType)genericType;
                                 Class<?> tempC= (Class<?>) pt.getActualTypeArguments()[0];
+
                                 //如果是项目内的集合泛型 则创建一个初始化状态的对象进去
                                 if(ServerConstant.ClassName.contains(tempC.getName())){
                                     //属性
                                     Object instance = tempC.newInstance();
                                     //迭代解析
                                     resoleParam(instance,instance.getClass());
-                                    Collection collection = null;
-                                    //如果是list 这样的接口或抽象类
-                                    if(aClass.isInterface()|| Modifier.isAbstract(aClass.getModifiers())){
-                                        //实例化它的可用类
-                                       collection = getNewInstanceWhenCollection(aClass);
-                                    }else{
-                                        //如果是可实例子类，则直接调用
-                                        collection = (Collection)aClass.newInstance();
-                                    }
-
+                                    //添加一个初始化对象进去
                                     collection.add(instance);
-                                    field.set(obj,collection);
-                                    continue;
                                 }
                             }
+                            //没有指定泛型的集合
+                            field.set(obj,collection);
+                            continue;
                         }
                         if (Map.class.isAssignableFrom(aClass)) {
                             //Map 逻辑
@@ -120,6 +126,18 @@ public class ParamExe {
         if(Queue.class.isAssignableFrom(clazz)){
             return new LinkedList();
         }
+        return null;
+    }
+
+    private Map getNewInstanceWhenMap(Class clazz){
+        if(!Map.class.isAssignableFrom(clazz)){
+            return null;
+        }
+
+        if(Map.class.isAssignableFrom(clazz)){
+            return new HashMap();
+        }
+
         return null;
     }
 }

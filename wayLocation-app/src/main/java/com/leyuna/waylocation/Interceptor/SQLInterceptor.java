@@ -1,4 +1,4 @@
-package com.leyuna.Interceptor;
+package com.leyuna.waylocation.Interceptor;
 
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
