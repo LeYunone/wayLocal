@@ -3,8 +3,8 @@ package com.leyuna.waylocation.bean.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 
 /**
  * @author pengli
@@ -18,5 +18,5 @@ public class LuceneDTO {
 
     private List listData;
 
-    private Queue<MethodInfoDTO> methodInfoDTO;
+    private List<MethodInfoDTO> methodInfoDTO;
 }
