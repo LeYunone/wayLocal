@@ -12,43 +12,38 @@
 </head>
 <body>
 <div id="app">
-    <el-row class="tac">
-        <el-col :span="3">
-            <h5>wayLocation</h5>
-            <el-menu
-                    default-active="2"
-                    class="el-menu-vertical-demo"
-            >
-                <el-submenu index="1">
-                    <template slot="title">
-                        <i class="el-icon-location"></i>
-                        <span>工具介绍</span>
-                    </template>
-                    <el-menu-item-group>
-                        <el-menu-item index="1-1">选项1</el-menu-item>
-                        <el-menu-item index="1-2">选项2</el-menu-item>
-                    </el-menu-item-group>
-                </el-submenu>
-                <el-menu-item index="2" route="/method">
-                    <i class="el-icon-menu"></i>
-                    <span slot="title">方法使用</span>
-                </el-menu-item>
-                <el-menu-item index="3">
-                    <i class="el-icon-document"></i>
-                    <span slot="title">参数解析</span>
-                </el-menu-item>
-            </el-menu>
-        </el-col>
-    </el-row>
+    <el-form ref="form" :model="form" label-width="80px">
+        <el-form-item label="方法名">
+            <el-input @input="searchMethod(title)" @keyup.enter.native="searchMethod(title)" v-model="form.methodName"></el-input>
+        </el-form-item>
+        <el-form-item>
+            <el-select v-for="(item,index) in form.info" placeholder="请选择活动区域">
+                <el-option label="item.className" value="shanghai"></el-option>
+            </el-select>
+        </el-form-item>
+    </el-form>
 </div>
 <script>
     var app = new Vue({
         el: '#app',
-        data: {
-            message: 'Hello Vue!'
+        data() {
+            return {
+                form: {
+                    methodName: "",
+                    info: [],
+                }
+            }
         },
-        method:{
-            searchClass(){
+        method: {
+            //输入框跟踪方法名模糊查询
+            searchMethod() {
+                axios({
+                    url: "/location/getMethodName",
+                    method: "GET",
+                    param: {
+                        methodName: ""
+                    },
+                })
             }
         }
     })
