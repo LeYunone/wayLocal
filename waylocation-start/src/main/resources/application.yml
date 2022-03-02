@@ -2,3 +2,5 @@
 spring:
   application:
     name: waylocation-start
+  thymeleaf:
+    cache: false

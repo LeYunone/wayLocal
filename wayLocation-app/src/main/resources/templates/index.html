@@ -5,21 +5,51 @@
     <title>首页</title>
     <script th:src="@{js/vue.js}" type="application/javascript"></script>
     <!-- 引入样式 -->
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" th:href="@{/element/theme/index.css}">
     <!-- 引入组件库 -->
-    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script th:src="@{/element/index.js}" type="application/javascript"></script>
 
 </head>
 <body>
 <div id="app">
-    {{ message }}
+    <el-row class="tac">
+        <el-col :span="3">
+            <h5>wayLocation</h5>
+            <el-menu
+                    default-active="2"
+                    class="el-menu-vertical-demo"
+            >
+                <el-submenu index="1">
+                    <template slot="title">
+                        <i class="el-icon-location"></i>
+                        <span>工具介绍</span>
+                    </template>
+                    <el-menu-item-group>
+                        <el-menu-item index="1-1">选项1</el-menu-item>
+                        <el-menu-item index="1-2">选项2</el-menu-item>
+                    </el-menu-item-group>
+                </el-submenu>
+                <el-menu-item index="2" route="/method">
+                    <i class="el-icon-menu"></i>
+                    <span slot="title">方法使用</span>
+                </el-menu-item>
+                <el-menu-item index="3">
+                    <i class="el-icon-document"></i>
+                    <span slot="title">参数解析</span>
+                </el-menu-item>
+            </el-menu>
+        </el-col>
+    </el-row>
 </div>
-
 <script>
     var app = new Vue({
         el: '#app',
         data: {
             message: 'Hello Vue!'
+        },
+        method:{
+            searchClass(){
+            }
         }
     })
 </script>
