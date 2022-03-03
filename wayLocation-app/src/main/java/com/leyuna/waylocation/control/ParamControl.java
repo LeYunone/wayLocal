@@ -2,8 +2,8 @@ package com.leyuna.waylocation.control;
 
 import com.leyuna.waylocation.bean.dto.MethodInfoDTO;
 import com.leyuna.waylocation.response.DataResponse;
+import com.leyuna.waylocation.service.method.LocationService;
 import com.leyuna.waylocation.service.param.ParamService;
-import com.leyuna.waylocation.service.method.LocationMethodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 public class ParamControl {
 
     @Autowired
-    private LocationMethodService methodService;
+    private LocationService locationService;
 
     @Autowired
     private ParamService paramService;
@@ -33,7 +33,7 @@ public class ParamControl {
     @RequestMapping("/getParam")
     public DataResponse getParam(MethodInfoDTO methodInfo){
         //获得方法
-        DataResponse<Method> method = methodService.getMethod(methodInfo);
+        DataResponse<Method> method = locationService.getMethod(methodInfo);
         Method data = method.getData();
         return paramService.getParam(data);
     }
@@ -45,7 +45,7 @@ public class ParamControl {
      */
     @RequestMapping("/getReturnParam")
     public DataResponse getReturnParam(MethodInfoDTO methodInfo){
-        DataResponse<Method> method = methodService.getMethod(methodInfo);
+        DataResponse<Method> method = locationService.getMethod(methodInfo);
         Method data = method.getData();
         return paramService.getReturnParam(data);
     }

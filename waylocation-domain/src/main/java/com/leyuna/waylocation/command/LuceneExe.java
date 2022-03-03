@@ -3,6 +3,7 @@ package com.leyuna.waylocation.command;
 import com.leyuna.waylocation.bean.dto.LuceneDTO;
 import com.leyuna.waylocation.bean.dto.MethodInfoDTO;
 import com.leyuna.waylocation.constant.enums.PathEnum;
+import com.leyuna.waylocation.constant.global.ServerConstant;
 import com.leyuna.waylocation.custom.SpiltCharAnalyzer;
 import com.leyuna.waylocation.util.StringResoleUtil;
 import org.apache.lucene.analysis.Analyzer;
@@ -26,6 +27,7 @@ import java.io.StringReader;
 import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author pengli
@@ -79,9 +81,49 @@ public class LuceneExe {
     }
 
     /**
+     * 创建类的搜索库
+     */
+    public void addClassDir(){
+        IndexWriter indexWriter=null;
+        try {
+            List<Document> documents=new ArrayList<>();
+            //创建索引库位置
+            Directory directory= FSDirectory.open(FileSystems.getDefault().getPath(PathEnum.PATH_CLASS_DIR.getValue()));
+            //IK 分词器
+            Analyzer analyzer = new SpiltCharAnalyzer();
+            //创建输出流 write
+            IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
+            indexWriter = new IndexWriter(directory,indexWriterConfig);
+            
+            for(String className:ServerConstant.ClassName){
+                Document document=new Document();
+                document.add(new StringField("className",className,Field.Store.YES));
+                
+                //只留最后的类名当key
+                className=className.substring(className.lastIndexOf('.')+1);
+                document.add(new TextField("key",className, Field.Store.YES));
+                documents.add(document);
+            }
+            //一次处理
+            indexWriter.addDocuments(documents);
+            //关闭输出流
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if(indexWriter!=null){
+                try {
+                    indexWriter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+    
+    /**
      * 删除文件索引库文档
      */
-    public void deleteMethodDir(){
+    public void deleteDir(){
         File file=new File(PathEnum.PATH_METHOD_DIR.getValue());
         if(file.exists()){
             //删除文件下所有文件
@@ -91,6 +133,17 @@ public class LuceneExe {
             }
             //删除文件夹
             file.delete();
+        }
+        
+        File file2=new File(PathEnum.PATH_CLASS_DIR.getValue());
+        if(file2.exists()){
+            //删除文件下所有文件
+            File[] files = file2.listFiles();
+            for(File f:files){
+                f.delete();
+            }
+            //删除文件夹
+            file2.delete();
         }
     }
 
@@ -126,7 +179,7 @@ public class LuceneExe {
 
             ScoreDoc[] scoreDocs=topDocs.scoreDocs;
             //只取前十条
-            long len=size>10?10:size;
+            long len=scoreDocs.length;
             for(int i=0;i<len;i++){
                 ScoreDoc scoreDoc=scoreDocs[i];
                 //获得对应的文档
@@ -147,6 +200,60 @@ public class LuceneExe {
             luceneDTO.setListData(result);
             luceneDTO.setTotole(totle);
         } catch (IOException | ParseException | InvalidTokenOffsetsException e) {
+            e.printStackTrace();
+        }finally {
+            if(indexReader!=null){
+                try {
+                    indexReader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return luceneDTO;
+    }
+    
+    public LuceneDTO getClassDir(String value,Integer size){
+        LuceneDTO luceneDTO=new LuceneDTO();
+        IndexReader indexReader=null;
+        try {
+            List<String> result=new ArrayList();
+            Analyzer analyzer=new SpiltCharAnalyzer();
+            //关键词
+            QueryParser qp = new QueryParser("key",analyzer);
+            Query query=qp.parse(value);
+
+            //高亮关键字
+            SimpleHTMLFormatter simpleHTMLFormatter = new SimpleHTMLFormatter("<span style='color:red'>", "</span>");
+            Highlighter highlighter = new Highlighter(simpleHTMLFormatter, new QueryScorer(query));
+
+            //打开索引库输入流
+            Directory directory=FSDirectory.open(FileSystems.getDefault().getPath(PathEnum.PATH_CLASS_DIR.getValue()));
+            indexReader = DirectoryReader.open(directory);
+            //索引库搜索指令
+            IndexSearcher indexSearcher=new IndexSearcher(indexReader);
+
+            //分页
+            TopDocs topDocs = indexSearcher.search(query, size);
+            long totle=topDocs.totalHits;
+
+            ScoreDoc[] scoreDocs=topDocs.scoreDocs;
+            //只取前十条
+            long len=scoreDocs.length;
+            for(int i=0;i<len;i++){
+                ScoreDoc scoreDoc=scoreDocs[i];
+                //获得对应的文档
+                Document doc = indexSearcher.doc(scoreDoc.doc);
+                //高亮处理
+                String className=doc.get("className");
+                TokenStream tokenStream = analyzer.tokenStream("className", new StringReader(className));
+                //暂不高亮处理
+//                result.add(highlighter.getBestFragment(tokenStream,className));
+                result.add(className);
+            }
+            luceneDTO.setListData(result);
+            luceneDTO.setTotole(totle);
+        } catch (IOException | ParseException e) {
             e.printStackTrace();
         }finally {
             if(indexReader!=null){

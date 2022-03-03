@@ -19,10 +19,10 @@ import java.util.List;
 /**
  * @author pengli
  * @date  2022-02-21 13:59
- * 定位方法接口     [根据方法名+类名组合？ 展示项目内所有条件方法？]
+ * 定位接口     
  */
 @Service
-public class LocationMethodService {
+public class LocationService {
 
     @Autowired
     private LuceneExe luceneExe;
@@ -127,6 +127,11 @@ public class LocationMethodService {
             e.printStackTrace();
         }
         return DataResponse.buildSuccess();
+    }
+    
+    public DataResponse getClassName(String className,Integer size){
+        LuceneDTO classDir = luceneExe.getClassDir(className, size);
+        return DataResponse.of(classDir);
     }
 
     private List<String> getParams(Method method){

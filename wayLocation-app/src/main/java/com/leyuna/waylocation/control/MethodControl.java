@@ -3,9 +3,8 @@ package com.leyuna.waylocation.control;
 import com.leyuna.waylocation.bean.dto.MethodInfoDTO;
 import com.leyuna.waylocation.response.DataResponse;
 import com.leyuna.waylocation.service.method.InvokeMethodService;
-import com.leyuna.waylocation.service.method.LocationMethodService;
+import com.leyuna.waylocation.service.method.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,7 +20,7 @@ import java.lang.reflect.Method;
 public class MethodControl {
 
     @Autowired
-    private LocationMethodService locationMethodService;
+    private LocationService locationMethodService;
 
     @Autowired
     private InvokeMethodService methodService;

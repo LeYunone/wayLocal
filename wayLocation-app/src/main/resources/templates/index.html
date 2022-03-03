@@ -17,33 +17,44 @@
 </head>
 <body>
 <div id="app">
-    <el-select
-            v-model="value"
-            multiple
-            filterable
-            remote
-            reserve-keyword
-            placeholder="请输入关键词"
-            :remote-method="searchMethod"
-            :loading="loading">
-        <el-option
-                v-for="(item,index) in form.info"
-                :key="index"
-                :label="item.className"
-                :value="item.className">
-        </el-option>
-    </el-select>
-
-<!--    <el-form ref="form" :model="form" label-width="80px">-->
-<!--        <el-form-item label="方法名">-->
-<!--            <el-input @input="searchMethod(form.methodName)" @keyup.enter.native="searchMethod(form.methodName)" v-model="form.methodName"></el-input>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item>-->
-<!--            <el-select v-model="value" placeholder="请选择具体类">-->
-<!--                <el-option v-for="(item,index) in form.info" :label="item.className" :value="item.className"></el-option>-->
-<!--            </el-select>-->
-<!--        </el-form-item>-->
-<!--    </el-form>-->
+    <div id="classInput">
+        类名：
+        <el-select
+                style="width: 500px"
+                v-model="value"
+                filterable
+                remote
+                reserve-keyword
+                placeholder="请输入关键词"
+                :remote-method="searchClass"
+                :loading="loading">
+            <el-option
+                    v-for="(item,index) in form.info"
+                    :key="index"
+                    :label="item"
+                    :value="item">
+            </el-option>
+        </el-select>
+    </div>
+    <div id="methodInput">
+        方法名：
+        <el-select
+                style="width: 500px"
+                v-model="value"
+                filterable
+                remote
+                reserve-keyword
+                placeholder="请输入关键词"
+                :remote-method="searchMethod"
+                :loading="loading">
+            <el-option
+                    v-for="(item,index) in form.info"
+                    :key="index"
+                    :label="item"
+                    :value="item">
+            </el-option>
+        </el-select>
+    </div>
 </div>
 <script>
     var app = new Vue({
@@ -61,12 +72,15 @@
         },
         methods: {
             //输入框跟踪方法名模糊查询
-            searchMethod(key) {
+            searchClass(key) {
+                if(key.length==0){
+                    return;
+                }
                 axios({
-                    url: "/location/getMethodName",
+                    url: "/location/getClassName",
                     method: "GET",
                     params: {
-                        methodName: key,
+                        className: key,
                         size:this.form.size
                     },
                 }).then((res) =>{
@@ -77,6 +91,14 @@
                     }else{
                         this.$message.error(data.message);
                     }
+                })
+            },
+            searchMethod(key){
+                if(key.length==0){
+                    return;
+                }
+                axios({
+                    
                 })
             }
         }
