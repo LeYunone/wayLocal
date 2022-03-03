@@ -3,46 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <title>首页</title>
-    <script th:src="@{js/vue.js}" type="application/javascript"></script>
+<!--    <script th:src="@{js/vue.js}" type="application/javascript"></script>-->
+    <script src="./js/vue.js" type="application/javascript"></script>
     <!-- 引入样式 -->
-    <link rel="stylesheet" th:href="@{/element/theme/index.css}">
+<!--    <link rel="stylesheet" th:href="@{/element/theme/index.css}"/>-->
+    <link rel="stylesheet" href="./element/theme/index.css"/>
     <!-- 引入组件库 -->
-    <script th:src="@{/element/index.js}" type="application/javascript"></script>
+<!--    <script th:src="@{/element/index.js}" type="application/javascript"></script>-->
+    <script src="./element/index.js" type="application/javascript"></script>
+
+    <script src="./js/axios.js"></script>
 
 </head>
 <body>
 <div id="app">
-    <el-form ref="form" :model="form" label-width="80px">
-        <el-form-item label="方法名">
-            <el-input @input="searchMethod(title)" @keyup.enter.native="searchMethod(title)" v-model="form.methodName"></el-input>
-        </el-form-item>
-        <el-form-item>
-            <el-select v-for="(item,index) in form.info" placeholder="请选择活动区域">
-                <el-option label="item.className" value="shanghai"></el-option>
-            </el-select>
-        </el-form-item>
-    </el-form>
+    <el-select
+            v-model="value"
+            multiple
+            filterable
+            remote
+            reserve-keyword
+            placeholder="请输入关键词"
+            :remote-method="searchMethod"
+            :loading="loading">
+        <el-option
+                v-for="(item,index) in form.info"
+                :key="index"
+                :label="item.className"
+                :value="item.className">
+        </el-option>
+    </el-select>
+
+<!--    <el-form ref="form" :model="form" label-width="80px">-->
+<!--        <el-form-item label="方法名">-->
+<!--            <el-input @input="searchMethod(form.methodName)" @keyup.enter.native="searchMethod(form.methodName)" v-model="form.methodName"></el-input>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item>-->
+<!--            <el-select v-model="value" placeholder="请选择具体类">-->
+<!--                <el-option v-for="(item,index) in form.info" :label="item.className" :value="item.className"></el-option>-->
+<!--            </el-select>-->
+<!--        </el-form-item>-->
+<!--    </el-form>-->
 </div>
 <script>
     var app = new Vue({
         el: '#app',
         data() {
             return {
+                loading:false,
+                value:"",
                 form: {
                     methodName: "",
                     info: [],
+                    size:10,
                 }
             }
         },
-        method: {
+        methods: {
             //输入框跟踪方法名模糊查询
-            searchMethod() {
+            searchMethod(key) {
                 axios({
                     url: "/location/getMethodName",
                     method: "GET",
-                    param: {
-                        methodName: ""
+                    params: {
+                        methodName: key,
+                        size:this.form.size
                     },
+                }).then((res) =>{
+                    var data=res.data;
+                    if(data.status){
+                        console.log(data)
+                        this.form.info=data.data.listData;
+                    }else{
+                        this.$message.error(data.message);
+                    }
                 })
             }
         }

@@ -4,6 +4,3 @@ spring:
     name: waylocation-start
   thymeleaf:
     cache: false
-server:
-  servlet:
-    context-path: '/waylocation'

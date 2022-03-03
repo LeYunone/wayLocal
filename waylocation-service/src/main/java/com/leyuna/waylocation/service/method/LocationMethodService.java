@@ -82,7 +82,7 @@ public class LocationMethodService {
      * @param methodName
      * @return
      */
-    public DataResponse getMethod(String methodName,int size){
+    public DataResponse getMethod(String methodName,Integer size){
 
         //默认走索引库搜索拿出最近十条匹配的数据展示
         LuceneDTO methodDirByMethodName = luceneExe.getMethodDir("methodName",methodName, size);

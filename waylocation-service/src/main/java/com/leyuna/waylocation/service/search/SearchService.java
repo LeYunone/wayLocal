@@ -37,8 +37,10 @@ public class SearchService {
         //拿到项目中所有方法信息
         List<MethodInfoDTO> methodInfoDTOS = classExe.orderClassToMethod(clazz.getClassLoader());
 
+
         //生成本项目方法的搜索库
         luceneExe.addMethodDir(methodInfoDTOS);
+
     }
 
     /**
