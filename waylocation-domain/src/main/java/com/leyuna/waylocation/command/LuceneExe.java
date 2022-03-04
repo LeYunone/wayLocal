@@ -45,14 +45,8 @@ public class LuceneExe {
         IndexWriter indexWriter=null;
         try {
             List<Document> documents=new ArrayList<>();
-            //创建索引库位置
-            Directory directory= FSDirectory.open(FileSystems.getDefault().getPath(PathEnum.PATH_METHOD_DIR.getValue()));
-            //IK 分词器
-            Analyzer analyzer = new SpiltCharAnalyzer();
-            //创建输出流 write
-            IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
-            indexWriter = new IndexWriter(directory,indexWriterConfig);
-
+            //拿写出流
+            indexWriter = generateindexWriter(PathEnum.PATH_METHOD_DIR.getValue());
             for(MethodInfoDTO method:methods){
                 Document document=new Document();
                 //填充文档
@@ -87,18 +81,10 @@ public class LuceneExe {
         IndexWriter indexWriter=null;
         try {
             List<Document> documents=new ArrayList<>();
-            //创建索引库位置
-            Directory directory= FSDirectory.open(FileSystems.getDefault().getPath(PathEnum.PATH_CLASS_DIR.getValue()));
-            //IK 分词器
-            Analyzer analyzer = new SpiltCharAnalyzer();
-            //创建输出流 write
-            IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
-            indexWriter = new IndexWriter(directory,indexWriterConfig);
-            
+            indexWriter = generateindexWriter(PathEnum.PATH_CLASS_DIR.getValue());
             for(String className:ServerConstant.ClassName){
                 Document document=new Document();
                 document.add(new StringField("className",className,Field.Store.YES));
-                
                 //只留最后的类名当key
                 className=className.substring(className.lastIndexOf('.')+1);
                 document.add(new TextField("key",className, Field.Store.YES));
@@ -119,12 +105,29 @@ public class LuceneExe {
             }
         }
     }
+
+    private IndexWriter generateindexWriter(String path) throws IOException {
+        //创建索引库位置
+        Directory directory= FSDirectory.open(FileSystems.getDefault().getPath(path));
+        //IK 分词器
+        Analyzer analyzer = new SpiltCharAnalyzer();
+        //创建输出流 write
+        IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
+        return new IndexWriter(directory,indexWriterConfig);
+    }
     
     /**
      * 删除文件索引库文档
      */
     public void deleteDir(){
-        File file=new File(PathEnum.PATH_METHOD_DIR.getValue());
+        //删方法搜索库
+        deleteFile(PathEnum.PATH_METHOD_DIR.getValue());
+        //删类搜索库
+        deleteFile(PathEnum.PATH_CLASS_DIR.getValue());
+    }
+
+    private void deleteFile(String path){
+        File file=new File(path);
         if(file.exists()){
             //删除文件下所有文件
             File[] files = file.listFiles();
@@ -133,17 +136,6 @@ public class LuceneExe {
             }
             //删除文件夹
             file.delete();
-        }
-        
-        File file2=new File(PathEnum.PATH_CLASS_DIR.getValue());
-        if(file2.exists()){
-            //删除文件下所有文件
-            File[] files = file2.listFiles();
-            for(File f:files){
-                f.delete();
-            }
-            //删除文件夹
-            file2.delete();
         }
     }
 
@@ -175,7 +167,6 @@ public class LuceneExe {
 
             //分页
             TopDocs topDocs = indexSearcher.search(query, size);
-            long totle=topDocs.totalHits;
 
             ScoreDoc[] scoreDocs=topDocs.scoreDocs;
             //只取前十条
@@ -185,7 +176,7 @@ public class LuceneExe {
                 //获得对应的文档
                 Document doc = indexSearcher.doc(scoreDoc.doc);
                 //还原方法名
-                String methodName=StringResoleUtil.synthesisWord(doc.get("methodName"));
+                String methodName=doc.get("methodName");
                 //高亮处理
                 TokenStream tokenStream = analyzer.tokenStream("methodName", new StringReader(methodName));
 
@@ -198,7 +189,7 @@ public class LuceneExe {
                 result.add(method);
             }
             luceneDTO.setListData(result);
-            luceneDTO.setTotole(totle);
+            luceneDTO.setTotole(topDocs.totalHits);
         } catch (IOException | ParseException | InvalidTokenOffsetsException e) {
             e.printStackTrace();
         }finally {
@@ -224,8 +215,8 @@ public class LuceneExe {
             Query query=qp.parse(value);
 
             //高亮关键字
-            SimpleHTMLFormatter simpleHTMLFormatter = new SimpleHTMLFormatter("<span style='color:red'>", "</span>");
-            Highlighter highlighter = new Highlighter(simpleHTMLFormatter, new QueryScorer(query));
+//            SimpleHTMLFormatter simpleHTMLFormatter = new SimpleHTMLFormatter("<span style='color:red'>", "</span>");
+//            Highlighter highlighter = new Highlighter(simpleHTMLFormatter, new QueryScorer(query));
 
             //打开索引库输入流
             Directory directory=FSDirectory.open(FileSystems.getDefault().getPath(PathEnum.PATH_CLASS_DIR.getValue()));
@@ -235,7 +226,6 @@ public class LuceneExe {
 
             //分页
             TopDocs topDocs = indexSearcher.search(query, size);
-            long totle=topDocs.totalHits;
 
             ScoreDoc[] scoreDocs=topDocs.scoreDocs;
             //只取前十条
@@ -246,13 +236,14 @@ public class LuceneExe {
                 Document doc = indexSearcher.doc(scoreDoc.doc);
                 //高亮处理
                 String className=doc.get("className");
-                TokenStream tokenStream = analyzer.tokenStream("className", new StringReader(className));
+
                 //暂不高亮处理
+//                TokenStream tokenStream = analyzer.tokenStream("className", new StringReader(className));
 //                result.add(highlighter.getBestFragment(tokenStream,className));
                 result.add(className);
             }
             luceneDTO.setListData(result);
-            luceneDTO.setTotole(totle);
+            luceneDTO.setTotole(topDocs.totalHits);
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }finally {
