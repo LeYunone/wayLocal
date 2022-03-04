@@ -22,6 +22,8 @@ public class MethodInfoDTO {
      */
     private String className;
 
+    private String value;
+
     /**
      * 方法名
      */

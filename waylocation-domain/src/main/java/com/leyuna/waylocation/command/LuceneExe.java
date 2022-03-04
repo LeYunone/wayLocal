@@ -184,6 +184,7 @@ public class LuceneExe {
 //                highlighter.getBestFragment(tokenStream,methodName)
                 MethodInfoDTO method=new MethodInfoDTO();
                 method.setMethodName(methodName);
+                method.setValue(methodName);
                 method.setParams(doc.get("params"));
                 method.setReturnParams(doc.get("returnParams"));
                 method.setClassName(doc.get("className"));
@@ -303,6 +304,7 @@ public class LuceneExe {
 //                methodName=highlighter.getBestFragment(tokenStream,methodName);
                 MethodInfoDTO method=new MethodInfoDTO();
                 method.setMethodName(methodName);
+                method.setValue(methodName);
                 method.setParams(doc.get("params"));
                 method.setReturnParams(doc.get("returnParams"));
                 method.setClassName(doc.get("className"));

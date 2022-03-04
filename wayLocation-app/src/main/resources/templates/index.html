@@ -21,30 +21,20 @@
         类名：
         <el-autocomplete
                 style="width: 500px"
-                v-model="className"
+                v-model="form.className"
                 :fetch-suggestions="searchClass"
                 @select="selectClassInput"
                 placeholder="请输入关键词"
         ></el-autocomplete>
 
         方法名：
-        <el-select
+        <el-autocomplete
                 style="width: 500px"
-                v-model="value"
-                filterable
-                clearable
-                remote
-                reserve-keyword
+                v-model="form.methodName"
+                :fetch-suggestions="searchMethod"
+                @select="selectClassInput"
                 placeholder="请输入关键词"
-                :remote-method="searchMethod"
-                :loading="loading">
-            <el-option
-                    v-for="(item,index) in form.methodInfo"
-                    :key="index"
-                    :label="item.methodName"
-                    :value="item.methodName">
-            </el-option>
-        </el-select>
+        ></el-autocomplete>
     </el-card>
 </div>
 <script>
@@ -53,8 +43,8 @@
         data() {
             return {
                 loading:false,
-                className:"",
                 form: {
+                    className:"",
                     methodName: "",
                     classInfo: [],
                     methodInfo: [],
@@ -88,7 +78,7 @@
                     }
                 })
             },
-            searchMethod(key){
+            searchMethod(key,callback){
                 if(key.length==0){
                     return;
                 }
@@ -104,6 +94,7 @@
                     var data=res.data;
                     if(data.status){
                         this.form.methodInfo=data.data;
+                        callback(this.form.methodInfo);
                     }else{
                         this.$message.error(data.message);
                     }
