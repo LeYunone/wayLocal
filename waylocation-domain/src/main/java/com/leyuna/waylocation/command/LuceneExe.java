@@ -1,5 +1,6 @@
 package com.leyuna.waylocation.command;
 
+import com.leyuna.waylocation.bean.dto.ClassDTO;
 import com.leyuna.waylocation.bean.dto.LuceneDTO;
 import com.leyuna.waylocation.bean.dto.MethodInfoDTO;
 import com.leyuna.waylocation.constant.enums.PathEnum;
@@ -52,7 +53,8 @@ public class LuceneExe {
                 //填充文档
                 document.add(new TextField("methodId",method.getMethodId(), Field.Store.YES));
                 document.add(new TextField("methodName",method.getMethodName(), Field.Store.YES));
-                document.add(new TextField("className",method.getClassName(), Field.Store.YES));
+                //不分词的全类名
+                document.add(new StringField("className",method.getClassName(), Field.Store.YES));
                 //出入参不进行分词
                 document.add(new StringField("params",method.getParams(), Field.Store.YES));
                 document.add(new StringField("returnParams",method.getReturnParams(), Field.Store.YES));
@@ -153,7 +155,7 @@ public class LuceneExe {
             Analyzer analyzer=new SpiltCharAnalyzer();
             //关键词
             QueryParser qp = new QueryParser(key,analyzer);
-            Query query=qp.parse(value);
+            Query query=qp.parse(key+":"+value);
 
             //高亮关键字
             SimpleHTMLFormatter simpleHTMLFormatter = new SimpleHTMLFormatter("<span style='color:red'>", "</span>");
@@ -179,9 +181,9 @@ public class LuceneExe {
                 String methodName=doc.get("methodName");
                 //高亮处理
                 TokenStream tokenStream = analyzer.tokenStream("methodName", new StringReader(methodName));
-
+//                highlighter.getBestFragment(tokenStream,methodName)
                 MethodInfoDTO method=new MethodInfoDTO();
-                method.setMethodName(highlighter.getBestFragment(tokenStream,methodName));
+                method.setMethodName(methodName);
                 method.setParams(doc.get("params"));
                 method.setReturnParams(doc.get("returnParams"));
                 method.setClassName(doc.get("className"));
@@ -190,7 +192,7 @@ public class LuceneExe {
             }
             luceneDTO.setListData(result);
             luceneDTO.setTotole(topDocs.totalHits);
-        } catch (IOException | ParseException | InvalidTokenOffsetsException e) {
+        } catch (IOException | ParseException e) {
             e.printStackTrace();
         }finally {
             if(indexReader!=null){
@@ -208,11 +210,11 @@ public class LuceneExe {
         LuceneDTO luceneDTO=new LuceneDTO();
         IndexReader indexReader=null;
         try {
-            List<String> result=new ArrayList();
+            List<ClassDTO> result=new ArrayList();
             Analyzer analyzer=new SpiltCharAnalyzer();
             //关键词
             QueryParser qp = new QueryParser("key",analyzer);
-            Query query=qp.parse(value);
+            Query query=qp.parse("key:"+value);
 
             //高亮关键字
 //            SimpleHTMLFormatter simpleHTMLFormatter = new SimpleHTMLFormatter("<span style='color:red'>", "</span>");
@@ -232,19 +234,84 @@ public class LuceneExe {
             long len=scoreDocs.length;
             for(int i=0;i<len;i++){
                 ScoreDoc scoreDoc=scoreDocs[i];
+                ClassDTO classDTO=new ClassDTO();
                 //获得对应的文档
                 Document doc = indexSearcher.doc(scoreDoc.doc);
                 //高亮处理
                 String className=doc.get("className");
-
+                classDTO.setValue(className);
+                classDTO.setKey(doc.get("key"));
                 //暂不高亮处理
 //                TokenStream tokenStream = analyzer.tokenStream("className", new StringReader(className));
 //                result.add(highlighter.getBestFragment(tokenStream,className));
-                result.add(className);
+                result.add(classDTO);
             }
             luceneDTO.setListData(result);
             luceneDTO.setTotole(topDocs.totalHits);
         } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }finally {
+            if(indexReader!=null){
+                try {
+                    indexReader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return luceneDTO;
+    }
+
+    public LuceneDTO getMethodDirBooleanQuery(String className,String methodName){
+        LuceneDTO luceneDTO=new LuceneDTO();
+        IndexReader indexReader=null;
+        try {
+            List<MethodInfoDTO> result=new ArrayList();
+            Analyzer analyzer=new SpiltCharAnalyzer();
+            //关键词
+            BooleanQuery.Builder booleanQueryBuilder = new BooleanQuery.Builder();
+            Query query1 = new TermQuery(new Term("className", className));
+            Query query2 = new TermQuery(new Term("methodName", methodName));
+            booleanQueryBuilder.add(query1, BooleanClause.Occur.SHOULD);
+            booleanQueryBuilder.add(query2, BooleanClause.Occur.MUST);
+            BooleanQuery booleanQuery = booleanQueryBuilder.build();
+
+            //高亮关键字
+            SimpleHTMLFormatter simpleHTMLFormatter = new SimpleHTMLFormatter("<span style='color:red'>", "</span>");
+            Highlighter highlighter = new Highlighter(simpleHTMLFormatter, new QueryScorer(booleanQuery));
+
+            //打开索引库输入流
+            Directory directory=FSDirectory.open(FileSystems.getDefault().getPath(PathEnum.PATH_METHOD_DIR.getValue()));
+            indexReader = DirectoryReader.open(directory);
+            //索引库搜索指令
+            IndexSearcher indexSearcher=new IndexSearcher(indexReader);
+
+            //分页
+            TopDocs topDocs = indexSearcher.search(booleanQuery,10);
+
+            ScoreDoc[] scoreDocs=topDocs.scoreDocs;
+            //只取前十条
+            long len=scoreDocs.length;
+            for(int i=0;i<len;i++){
+                ScoreDoc scoreDoc=scoreDocs[i];
+                //获得对应的文档
+                Document doc = indexSearcher.doc(scoreDoc.doc);
+                //还原方法名
+                methodName=doc.get("methodName");
+                //高亮处理
+                TokenStream tokenStream = analyzer.tokenStream("methodName", new StringReader(methodName));
+//                methodName=highlighter.getBestFragment(tokenStream,methodName);
+                MethodInfoDTO method=new MethodInfoDTO();
+                method.setMethodName(methodName);
+                method.setParams(doc.get("params"));
+                method.setReturnParams(doc.get("returnParams"));
+                method.setClassName(doc.get("className"));
+                method.setMethodId(doc.get("methodId"));
+                result.add(method);
+            }
+            luceneDTO.setListData(result);
+            luceneDTO.setTotole(topDocs.totalHits);
+        } catch (IOException e) {
             e.printStackTrace();
         }finally {
             if(indexReader!=null){

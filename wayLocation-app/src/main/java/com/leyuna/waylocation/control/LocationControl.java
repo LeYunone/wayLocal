@@ -27,4 +27,20 @@ public class LocationControl {
         }
         return DataResponse.buildSuccess();
     }
+
+    @RequestMapping("/getMethod")
+    public DataResponse getMethod(String className,String methodName,@RequestParam(required = false,defaultValue = "10") Integer size){
+        //如果没有指明类
+        if(StringUtils.isEmpty(className)){
+            return locationService.getMethod(methodName,size);
+        }
+        try {
+            //如果指明类非常清晰
+            Class.forName(className);
+            return locationService.getMethod(className,methodName);
+        } catch (ClassNotFoundException e) {
+            //如果指明类为模糊查询
+            return locationService.getMethod(className);
+        }
+    }
 }

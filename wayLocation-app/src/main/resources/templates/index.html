@@ -17,44 +17,35 @@
 </head>
 <body>
 <div id="app">
-    <div id="classInput">
+    <el-card class="box-card">
         类名：
-        <el-select
+        <el-autocomplete
                 style="width: 500px"
-                v-model="value"
-                filterable
-                remote
-                reserve-keyword
+                v-model="className"
+                :fetch-suggestions="searchClass"
+                @select="selectClassInput"
                 placeholder="请输入关键词"
-                :remote-method="searchClass"
-                :loading="loading">
-            <el-option
-                    v-for="(item,index) in form.info"
-                    :key="index"
-                    :label="item"
-                    :value="item">
-            </el-option>
-        </el-select>
-    </div>
-    <div id="methodInput">
+        ></el-autocomplete>
+
         方法名：
         <el-select
                 style="width: 500px"
                 v-model="value"
                 filterable
+                clearable
                 remote
                 reserve-keyword
                 placeholder="请输入关键词"
                 :remote-method="searchMethod"
                 :loading="loading">
             <el-option
-                    v-for="(item,index) in form.info"
+                    v-for="(item,index) in form.methodInfo"
                     :key="index"
-                    :label="item"
-                    :value="item">
+                    :label="item.methodName"
+                    :value="item.methodName">
             </el-option>
         </el-select>
-    </div>
+    </el-card>
 </div>
 <script>
     var app = new Vue({
@@ -62,17 +53,21 @@
         data() {
             return {
                 loading:false,
-                value:"",
+                className:"",
                 form: {
                     methodName: "",
-                    info: [],
+                    classInfo: [],
+                    methodInfo: [],
                     size:10,
                 }
             }
         },
         methods: {
+            selectClassInput(){
+
+            },
             //输入框跟踪方法名模糊查询
-            searchClass(key) {
+            searchClass(key,callback) {
                 if(key.length==0){
                     return;
                 }
@@ -86,8 +81,8 @@
                 }).then((res) =>{
                     var data=res.data;
                     if(data.status){
-                        console.log(data)
-                        this.form.info=data.data.listData;
+                        this.form.classInfo=data.data.listData;
+                        callback(this.form.classInfo);
                     }else{
                         this.$message.error(data.message);
                     }
@@ -98,7 +93,20 @@
                     return;
                 }
                 axios({
-                    
+                    url:"/location/getMethod",
+                    method:"GET",
+                    params:{
+                        className:this.className,
+                        methodName:key,
+                        size:this.size
+                    }
+                }).then((res)=>{
+                    var data=res.data;
+                    if(data.status){
+                        this.form.methodInfo=data.data;
+                    }else{
+                        this.$message.error(data.message);
+                    }
                 })
             }
         }
