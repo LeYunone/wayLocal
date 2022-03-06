@@ -37,10 +37,10 @@ public class LocationControl {
         try {
             //如果指明类非常清晰
             Class.forName(className);
-            return locationService.getMethod(className,methodName);
+            return locationService.getMethod(className,methodName,true);
         } catch (ClassNotFoundException e) {
             //如果指明类为模糊查询
-            return locationService.getMethod(className);
+            return locationService.getMethod(className,methodName,false);
         }
     }
 }

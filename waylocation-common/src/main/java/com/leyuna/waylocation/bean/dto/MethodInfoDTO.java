@@ -48,4 +48,9 @@ public class MethodInfoDTO {
      * 入参值 json格式
      */
     private String paramJsonValue;
+
+    /**
+     * 给页面的出参值
+     */
+    private String methodStr;
 }

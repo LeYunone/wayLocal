@@ -40,26 +40,6 @@ public class LocationService {
     }
 
     /**
-     * 模糊搜索指定类下的所有方法
-     * @param className
-     * @return
-     */
-    public DataResponse getMethod(String className){
-
-        //先根据类名从搜索库查到最接近的类
-        LuceneDTO methodDirByClassName = luceneExe.getClassDir(className,1);
-        List<String> listData =
-                methodDirByClassName.getListData();
-        if(CollectionUtils.isEmpty(listData)){
-            return DataResponse.buildSuccess();
-        }
-        //最接近的类名
-        String allClassName = listData.get(0);
-        List<MethodInfoDTO> methodInfoDTOS = locationExe.locationMethod(allClassName);
-        return DataResponse.of(methodInfoDTOS);
-    }
-
-    /**
      * 只根据方法名模糊
      * @param methodName
      * @return
@@ -77,9 +57,25 @@ public class LocationService {
      * @param method
      * @return
      */
-    public DataResponse getMethod(String className,String method){
-        LuceneDTO methodDirBooleanQuery = luceneExe.getMethodDirBooleanQuery(className, method);
-        return DataResponse.of(methodDirBooleanQuery.getListData());
+    public DataResponse getMethod(String className,String method,boolean accuracy){
+        List<MethodInfoDTO> result=null;
+        if(accuracy){
+            LuceneDTO methodDirBooleanQuery = luceneExe.getMethodDirBooleanQuery(className, method);
+            result=methodDirBooleanQuery.getListData();
+        }else{
+            //先根据类名从搜索库查到最接近的类
+            LuceneDTO methodDirByClassName = luceneExe.getClassDir(className,1);
+            List<String> listData =
+                    methodDirByClassName.getListData();
+            if(CollectionUtils.isEmpty(listData)){
+                return DataResponse.buildSuccess();
+            }
+            //最接近的类名
+            String allClassName = listData.get(0);
+            LuceneDTO methodDirBooleanQuery = luceneExe.getMethodDirBooleanQuery(allClassName, method);
+            result = methodDirBooleanQuery.getListData();
+        }
+        return DataResponse.of(result);
     }
 
     /**
