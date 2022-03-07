@@ -94,6 +94,8 @@ public class LocationService {
             }
             Method method = null;
             String methodName = methodInfo.getMethodName();
+            
+            //过滤高亮字符
             methodName = StringResoleUtil.replaceString(methodName, "<span style='color:red'>");
             methodName = StringResoleUtil.replaceString(methodName,"</span>");
             try {

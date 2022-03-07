@@ -1,7 +1,10 @@
 package com.leyuna.waylocation.command;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.leyuna.waylocation.constant.global.ServerConstant;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -15,9 +18,35 @@ import java.util.*;
 public class ParamExe {
 
     /**
+     * 获取对象的完整结构
+     * @return
+     */
+    public String getObjectStructure(Class clazz,String fieldName){
+        //如果为基本数据类型则跳过
+        if(clazz.isPrimitive()){
+            //如果是出参 则说明进来的参数应该是没有属性名的
+            if(StringUtils.isEmpty(fieldName)){
+                return "";
+            }
+            return fieldName+":\"\"";
+        }
+        //入参对象
+        Object obj = null;
+        try {
+            obj = clazz.newInstance();
+        } catch (Exception e) {
+            //入参无法实例化，则说明参数为抽象属性 或者没有空构造
+            e.printStackTrace();
+        }
+        //深度解析对象结构  规则：如果是项目内对象则继续，否则跳过
+        resoleParam(obj,clazz);
+        return JSONObject.toJSONString(obj, SerializerFeature.WriteMapNullValue,SerializerFeature.WriteNullStringAsEmpty);
+    }
+    
+    /**
      * 解析参数结构
      */
-    public void resoleParam (Object obj, Class type) {
+    private void resoleParam (Object obj, Class type) {
         if (null == obj) {
             return;
         }

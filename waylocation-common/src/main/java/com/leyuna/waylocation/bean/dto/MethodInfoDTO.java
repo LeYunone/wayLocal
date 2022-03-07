@@ -40,9 +40,11 @@ public class MethodInfoDTO implements Serializable {
     private String methodId;
 
     /**
-     * 参数列表 逗号分割
+     * 参数列表 
      */
     private String params;
+    
+    private String paramsJson;
 
     /**
      * 出参列表 逗号分割

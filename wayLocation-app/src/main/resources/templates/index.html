@@ -105,6 +105,11 @@
                     url:"/method/invokeMethod",
                     method:"POST",
                     data:this.methodInfo
+                }).then((res)=>{
+                    var data=res.data;
+                    if(data.status){
+                        
+                    }
                 })
             },
             //类名选择
