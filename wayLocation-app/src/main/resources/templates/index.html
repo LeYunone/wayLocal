@@ -21,7 +21,7 @@
         类名：
         <el-autocomplete
                 style="width: 500px"
-                v-model="form.className"
+                v-model="methodInfo.className"
                 :fetch-suggestions="searchClass"
                 @select="selectClassInput"
                 placeholder="请输入关键词"
@@ -30,9 +30,9 @@
         方法名：
         <el-autocomplete
                 style="width: 500px"
-                v-model="form.methodName"
+                v-model="text"
                 :fetch-suggestions="searchMethod"
-                @select="selectClassInput"
+                @select="selectMethodInput"
                 placeholder="请输入关键词"
         ></el-autocomplete>
     </el-card>
@@ -53,7 +53,7 @@
                             type="textarea"
                             :autosize="{ minRows: 15}"
                             placeholder="请输入内容"
-                            v-model="form.params">
+                            v-model="methodInfo.params">
                     </el-input>
                 </td>
             </tr>
@@ -68,7 +68,7 @@
                             type="textarea"
                             :autosize="{ minRows: 15}"
                             placeholder="请输入内容"
-                            v-model="form.returnParams">
+                            v-model="methodInfo.returnParams">
                     </el-input>
                 </td>
             </tr>
@@ -83,14 +83,17 @@
         data() {
             return {
                 loading:false,
+                text:"",
                 form: {
-                    returnParams:"",
-                    returnParamValue:"",
-                    className:"",
-                    methodName: "",
                     classInfo: [],
                     methodInfo: [],
+                    returnParamValue:"",
                     size:10,
+                },
+                methodInfo:{
+                    returnParams:"",
+                    className:"",
+                    methodName: "",
                     params:"",
                     paramJsonValue:""
                 }
@@ -100,18 +103,23 @@
             invokeMethod(){
                 axios({
                     url:"/method/invokeMethod",
-                    method:"GET",
-                    params:{
-                        className:this.form.className,
-                        methodName:this.form.methodName,
-                        params:this.form.returnParams,
-                        returnParams:this.form.returnParams,
-                        paramJsonValue:this.form.paramJsonValue
-                    }
+                    method:"POST",
+                    data:this.methodInfo
                 })
             },
-            selectClassInput(){
+            //类名选择
+            selectClassInput(item){
 
+            },
+            //方法选择  如果方法确定则加载出参和入参结构
+            selectMethodInput(item){
+                this.methodInfo=item;
+                axios({
+                    url:"/param/getParam",
+                    method:"POST",
+                    data:this.methodInfo
+                })
+                console.log(item)
             },
             //输入框跟踪方法名模糊查询
             searchClass(key,callback) {
@@ -140,7 +148,7 @@
                     url:"/location/getMethod",
                     method:"GET",
                     params:{
-                        className:this.form.className,
+                        className:this.methodInfo.className,
                         methodName:key,
                         size:this.form.size
                     }

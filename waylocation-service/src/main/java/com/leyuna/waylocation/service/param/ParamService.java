@@ -40,7 +40,8 @@ public class ParamService {
                 try {
                     obj = type.newInstance();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    //入参无法实例化，则说明参数为基本数据类型或抽象属性
+
                 }
                 //深度解析对象结构  规则：如果是项目内对象则继续，否则跳过
                 paramExe.resoleParam(obj,type);

@@ -5,6 +5,8 @@ import com.leyuna.waylocation.response.DataResponse;
 import com.leyuna.waylocation.service.method.LocationService;
 import com.leyuna.waylocation.service.param.ParamService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,8 +32,8 @@ public class ParamControl {
      * @param methodInfo 方法具体信息
      * @return
      */
-    @RequestMapping("/getParam")
-    public DataResponse getParam(MethodInfoDTO methodInfo){
+    @PostMapping("/getParam")
+    public DataResponse getParam(@RequestBody MethodInfoDTO methodInfo){
         //获得方法
         DataResponse<Method> method = locationService.getMethod(methodInfo);
         Method data = method.getData();

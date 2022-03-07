@@ -30,7 +30,7 @@ public class LocationControl {
     @RequestMapping("/getClassName")
     public DataResponse getClassName(String className,
                                      @RequestParam(required = false,defaultValue = "10") Integer size,
-                                     @CookieValue("LinkedHashMap") LinkedHashMap<String, ClassDTO> historyClass){
+                                     @CookieValue(value = "LinkedHashMap",required = false) LinkedHashMap<String, ClassDTO> historyClass){
         if(!StringUtils.isEmpty(className)){
             //模糊查询类
             return locationService.getClassName(className, size);
