@@ -239,7 +239,6 @@ public class LuceneExe {
                 ClassDTO classDTO=new ClassDTO();
                 //获得对应的文档
                 Document doc = indexSearcher.doc(scoreDoc.doc);
-                //高亮处理
                 String className=doc.get("className");
                 classDTO.setValue(className);
                 classDTO.setKey(doc.get("key"));
@@ -272,10 +271,12 @@ public class LuceneExe {
             Analyzer analyzer=new SpiltCharAnalyzer();
             //关键词
             BooleanQuery.Builder booleanQueryBuilder = new BooleanQuery.Builder();
-            Query query1 = new TermQuery(new Term("className", className));
-            Query query2 = new TermQuery(new Term("methodName", methodName));
-            booleanQueryBuilder.add(query1, BooleanClause.Occur.SHOULD);
-            booleanQueryBuilder.add(query2, BooleanClause.Occur.MUST);
+            QueryParser query=new QueryParser("methodName",analyzer);
+            Query parse = query.parse(methodName);
+            Query query2=new TermQuery(new Term("className",className));
+
+            booleanQueryBuilder.add(parse, BooleanClause.Occur.MUST);
+            booleanQueryBuilder.add(query2, BooleanClause.Occur.SHOULD);
             BooleanQuery booleanQuery = booleanQueryBuilder.build();
 
             //高亮关键字
@@ -315,7 +316,7 @@ public class LuceneExe {
             }
             luceneDTO.setListData(result);
             luceneDTO.setTotole(topDocs.totalHits);
-        } catch (IOException e) {
+        } catch (IOException | ParseException e) {
             e.printStackTrace();
         }finally {
             if(indexReader!=null){

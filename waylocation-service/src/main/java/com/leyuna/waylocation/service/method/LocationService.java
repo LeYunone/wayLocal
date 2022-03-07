@@ -1,5 +1,6 @@
 package com.leyuna.waylocation.service.method;
 
+import com.leyuna.waylocation.bean.dto.ClassDTO;
 import com.leyuna.waylocation.bean.dto.LuceneDTO;
 import com.leyuna.waylocation.bean.dto.MethodInfoDTO;
 import com.leyuna.waylocation.command.LocationExe;
@@ -65,14 +66,14 @@ public class LocationService {
         }else{
             //先根据类名从搜索库查到最接近的类
             LuceneDTO methodDirByClassName = luceneExe.getClassDir(className,1);
-            List<String> listData =
+            List<ClassDTO> listData =
                     methodDirByClassName.getListData();
             if(CollectionUtils.isEmpty(listData)){
                 return DataResponse.buildSuccess();
             }
             //最接近的类名
-            String allClassName = listData.get(0);
-            LuceneDTO methodDirBooleanQuery = luceneExe.getMethodDirBooleanQuery(allClassName, method);
+            ClassDTO classDTO = listData.get(0);
+            LuceneDTO methodDirBooleanQuery = luceneExe.getMethodDirBooleanQuery(classDTO.getValue(), method);
             result = methodDirBooleanQuery.getListData();
         }
         return DataResponse.of(result);

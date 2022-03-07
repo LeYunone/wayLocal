@@ -34,6 +34,13 @@ public class MethodControl {
         return DataResponse.buildSuccess();
     }
 
+
+    /**
+     * 方法调用
+     * @param methodInfo
+     * @return
+     */
+    @RequestMapping("/invokeMethod")
     public DataResponse invokeMethod(MethodInfoDTO methodInfo){
         DataResponse<Method> method =
                 locationMethodService.getMethod(methodInfo);

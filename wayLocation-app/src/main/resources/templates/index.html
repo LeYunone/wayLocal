@@ -58,9 +58,6 @@
             },
             //输入框跟踪方法名模糊查询
             searchClass(key,callback) {
-                if(key.length==0){
-                    return;
-                }
                 axios({
                     url: "/location/getClassName",
                     method: "GET",
@@ -86,9 +83,9 @@
                     url:"/location/getMethod",
                     method:"GET",
                     params:{
-                        className:this.className,
+                        className:this.form.className,
                         methodName:key,
-                        size:this.size
+                        size:this.form.size
                     }
                 }).then((res)=>{
                     var data=res.data;

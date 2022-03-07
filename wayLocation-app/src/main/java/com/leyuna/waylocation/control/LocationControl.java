@@ -23,7 +23,11 @@ public class LocationControl {
     @RequestMapping("/getClassName")
     public DataResponse getClassName(String className,@RequestParam(required = false,defaultValue = "10") Integer size){
         if(!StringUtils.isEmpty(className)){
+            //模糊查询类
             return locationService.getClassName(className, size);
+        }else{
+            //查找历史使用类
+
         }
         return DataResponse.buildSuccess();
     }
