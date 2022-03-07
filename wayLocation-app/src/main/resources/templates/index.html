@@ -16,7 +16,7 @@
 
 </head>
 <body>
-<div id="app">
+<div id="app" style="width: 80%;margin-left: 200px">
     <el-card class="box-card">
         类名：
         <el-autocomplete
@@ -36,7 +36,47 @@
                 placeholder="请输入关键词"
         ></el-autocomplete>
     </el-card>
+
+    <el-card class="box-card" style="margin-top: 18px">
+        <div class="div-button">
+            <el-button plain @click="">保存</el-button>
+            <el-button plain>清除</el-button>
+            <el-button plain @click="invokeMethod">测试</el-button>
+        </div>
+        <table>
+            <tr>
+                <td class="table-lab">
+                    入参：
+                </td>
+                <td class="table-input">
+                    <el-input
+                            type="textarea"
+                            :autosize="{ minRows: 15}"
+                            placeholder="请输入内容"
+                            v-model="form.params">
+                    </el-input>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="table-lab">
+                    出参：
+                </td>
+                <td class="table-input">
+                    <el-input
+                            disabled
+                            type="textarea"
+                            :autosize="{ minRows: 15}"
+                            placeholder="请输入内容"
+                            v-model="form.returnParams">
+                    </el-input>
+                </td>
+            </tr>
+        </table>
+    </el-card>
 </div>
+</body>
+</html>
 <script>
     var app = new Vue({
         el: '#app',
@@ -44,15 +84,32 @@
             return {
                 loading:false,
                 form: {
+                    returnParams:"",
+                    returnParamValue:"",
                     className:"",
                     methodName: "",
                     classInfo: [],
                     methodInfo: [],
                     size:10,
+                    params:"",
+                    paramJsonValue:""
                 }
             }
         },
         methods: {
+            invokeMethod(){
+                axios({
+                    url:"/method/invokeMethod",
+                    method:"GET",
+                    params:{
+                        className:this.form.className,
+                        methodName:this.form.methodName,
+                        params:this.form.returnParams,
+                        returnParams:this.form.returnParams,
+                        paramJsonValue:this.form.paramJsonValue
+                    }
+                })
+            },
             selectClassInput(){
 
             },
@@ -100,5 +157,17 @@
         }
     })
 </script>
-</body>
-</html>
+<style>
+    .table-input{
+        width:1000px
+    }
+    .table-lab{
+        width:100px
+    }
+    .div-button{
+        float: right;
+        padding: 0 50px;
+        cursor: pointer;
+        line-height: 70px;
+    }
+</style>

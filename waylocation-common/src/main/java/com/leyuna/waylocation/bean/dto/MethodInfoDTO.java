@@ -6,6 +6,8 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
+
 /**
  * @author pengli
  * @create 2022-02-22 10:36
@@ -15,13 +17,16 @@ import lombok.experimental.Accessors;
 @ToString
 @NoArgsConstructor
 @Accessors(chain = true)
-public class MethodInfoDTO {
+public class MethodInfoDTO implements Serializable {
 
     /**
      * 全类名
      */
     private String className;
 
+    /**
+     * 展示给页面看到字符串
+     */
     private String value;
 
     /**
@@ -47,10 +52,5 @@ public class MethodInfoDTO {
     /**
      * 入参值 json格式
      */
-    private String paramJsonValue;
-
-    /**
-     * 给页面的出参值
-     */
-    private String methodStr;
+    private String paramValue;
 }

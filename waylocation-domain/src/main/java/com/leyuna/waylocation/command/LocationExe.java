@@ -35,7 +35,7 @@ public class LocationExe {
                 MethodInfoDTO methodInfoDTO=new MethodInfoDTO();
                 methodInfoDTO.setClassName(className);
                 methodInfoDTO.setMethodName(m.getName());
-                methodInfoDTO.setValue(m.getName());
+                methodInfoDTO.setValue(methodInfoDTO.getReturnParams()+"  "+m.getName()+"("+methodInfoDTO.getParams()+")");
                 //入参列表
                 methodInfoDTO.setParams(StringUtils.join(getParams(m),","));
                 //出餐列表
