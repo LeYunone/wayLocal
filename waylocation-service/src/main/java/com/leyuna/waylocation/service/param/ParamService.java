@@ -35,12 +35,17 @@ public class ParamService {
         if(parameters.length>=1){
             for(Parameter parameter:parameters){
                 Class<?> type = parameter.getType();
+                //如果为基本数据类型则跳过
+                if(type.isPrimitive()){
+                    result.add(parameter.getName()+":\"\"");
+                    continue;
+                }
                 //入参对象
                 Object obj = null;
                 try {
                     obj = type.newInstance();
                 } catch (Exception e) {
-                    //入参无法实例化，则说明参数为基本数据类型或抽象属性
+                    //入参无法实例化，则说明参数为抽象属性
 
                 }
                 //深度解析对象结构  规则：如果是项目内对象则继续，否则跳过

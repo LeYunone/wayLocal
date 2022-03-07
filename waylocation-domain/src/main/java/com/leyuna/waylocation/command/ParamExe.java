@@ -49,8 +49,6 @@ public class ParamExe {
                         //判断是否是集合一类
                         if (Collection.class.isAssignableFrom(aClass)) {
                             //Collection 逻辑
-
-                            //拿到该属性的实例对象
                             Collection collection = null;
                             //如果是接口或抽象类
                             if(aClass.isInterface()|| Modifier.isAbstract(aClass.getModifiers())){
