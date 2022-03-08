@@ -242,9 +242,12 @@ public class LuceneExe {
                 MethodInfoDTO method=new MethodInfoDTO();
                 String json=doc.get("value");
                 method = JSON.parseObject(json,MethodInfoDTO.class);
-
+                String returnName="void";
+                if(null != method.getReturnParams()){
+                    returnName = method.getReturnParams().getName();
+                }
                 //页面展示
-                method.setValue(method.getReturnParams().getName()+"  "+methodName+"("+ ParamsUtil.getParams(method.getParams()) +")");
+                method.setValue(returnName+"  "+methodName+"("+ParamsUtil.getParams(method.getParams())+")");
                 result.add(method);
             }
             luceneDTO.setListData(result);

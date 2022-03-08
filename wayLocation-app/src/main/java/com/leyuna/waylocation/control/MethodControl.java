@@ -1,5 +1,6 @@
 package com.leyuna.waylocation.control;
 
+import com.alibaba.fastjson.JSON;
 import com.leyuna.waylocation.bean.dto.ClassDTO;
 import com.leyuna.waylocation.bean.dto.MethodInfoDTO;
 import com.leyuna.waylocation.response.DataResponse;
@@ -46,8 +47,8 @@ public class MethodControl {
      */
     @PostMapping("/invokeMethod")
     public DataResponse invokeMethod(@RequestBody MethodInfoDTO methodInfo, HttpServletResponse response,
-                                     @CookieValue("historyClass")LinkedHashMap<String,ClassDTO> historyClass,
-                                     @CookieValue("historyMethodInfo") Queue<MethodInfoDTO> historyMethod){
+                                     @CookieValue(value = "historyClass",required = false)LinkedHashMap<String,ClassDTO> historyClass,
+                                     @CookieValue(value = "historyMethodInfo",required = false) Queue<MethodInfoDTO> historyMethod){
         if(CollectionUtils.isEmpty(historyMethod)){
             historyMethod=new LinkedList<>();
         }
@@ -61,9 +62,9 @@ public class MethodControl {
         historyClass.put(methodInfo.getClassName(),classDTO);
 
         //记录本次调用的信息   [使用类]  [使用方法]  [使用参数]
-        Cookie hMethod=new Cookie("historyMethodInfo",historyMethod.toString());
+        Cookie hMethod=new Cookie("historyMethodInfo", JSON.toJSONString(historyMethod));
         //记录本次调用类名
-        Cookie hClass=new Cookie("historyClass",historyClass.toString());
+        Cookie hClass=new Cookie("historyClass", JSON.toJSONString(historyClass));
         response.addCookie(hClass);
         response.addCookie(hMethod);
 
@@ -73,7 +74,7 @@ public class MethodControl {
         Method data = method.getData();
 
         //调用方法
-        methodService.invokeMethod(data, methodInfo.getParamValue());
+//        methodService.invokeMethod(data, methodInfo.getParamValue());
         return DataResponse.buildSuccess();
     }
 

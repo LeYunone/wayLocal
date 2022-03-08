@@ -7,6 +7,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author pengli
@@ -52,5 +53,10 @@ public class MethodInfoDTO implements Serializable {
     /**
      * 入参值 json格式
      */
-    private String paramValue;
+    private List<String> paramValue;
+
+    /**
+     * 出参值
+     */
+    private String returnParamValue;
 }

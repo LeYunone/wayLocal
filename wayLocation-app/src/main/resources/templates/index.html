@@ -51,11 +51,12 @@
                     入参：
                 </td>
                 <td class="table-input">
-                    <el-input style="width: 350px" v-for="(item,index) in form.paramValue"
+                    <el-input style="width: 350px" v-for="(item,index) in methodInfo.paramValue"
                             type="textarea"
+                            :key="index"
                             :autosize="{ minRows: 15}"
                             placeholder="请输入内容"
-                            v-model="item">
+                            v-model="methodInfo.paramValue[index]">
                     </el-input>
                 </td>
             </tr>
@@ -70,7 +71,7 @@
                             type="textarea"
                             :autosize="{ minRows: 15}"
                             placeholder="请输入内容"
-                            v-model="form.returnParamValue">
+                            v-model="methodInfo.returnParamValue">
                     </el-input>
                 </td>
             </tr>
@@ -84,13 +85,12 @@
         el: '#app',
         data() {
             return {
+                item:"",
                 loading:false,
                 text:"",
                 form: {
                     classInfo: [],
                     methodInfo: [],
-                    paramValue:[],
-                    returnParamValue:"",
                     size:10,
                 },
                 methodInfo:{
@@ -98,7 +98,9 @@
                     className:"",
                     methodName: "",
                     params:"",
-                    paramJsonValue:""
+                    paramJsonValue:"",
+                    paramValue:[],
+                    returnParamValue:"",
                 }
             }
         },
@@ -129,7 +131,7 @@
                 }).then((res)=>{
                     var data=res.data;
                     if(data.status){
-                        this.form.paramValue=data.data;
+                        this.methodInfo.paramValue=data.data;
                     }
                 })
 
@@ -140,7 +142,7 @@
                 }).then((res)=>{
                     var data = res.data;
                     if(data.status){
-                        this.form.returnParamValue=data.data;
+                        this.methodInfo.returnParamValue=data.data;
                     }
                 })
             },
