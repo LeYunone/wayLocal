@@ -22,6 +22,7 @@
         <el-autocomplete
                 style="width: 500px"
                 v-model="methodInfo.className"
+                clearable
                 :fetch-suggestions="searchClass"
                 @select="selectClassInput"
                 placeholder="请输入关键词"
@@ -30,6 +31,7 @@
         方法名：
         <el-autocomplete
                 style="width: 500px"
+                clearable
                 v-model="text"
                 :fetch-suggestions="searchMethod"
                 @select="selectMethodInput"
@@ -49,11 +51,11 @@
                     入参：
                 </td>
                 <td class="table-input">
-                    <el-input
+                    <el-input style="width: 350px" v-for="(item,index) in form.paramValue"
                             type="textarea"
                             :autosize="{ minRows: 15}"
                             placeholder="请输入内容"
-                            v-model="methodInfo.params">
+                            v-model="item">
                     </el-input>
                 </td>
             </tr>
@@ -68,7 +70,7 @@
                             type="textarea"
                             :autosize="{ minRows: 15}"
                             placeholder="请输入内容"
-                            v-model="methodInfo.returnParams">
+                            v-model="form.returnParamValue">
                     </el-input>
                 </td>
             </tr>
@@ -87,6 +89,7 @@
                 form: {
                     classInfo: [],
                     methodInfo: [],
+                    paramValue:[],
                     returnParamValue:"",
                     size:10,
                 },
@@ -123,8 +126,23 @@
                     url:"/param/getParam",
                     method:"POST",
                     data:this.methodInfo
+                }).then((res)=>{
+                    var data=res.data;
+                    if(data.status){
+                        this.form.paramValue=data.data;
+                    }
                 })
-                console.log(item)
+
+                axios({
+                    url:"/param/getReturnParam",
+                    method:"POST",
+                    data:this.methodInfo
+                }).then((res)=>{
+                    var data = res.data;
+                    if(data.status){
+                        this.form.returnParamValue=data.data;
+                    }
+                })
             },
             //输入框跟踪方法名模糊查询
             searchClass(key,callback) {

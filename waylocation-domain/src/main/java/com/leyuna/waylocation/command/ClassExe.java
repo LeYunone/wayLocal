@@ -52,7 +52,13 @@ public class ClassExe {
         return result;
     }
 
-    private void getEEEaaa(int i,LuceneDTO testDto){
+    private MethodInfoDTO getEEEaaa(int i,LuceneDTO testDto){
         System.out.println(1);
+        return null;
+    }
+
+    public void getTest(){
+        System.out.println("22");
+        System.out.println("33");
     }
 }

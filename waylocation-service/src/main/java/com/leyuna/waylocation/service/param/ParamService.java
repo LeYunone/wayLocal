@@ -31,15 +31,12 @@ public class ParamService {
      * @return
      */
     public DataResponse getParam(Class<?> [] cs){
-        Map<String,Object> result=new HashMap<>();
+        List<String> result=new ArrayList<>();
         //如果是多参数的情况
         if(cs.length>=1){
             for(Class clazz:cs){
-                if(clazz.isPrimitive()){
-                    continue;
-                }
                 String json = paramExe.getObjectStructure(clazz, clazz.getName());
-                result.put(clazz.getName(),json);
+                result.add(json);
             }
         }else{
             return DataResponse.buildSuccess();
@@ -54,6 +51,11 @@ public class ParamService {
      * @return
      */
     public DataResponse getReturnParam(Class<?> clazz){
+
+        if(clazz==null){
+            return DataResponse.buildSuccess();
+        }
+
         String json = paramExe.getObjectStructure(clazz,null);
         return DataResponse.of(json);
     }

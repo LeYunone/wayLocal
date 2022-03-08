@@ -19,22 +19,33 @@ public class ParamExe {
 
     /**
      * 获取对象的完整结构
+     *
      * @return
      */
-    public String getObjectStructure(Class clazz,String fieldName){
+    public String getObjectStructure (Class clazz, String fieldName) {
+        if (clazz.isPrimitive()) {
+            //如果是基本数据类型
+            return clazz.getName();
+        }
         //入参对象
         Object obj = null;
         try {
             obj = clazz.newInstance();
         } catch (Exception e) {
             //入参无法实例化，则说明参数为抽象属性 或者没有空构造
+            if (clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers())) {
+                //如果是抽象属性  则跳过解析
+                return clazz.getName();
+            }
+
+            //如果是没有无参构造场景时
             e.printStackTrace();
         }
         //深度解析对象结构  规则：如果是项目内对象则继续，否则跳过
-        resoleParam(obj,clazz);
-        return JSONObject.toJSONString(obj, SerializerFeature.WriteMapNullValue,SerializerFeature.WriteNullStringAsEmpty);
+        resoleParam(obj, clazz);
+        return JSONObject.toJSONString(obj, SerializerFeature.WriteMapNullValue, SerializerFeature.WriteNullStringAsEmpty);
     }
-    
+
     /**
      * 解析参数结构
      */
@@ -48,6 +59,10 @@ public class ParamExe {
             Field[] declaredFields = type.getDeclaredFields();
             for (Field field : declaredFields) {
                 Class aClass = field.getType();
+                if (aClass.isPrimitive()) {
+                    //如果是基本数据类型
+                    continue;
+                }
                 boolean accessible = field.isAccessible();
                 try {
                     if (!accessible) {
@@ -55,16 +70,20 @@ public class ParamExe {
                     }
                     //如果这个属性值是项目内属性，则进行迭代继续迭代
                     if (ServerConstant.ClassName.contains(aClass.getName())) {
-                        Object o = aClass.newInstance();
+                        Object o = null;
+                        try {
+                            o = aClass.newInstance();
+                        } catch (Exception e) {
+                            //如果是抽象属性则跳过
+                            if (aClass.isInterface() || Modifier.isAbstract(aClass.getModifiers())) {
+                                continue;
+                            }
+                            //TODO 无参构造处理
+                        }
                         //迭代对象内属性
                         resoleParam(o, aClass);
                         field.set(obj, o);
                     } else {
-                        //给属性赋值
-                        if (aClass.isPrimitive()) {
-                            //如果是基本数据类型
-                            continue;
-                        }
                         //获取属性泛型
                         Type genericType = field.getGenericType();
                         //判断是否是集合一类
@@ -72,43 +91,47 @@ public class ParamExe {
                             //Collection 逻辑
                             Collection collection = null;
                             //如果是接口或抽象类
-                            if(aClass.isInterface()|| Modifier.isAbstract(aClass.getModifiers())){
+                            if (aClass.isInterface() || Modifier.isAbstract(aClass.getModifiers())) {
                                 //实例化它的可用类
                                 collection = getNewInstanceWhenCollection(aClass);
-                            }else{
+                            } else {
                                 //如果是可实例子类，则直接调用
-                                collection = (Collection)aClass.newInstance();
+                                collection = (Collection) aClass.newInstance();
                             }
 
-                            if(genericType  instanceof ParameterizedType){
+                            if (genericType instanceof ParameterizedType) {
                                 //泛型实例
-                                ParameterizedType pt=(ParameterizedType)genericType;
-                                Class<?> tempC= (Class<?>) pt.getActualTypeArguments()[0];
+                                ParameterizedType pt = (ParameterizedType) genericType;
+                                Class<?> tempC = (Class<?>) pt.getActualTypeArguments()[0];
 
-                                //如果是项目内的集合泛型 则创建一个初始化状态的对象进去
-                                if(ServerConstant.ClassName.contains(tempC.getName())){
-                                    //属性
-                                    Object instance = tempC.newInstance();
-                                    //迭代解析
-                                    resoleParam(instance,instance.getClass());
-                                    //添加一个初始化对象进去
-                                    collection.add(instance);
+                                //属性
+                                Object instance = null;
+                                try {
+                                    instance = tempC.newInstance();
+                                } catch (Exception e) {
+                                    //如果泛型是抽象属性
                                 }
+                                //如果是项目内的集合泛型 则创建一个初始化状态的对象进去
+                                if (ServerConstant.ClassName.contains(tempC.getName())) {
+                                    //迭代解析
+                                    resoleParam(instance, tempC);
+                                }
+                                //添加一个初始化对象进去
+                                collection.add(instance);
                             }
                             //没有指定泛型的集合
-                            field.set(obj,collection);
+                            field.set(obj, collection);
                             continue;
                         }
                         if (Map.class.isAssignableFrom(aClass)) {
                             //Map 逻辑
 
                         }
-                        if(String.class.isAssignableFrom(aClass)){
+                        if (String.class.isAssignableFrom(aClass)) {
                             //String 逻辑
-                            field.set(obj," ");
+                            field.set(obj, " ");
                             continue;
                         }
-
                         field.set(obj, null);
                     }
                 } catch (Exception e) {
@@ -122,38 +145,39 @@ public class ParamExe {
 
     /**
      * 当class为collection 子接口或抽象类时，分类讨论 取出适合class的子类实例
+     *
      * @param clazz
      * @return
      */
-    private Collection getNewInstanceWhenCollection(Class clazz){
+    private Collection getNewInstanceWhenCollection (Class clazz) {
         //判断是否是集合
-        if(!Collection.class.isAssignableFrom(clazz)){
+        if (!Collection.class.isAssignableFrom(clazz)) {
             return null;
         }
 
         //判断是list分支吗
-        if(List.class.isAssignableFrom(clazz)){
+        if (List.class.isAssignableFrom(clazz)) {
             return new ArrayList();
         }
 
         //判断是set分支吗
-        if(Set.class.isAssignableFrom(clazz)){
+        if (Set.class.isAssignableFrom(clazz)) {
             return new HashSet();
         }
 
         //判断是队列分支吗
-        if(Queue.class.isAssignableFrom(clazz)){
+        if (Queue.class.isAssignableFrom(clazz)) {
             return new LinkedList();
         }
         return null;
     }
 
-    private Map getNewInstanceWhenMap(Class clazz){
-        if(!Map.class.isAssignableFrom(clazz)){
+    private Map getNewInstanceWhenMap (Class clazz) {
+        if (!Map.class.isAssignableFrom(clazz)) {
             return null;
         }
 
-        if(Map.class.isAssignableFrom(clazz)){
+        if (Map.class.isAssignableFrom(clazz)) {
             return new HashMap();
         }
 

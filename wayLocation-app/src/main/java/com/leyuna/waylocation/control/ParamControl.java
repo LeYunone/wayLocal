@@ -34,8 +34,7 @@ public class ParamControl {
      */
     @PostMapping("/getParam")
     public DataResponse getParam(@RequestBody MethodInfoDTO methodInfo){
-        Class<?>[] params = methodInfo.getParams();
-        return paramService.getParam(params);
+        return paramService.getParam(methodInfo.getParams());
     }
 
     /**
@@ -43,8 +42,8 @@ public class ParamControl {
      * @param methodInfo
      * @return
      */
-    @RequestMapping("/getReturnParam")
-    public DataResponse getReturnParam(MethodInfoDTO methodInfo){
+    @PostMapping("/getReturnParam")
+    public DataResponse getReturnParam(@RequestBody MethodInfoDTO methodInfo){
         return paramService.getReturnParam(methodInfo.getReturnParams());
     }
 }

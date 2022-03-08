@@ -16,4 +16,6 @@ public class ClassDTO {
     private String key;
 
     private String value;
+
+    private MethodInfoDTO dto;
 }
