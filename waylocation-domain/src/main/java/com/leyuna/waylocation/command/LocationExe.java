@@ -35,11 +35,12 @@ public class LocationExe {
                 MethodInfoDTO methodInfoDTO=new MethodInfoDTO();
                 methodInfoDTO.setClassName(className);
                 methodInfoDTO.setMethodName(m.getName());
-                methodInfoDTO.setValue(methodInfoDTO.getReturnParams()+"  "+m.getName()+"("+methodInfoDTO.getParams()+")");
                 //入参列表
-                methodInfoDTO.setParams(StringUtils.join(getParams(m),","));
+                methodInfoDTO.setParams(m.getParameterTypes());
                 //出餐列表
-                methodInfoDTO.setReturnParams(m.getReturnType().getName());
+                methodInfoDTO.setReturnParams(m.getReturnType());
+
+                methodInfoDTO.setValue(methodInfoDTO.getReturnParams().getName()+"  "+m.getName()+"("+methodInfoDTO.getParams()+")");
                 result.add(methodInfoDTO);
             }
         } catch (ClassNotFoundException e) {

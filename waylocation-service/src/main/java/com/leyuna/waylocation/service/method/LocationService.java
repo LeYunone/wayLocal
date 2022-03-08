@@ -8,6 +8,7 @@ import com.leyuna.waylocation.command.LuceneExe;
 import com.leyuna.waylocation.constant.enums.ErrorEnum;
 import com.leyuna.waylocation.response.DataResponse;
 import com.leyuna.waylocation.util.AssertUtil;
+import com.leyuna.waylocation.util.ParamsUtil;
 import com.leyuna.waylocation.util.StringResoleUtil;
 import com.sun.deploy.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,11 +88,6 @@ public class LocationService {
     public DataResponse<Method> getMethod(MethodInfoDTO methodInfo){
         try {
             Class<?> aClass = Class.forName(methodInfo.getClassName());
-            String[] params = methodInfo.getParams().split(",");
-            Class [] cs=new Class[params.length];
-            for(int i=0;i<params.length;i++){
-                cs[i]=Class.forName(params[i]);
-            }
             Method method = null;
             String methodName = methodInfo.getMethodName();
             
@@ -99,9 +95,9 @@ public class LocationService {
             methodName = StringResoleUtil.replaceString(methodName, "<span style='color:red'>");
             methodName = StringResoleUtil.replaceString(methodName,"</span>");
             try {
-                method = aClass.getMethod(methodName, cs);
+                method = aClass.getMethod(methodName, methodInfo.getParams());
             } catch (NoSuchMethodException e) {
-                method = aClass.getDeclaredMethod(methodName,cs);
+                method = aClass.getDeclaredMethod(methodName,methodInfo.getParams());
             }
             AssertUtil.isFalse(null==method,ErrorEnum.SELECT_INFO_NOT_FOUND.getName());
             return DataResponse.of(method);

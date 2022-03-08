@@ -22,14 +22,6 @@ public class ParamExe {
      * @return
      */
     public String getObjectStructure(Class clazz,String fieldName){
-        //如果为基本数据类型则跳过
-        if(clazz.isPrimitive()){
-            //如果是出参 则说明进来的参数应该是没有属性名的
-            if(StringUtils.isEmpty(fieldName)){
-                return "";
-            }
-            return fieldName+":\"\"";
-        }
         //入参对象
         Object obj = null;
         try {

@@ -4,9 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.leyuna.waylocation.command.ParamExe;
 import com.leyuna.waylocation.response.DataResponse;
-import com.sun.deploy.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -30,15 +30,16 @@ public class ParamService {
      * 获取入参结构
      * @return
      */
-    public DataResponse getParam(Method method){
-        Parameter[] parameters = method.getParameters();
+    public DataResponse getParam(Class<?> [] cs){
         Map<String,Object> result=new HashMap<>();
         //如果是多参数的情况
-        if(parameters.length>=1){
-            for(Parameter parameter:parameters){
-                Class<?> type = parameter.getType();
-                String json = paramExe.getObjectStructure(type, parameter.getName());
-                result.put(parameter.getName(),json);
+        if(cs.length>=1){
+            for(Class clazz:cs){
+                if(clazz.isPrimitive()){
+                    continue;
+                }
+                String json = paramExe.getObjectStructure(clazz, clazz.getName());
+                result.put(clazz.getName(),json);
             }
         }else{
             return DataResponse.buildSuccess();
@@ -49,12 +50,11 @@ public class ParamService {
 
     /**
      *  获取出参结构
-     * @param method
+     * @param clazz
      * @return
      */
-    public DataResponse getReturnParam(Method method){
-        Class<?> returnType = method.getReturnType();
-        String json = paramExe.getObjectStructure(returnType,null);
+    public DataResponse getReturnParam(Class<?> clazz){
+        String json = paramExe.getObjectStructure(clazz,null);
         return DataResponse.of(json);
     }
 }

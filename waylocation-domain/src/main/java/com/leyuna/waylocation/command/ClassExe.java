@@ -4,6 +4,7 @@ import com.leyuna.waylocation.bean.dto.LuceneDTO;
 import com.leyuna.waylocation.bean.dto.MethodInfoDTO;
 import com.leyuna.waylocation.constant.global.ServerConstant;
 import com.leyuna.waylocation.util.ClassOrderUtil;
+import com.leyuna.waylocation.util.ParamsUtil;
 import com.sun.deploy.util.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -42,25 +43,16 @@ public class ClassExe {
                 methodInfoDTO.setMethodId(String.valueOf(numId));
                 methodInfoDTO.setMethodName(method.getName());
                 //入参列表
-                methodInfoDTO.setParams(StringUtils.join(getParams(method),","));
+                methodInfoDTO.setParams(method.getParameterTypes());
                 //出餐列表
-                methodInfoDTO.setReturnParams(method.getReturnType().getName());
+                methodInfoDTO.setReturnParams(method.getReturnType());
                 result.add(methodInfoDTO);
             }
         }
         return result;
     }
 
-    private List<String> getParams(Method method){
-        List<String> result=new ArrayList<>();
-        Class<?>[] parameterTypes = method.getParameterTypes();
-        for(Class clazz:parameterTypes){
-            result.add(clazz.getName());
-        }
-        return result;
-    }
-
-    private void getEEEaaa(LuceneDTO testDto){
+    private void getEEEaaa(int i,LuceneDTO testDto){
         System.out.println(1);
     }
 }

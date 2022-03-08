@@ -42,14 +42,12 @@ public class MethodInfoDTO implements Serializable {
     /**
      * 参数列表 
      */
-    private String params;
+    private Class<?>[] params;
     
-    private String paramsJson;
-
     /**
      * 出参列表 逗号分割
      */
-    private String returnParams;
+    private Class<?> returnParams;
 
     /**
      * 入参值 json格式

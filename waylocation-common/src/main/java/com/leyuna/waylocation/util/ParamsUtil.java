@@ -1,6 +1,11 @@
 package com.leyuna.waylocation.util;
 
-import org.jeasy.random.EasyRandom;
+
+import com.sun.deploy.util.StringUtils;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author pengli
@@ -9,4 +14,16 @@ import org.jeasy.random.EasyRandom;
  */
 public class ParamsUtil {
 
+    /**
+     * 返回类型类名 逗号分隔
+     * @param cs 字节码数组
+     * @return
+     */
+    public static String getParams(Class<?> [] cs){
+        List<String> result=new ArrayList<>();
+        for(Class clazz:cs){
+            result.add(clazz.getName());
+        }
+        return StringUtils.join(result,",");
+    }
 }

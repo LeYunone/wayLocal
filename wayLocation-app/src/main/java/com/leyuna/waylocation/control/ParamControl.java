@@ -34,10 +34,8 @@ public class ParamControl {
      */
     @PostMapping("/getParam")
     public DataResponse getParam(@RequestBody MethodInfoDTO methodInfo){
-        //获得方法
-        DataResponse<Method> method = locationService.getMethod(methodInfo);
-        Method data = method.getData();
-        return paramService.getParam(data);
+        Class<?>[] params = methodInfo.getParams();
+        return paramService.getParam(params);
     }
 
     /**
@@ -47,8 +45,6 @@ public class ParamControl {
      */
     @RequestMapping("/getReturnParam")
     public DataResponse getReturnParam(MethodInfoDTO methodInfo){
-        DataResponse<Method> method = locationService.getMethod(methodInfo);
-        Method data = method.getData();
-        return paramService.getReturnParam(data);
+        return paramService.getReturnParam(methodInfo.getReturnParams());
     }
 }
