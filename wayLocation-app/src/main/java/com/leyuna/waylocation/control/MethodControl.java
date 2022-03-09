@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
@@ -52,13 +53,14 @@ public class MethodControl {
      */
     @PostMapping("/invokeMethod")
     public DataResponse invokeMethod(@RequestBody MethodInfoDTO methodInfo, HttpServletResponse response,
+                                     HttpServletRequest request,
                                      @CookieValue(value = "historyClass",required = false)String historyClass,
                                      @CookieValue(value = "historyMethodInfo",required = false) String historyMethod) throws UnsupportedEncodingException {
         LinkedHashMap<String,ClassDTO> hisC=new LinkedHashMap<>();
         Queue<MethodInfoDTO> hisM=new LinkedList<>();
+        Cookie[] cookies = request.getCookies();
         if(!StringUtils.isEmpty(historyMethod)){
-            List<MethodInfoDTO> methodInfoDTOS = JSONObject.parseArray(historyMethod, MethodInfoDTO.class);
-            hisM=new LinkedList<>(methodInfoDTOS);
+            hisM= new LinkedList<>(JSONObject.parseArray(historyMethod, MethodInfoDTO.class));
         }
         if(!StringUtils.isEmpty(historyClass)){
             hisC = JSONObject.parseObject(historyClass, hisC.getClass());
@@ -73,15 +75,16 @@ public class MethodControl {
         }
 
         hisM.add(methodInfo);
+        //记录本次调用的信息   [使用类]  [使用方法]  [使用参数]
         Cookie hMethod=new Cookie("historyMethodInfo",URLEncoder.encode(JSON.toJSONString(hisM),"UTF-8") );
         response.addCookie(hMethod);
 
-        //记录本次调用的信息   [使用类]  [使用方法]  [使用参数]
+        //记录本次调用的类
         ClassDTO classDTO=new ClassDTO();
         classDTO.setValue(methodInfo.getClassName());
         hisC.put(methodInfo.getClassName(),classDTO);
-        //记录本次调用类名
         Cookie hClass=new Cookie("historyClass", URLEncoder.encode(JSON.toJSONString(hisC),"UTF-8"));
+        hClass.setPath("/");
         response.addCookie(hClass);
 
         //返回调用结果

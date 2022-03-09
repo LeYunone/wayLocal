@@ -1,5 +1,6 @@
 package com.leyuna.waylocation.control;
 
+import com.alibaba.fastjson.JSONObject;
 import com.leyuna.waylocation.bean.dto.ClassDTO;
 import com.leyuna.waylocation.bean.dto.LuceneDTO;
 import com.leyuna.waylocation.bean.dto.MethodInfoDTO;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 /**
@@ -30,20 +34,22 @@ public class LocationControl {
     @RequestMapping("/getClassName")
     public DataResponse getClassName(String className,
                                      @RequestParam(required = false,defaultValue = "10") Integer size,
-                                     @CookieValue(value = "LinkedHashMap",required = false) LinkedHashMap<String, ClassDTO> historyClass){
+                                     HttpServletRequest  request,
+                                     @CookieValue(value = "historyClass",required = false)String historyClass){
         if(!StringUtils.isEmpty(className)){
             //模糊查询类
             return locationService.getClassName(className, size);
         }
+        LinkedHashMap<String,ClassDTO> classDTOS=new LinkedHashMap<>();
+
         //查找历史使用类
-        if(CollectionUtils.isEmpty(historyClass)){
+        if(StringUtils.isEmpty(historyClass)){
             return DataResponse.buildSuccess();
         }
-        Collection<ClassDTO> values = historyClass.values();
+        classDTOS = JSONObject.parseObject(historyClass, classDTOS.getClass());
         LuceneDTO luceneDTO=new LuceneDTO();
-        luceneDTO.setListData(new ArrayList(values));
-        luceneDTO.setTotole(values.size());
-
+        luceneDTO.setListData(new LinkedList<>(classDTOS.values()));
+        luceneDTO.setTotole(classDTOS.size());
         return DataResponse.of(luceneDTO);
     }
 

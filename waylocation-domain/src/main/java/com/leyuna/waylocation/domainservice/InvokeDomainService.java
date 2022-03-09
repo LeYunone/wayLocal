@@ -56,6 +56,10 @@ public class InvokeDomainService {
             String json=paramValue.get(i);
             Class clazz=params[i];
             Object o = JSONObject.parseObject(json, clazz);
+            if(clazz.isPrimitive() && null==o){
+                //如果是基本数据类型而且没有赋值，则给他基本默认值
+                o = getPrimitive(clazz);
+            }
             paramObjects[i]=o;
         }
         Object result=null;
@@ -68,5 +72,21 @@ public class InvokeDomainService {
             method.setAccessible(accessible);
         }
         return result;
+    }
+    
+    private Object getPrimitive(Class clazz){
+        if(clazz == byte.class || clazz == short.class || clazz == int.class || clazz == long.class ){
+            return 0;
+        }
+        if(clazz == double.class || clazz == float.class){
+            return 0.0;
+        }
+        if(clazz == boolean.class){
+            return  false;
+        }
+        if(clazz == char.class){
+            return ' ';
+        }
+        return null; 
     }
 }
