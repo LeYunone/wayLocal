@@ -1,4 +1,4 @@
-package com.leyuna.waylocation.config;
+package com.leyuna.waylocation.util;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

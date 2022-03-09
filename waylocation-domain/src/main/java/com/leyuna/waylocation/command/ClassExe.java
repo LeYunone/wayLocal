@@ -1,5 +1,6 @@
 package com.leyuna.waylocation.command;
 
+import com.leyuna.waylocation.bean.dto.ClassDTO;
 import com.leyuna.waylocation.bean.dto.LuceneDTO;
 import com.leyuna.waylocation.bean.dto.MethodInfoDTO;
 import com.leyuna.waylocation.constant.global.ServerConstant;
@@ -41,6 +42,8 @@ public class ClassExe {
                 methodInfoDTO.setClassName(clazz.getName());
                 //记录类名到应用中
                 methodInfoDTO.setMethodId(String.valueOf(numId));
+                //类字节码
+                methodInfoDTO.setClazz(clazz);
                 methodInfoDTO.setMethodName(method.getName());
                 //入参列表
                 methodInfoDTO.setParams(method.getParameterTypes());
@@ -52,7 +55,7 @@ public class ClassExe {
         return result;
     }
 
-    private MethodInfoDTO getEEEaaa(int i,LuceneDTO testDto){
+    private MethodInfoDTO getEEEaaa(int i, ClassDTO testDto){
         System.out.println(1);
         return null;
     }

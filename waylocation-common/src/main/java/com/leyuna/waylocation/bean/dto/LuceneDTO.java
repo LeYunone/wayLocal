@@ -17,6 +17,4 @@ public class LuceneDTO {
     private long totole;
 
     private List listData;
-
-    private ClassDTO classDTO;
 }

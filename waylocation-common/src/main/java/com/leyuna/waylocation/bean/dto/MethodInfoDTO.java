@@ -26,6 +26,11 @@ public class MethodInfoDTO implements Serializable {
     private String className;
 
     /**
+     * 类字节码
+     */
+    private Class<?> clazz;
+
+    /**
      * 展示给页面看到字符串
      */
     private String value;

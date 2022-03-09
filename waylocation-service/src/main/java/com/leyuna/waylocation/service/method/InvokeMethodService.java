@@ -1,6 +1,9 @@
 package com.leyuna.waylocation.service.method;
 
+import com.leyuna.waylocation.bean.dto.MethodInfoDTO;
+import com.leyuna.waylocation.command.InvokeMethodExe;
 import com.leyuna.waylocation.response.DataResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Method;
@@ -13,15 +16,11 @@ import java.lang.reflect.Method;
 @Service
 public class InvokeMethodService {
 
-    public DataResponse invokeMethod(Method method,String value){
+    @Autowired
+    private InvokeMethodExe invokeMethodExe;
 
-        //将json格式解析成入参
-
-        //从容器中取出对象
-
+    public DataResponse invokeMethod(MethodInfoDTO methodInfo){
         //执行方法
-
-
-        return DataResponse.buildSuccess();
+        return DataResponse.of(invokeMethodExe.invokeMethod(methodInfo));
     }
 }

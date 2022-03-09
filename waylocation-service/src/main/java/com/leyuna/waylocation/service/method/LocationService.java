@@ -47,7 +47,6 @@ public class LocationService {
      * @return
      */
     public DataResponse getMethod(String methodName,Integer size){
-
         //默认走索引库搜索拿出最近十条匹配的数据展示
         LuceneDTO methodDirByMethodName = luceneExe.getMethodDir("methodName",methodName, size);
         return DataResponse.of(methodDirByMethodName.getListData());
@@ -86,29 +85,10 @@ public class LocationService {
      * @return
      */
     public DataResponse<Method> getMethod(MethodInfoDTO methodInfo){
-        try {
-            Class<?> aClass = Class.forName(methodInfo.getClassName());
-            Method method = null;
-            String methodName = methodInfo.getMethodName();
-            
-            //过滤高亮字符
-            methodName = StringResoleUtil.replaceString(methodName, "<span style='color:red'>");
-            methodName = StringResoleUtil.replaceString(methodName,"</span>");
-            try {
-                method = aClass.getMethod(methodName, methodInfo.getParams());
-            } catch (NoSuchMethodException e) {
-                method = aClass.getDeclaredMethod(methodName,methodInfo.getParams());
-            }
-            AssertUtil.isFalse(null==method,ErrorEnum.SELECT_INFO_NOT_FOUND.getName());
-            return DataResponse.of(method);
-        } catch (ClassNotFoundException | NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-        return DataResponse.buildSuccess();
+        return DataResponse.of(locationExe.locationMethod(methodInfo));
     }
     
     public DataResponse getClassName(String className,Integer size){
-        LuceneDTO classDir = luceneExe.getClassDir(className, size);
-        return DataResponse.of(classDir);
+        return DataResponse.of(luceneExe.getClassDir(className, size));
     }
 }

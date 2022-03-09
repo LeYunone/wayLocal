@@ -1,6 +1,10 @@
 package com.leyuna.waylocation.command;
 
 import com.leyuna.waylocation.bean.dto.MethodInfoDTO;
+import com.leyuna.waylocation.constant.enums.ErrorEnum;
+import com.leyuna.waylocation.response.DataResponse;
+import com.leyuna.waylocation.util.AssertUtil;
+import com.leyuna.waylocation.util.StringResoleUtil;
 import com.sun.deploy.util.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -16,37 +20,26 @@ import java.util.List;
 @Service
 public class LocationExe {
 
-    /**
-     *
-     * @param className
-     * 定位到指定类名下的所有方法信息
-     * @return
-     */
-    public List<MethodInfoDTO> locationMethod(String className){
-
-        List<MethodInfoDTO> result=new ArrayList<>();
-
+    public Method locationMethod(MethodInfoDTO methodInfo){
         try {
-            Class<?> aClass = Class.forName(className);
-            Method[] declaredMethods = aClass.getDeclaredMethods();
+            Class<?> aClass = Class.forName(methodInfo.getClassName());
+            Method method = null;
+            String methodName = methodInfo.getMethodName();
 
-            //遍历所有方法，判断其名
-            for(Method m:declaredMethods){
-                MethodInfoDTO methodInfoDTO=new MethodInfoDTO();
-                methodInfoDTO.setClassName(className);
-                methodInfoDTO.setMethodName(m.getName());
-                //入参列表
-                methodInfoDTO.setParams(m.getParameterTypes());
-                //出餐列表
-                methodInfoDTO.setReturnParams(m.getReturnType());
-
-                methodInfoDTO.setValue(methodInfoDTO.getReturnParams().getName()+"  "+m.getName()+"("+methodInfoDTO.getParams()+")");
-                result.add(methodInfoDTO);
+            //过滤高亮字符
+            methodName = StringResoleUtil.replaceString(methodName, "<span style='color:red'>");
+            methodName = StringResoleUtil.replaceString(methodName,"</span>");
+            try {
+                method = aClass.getMethod(methodName, methodInfo.getParams());
+            } catch (NoSuchMethodException e) {
+                method = aClass.getDeclaredMethod(methodName,methodInfo.getParams());
             }
-        } catch (ClassNotFoundException e) {
+            AssertUtil.isFalse(null==method, ErrorEnum.SELECT_INFO_NOT_FOUND.getName());
+            return method;
+        } catch (ClassNotFoundException | NoSuchMethodException e) {
             e.printStackTrace();
         }
-        return result;
+        return null;
     }
 
     private List<String> getParams(Method method){

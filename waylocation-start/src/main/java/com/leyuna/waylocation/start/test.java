@@ -1,7 +1,5 @@
 package com.leyuna.waylocation.start;
 
-import com.leyuna.waylocation.config.SpringContextUtil;
-
 import java.lang.reflect.Method;
 
 /**
@@ -15,7 +13,7 @@ public class test {
         Method getTest = aClass.getDeclaredMethod("getTest");
         Object bean = null;
         try {
-            bean = SpringContextUtil.getBean(aClass);
+//            bean = SpringContextUtil.getBean(aClass);
         }catch (Exception e){
             bean=aClass.newInstance();
         }

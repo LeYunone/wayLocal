@@ -1,6 +1,8 @@
 package com.leyuna.waylocation.control;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.leyuna.waylocation.bean.dto.ClassDTO;
 import com.leyuna.waylocation.bean.dto.MethodInfoDTO;
 import com.leyuna.waylocation.response.DataResponse;
@@ -8,11 +10,14 @@ import com.leyuna.waylocation.service.method.InvokeMethodService;
 import com.leyuna.waylocation.service.method.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.net.URLEncoder;
 import java.util.*;
 
 /**
@@ -47,36 +52,43 @@ public class MethodControl {
      */
     @PostMapping("/invokeMethod")
     public DataResponse invokeMethod(@RequestBody MethodInfoDTO methodInfo, HttpServletResponse response,
-                                     @CookieValue(value = "historyClass",required = false)LinkedHashMap<String,ClassDTO> historyClass,
-                                     @CookieValue(value = "historyMethodInfo",required = false) Queue<MethodInfoDTO> historyMethod){
-        if(CollectionUtils.isEmpty(historyMethod)){
-            historyMethod=new LinkedList<>();
+                                     @CookieValue(value = "historyClass",required = false)String historyClass,
+                                     @CookieValue(value = "historyMethodInfo",required = false) String historyMethod) throws UnsupportedEncodingException {
+        LinkedHashMap<String,ClassDTO> hisC=new LinkedHashMap<>();
+        Queue<MethodInfoDTO> hisM=new LinkedList<>();
+        if(!StringUtils.isEmpty(historyMethod)){
+            List<MethodInfoDTO> methodInfoDTOS = JSONObject.parseArray(historyMethod, MethodInfoDTO.class);
+            hisM=new LinkedList<>(methodInfoDTOS);
         }
-        if(CollectionUtils.isEmpty(historyClass)){
-            historyClass=new LinkedHashMap<>();
+        if(!StringUtils.isEmpty(historyClass)){
+            hisC = JSONObject.parseObject(historyClass, hisC.getClass());
         }
-        historyMethod.add(methodInfo);
 
         ClassDTO classDTO=new ClassDTO();
         classDTO.setValue(methodInfo.getClassName());
-        historyClass.put(methodInfo.getClassName(),classDTO);
+        hisC.put(methodInfo.getClassName(),classDTO);
 
         //记录本次调用的信息   [使用类]  [使用方法]  [使用参数]
-        Cookie hMethod=new Cookie("historyMethodInfo", JSON.toJSONString(historyMethod));
         //记录本次调用类名
-        Cookie hClass=new Cookie("historyClass", JSON.toJSONString(historyClass));
+        Cookie hClass=new Cookie("historyClass", URLEncoder.encode(JSON.toJSONString(hisC),"UTF-8"));
         response.addCookie(hClass);
-        response.addCookie(hMethod);
-
-        //获得具体方法
-        DataResponse<Method> method =
-                locationMethodService.getMethod(methodInfo);
-        Method data = method.getData();
 
         //调用方法
-//        methodService.invokeMethod(data, methodInfo.getParamValue());
-        return DataResponse.buildSuccess();
+        DataResponse dataResponse = methodService.invokeMethod(methodInfo);
+        Object data = dataResponse.getData();
+        if(data!=null){
+            //记录本次调用结果
+            methodInfo.setReturnParamValue(JSON.toJSONString(data));
+        }
+        hisM.add(methodInfo);
+        Cookie hMethod=new Cookie("historyMethodInfo",URLEncoder.encode(JSON.toJSONString(hisM),"UTF-8") );
+        response.addCookie(hMethod);
+
+        //返回调用结果
+        return DataResponse.of(data);
     }
 
+    private void editHisCookie(String historyClass,String historyMethod,HttpServletResponse res){
 
+    }
 }
