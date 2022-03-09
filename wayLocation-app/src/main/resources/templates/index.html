@@ -94,8 +94,8 @@
                     size:10,
                 },
                 methodInfo:{
-                    returnParams:"",
                     className:"",
+                    returnParams:"",
                     methodName: "",
                     params:"",
                     paramJsonValue:"",
@@ -112,8 +112,9 @@
                     data:this.methodInfo
                 }).then((res)=>{
                     var data=res.data;
+                    console.log(data)
                     if(data.status){
-                        
+                        this.methodInfo=data.data;
                     }
                 })
             },
@@ -124,6 +125,7 @@
             //方法选择  如果方法确定则加载出参和入参结构
             selectMethodInput(item){
                 this.methodInfo=item;
+                console.log(this.methodInfo)
                 axios({
                     url:"/param/getParam",
                     method:"POST",

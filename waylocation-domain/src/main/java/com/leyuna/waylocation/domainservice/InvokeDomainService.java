@@ -1,5 +1,6 @@
 package com.leyuna.waylocation.domainservice;
 
+import com.alibaba.fastjson.JSONObject;
 import com.leyuna.waylocation.bean.dto.MethodInfoDTO;
 import com.leyuna.waylocation.command.LocationExe;
 import com.leyuna.waylocation.util.AssertUtil;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * @author pengli
@@ -46,13 +48,20 @@ public class InvokeDomainService {
             }
             e.printStackTrace();
         }
-
         //解析入参值
-
+        Class<?>[] params = methodInfo.getParams();
+        Object [] paramObjects=new Object[params.length];
+        List<String> paramValue = methodInfo.getParamValue();
+        for(int i=0;i<params.length;i++){
+            String json=paramValue.get(i);
+            Class clazz=params[i];
+            Object o = JSONObject.parseObject(json, clazz);
+            paramObjects[i]=o;
+        }
         Object result=null;
         try {
             method.setAccessible(true);
-            result=method.invoke(bean,methodInfo.getParamValue());
+            result=method.invoke(bean,paramObjects);
         } catch (Exception e) {
             e.printStackTrace();
         }finally {

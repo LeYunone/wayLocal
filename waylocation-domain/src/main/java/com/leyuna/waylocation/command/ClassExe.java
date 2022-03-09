@@ -55,9 +55,9 @@ public class ClassExe {
         return result;
     }
 
-    private MethodInfoDTO getEEEaaa(int i, ClassDTO testDto){
+    private String getEEEaaa(int i, ClassDTO testDto){
         System.out.println(1);
-        return null;
+        return testDto.getKey()+"测试成功" + i ;
     }
 
     public void getTest(){

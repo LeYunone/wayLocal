@@ -64,15 +64,6 @@ public class MethodControl {
             hisC = JSONObject.parseObject(historyClass, hisC.getClass());
         }
 
-        ClassDTO classDTO=new ClassDTO();
-        classDTO.setValue(methodInfo.getClassName());
-        hisC.put(methodInfo.getClassName(),classDTO);
-
-        //记录本次调用的信息   [使用类]  [使用方法]  [使用参数]
-        //记录本次调用类名
-        Cookie hClass=new Cookie("historyClass", URLEncoder.encode(JSON.toJSONString(hisC),"UTF-8"));
-        response.addCookie(hClass);
-
         //调用方法
         DataResponse dataResponse = methodService.invokeMethod(methodInfo);
         Object data = dataResponse.getData();
@@ -80,12 +71,21 @@ public class MethodControl {
             //记录本次调用结果
             methodInfo.setReturnParamValue(JSON.toJSONString(data));
         }
+
         hisM.add(methodInfo);
         Cookie hMethod=new Cookie("historyMethodInfo",URLEncoder.encode(JSON.toJSONString(hisM),"UTF-8") );
         response.addCookie(hMethod);
 
+        //记录本次调用的信息   [使用类]  [使用方法]  [使用参数]
+        ClassDTO classDTO=new ClassDTO();
+        classDTO.setValue(methodInfo.getClassName());
+        hisC.put(methodInfo.getClassName(),classDTO);
+        //记录本次调用类名
+        Cookie hClass=new Cookie("historyClass", URLEncoder.encode(JSON.toJSONString(hisC),"UTF-8"));
+        response.addCookie(hClass);
+
         //返回调用结果
-        return DataResponse.of(data);
+        return DataResponse.of(methodInfo);
     }
 
     private void editHisCookie(String historyClass,String historyMethod,HttpServletResponse res){
