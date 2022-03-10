@@ -35,7 +35,7 @@ public class ParamService {
         //如果是多参数的情况
         if(cs.length>=1){
             for(Class clazz:cs){
-                String json = paramExe.getObjectStructure(clazz, clazz.getName());
+                String json = paramExe.getObjectStructure(clazz);
                 result.add(json);
             }
         }else{
@@ -56,7 +56,7 @@ public class ParamService {
             return DataResponse.buildSuccess();
         }
 
-        String json = paramExe.getObjectStructure(clazz,null);
+        String json = paramExe.getObjectStructure(clazz);
         return DataResponse.of(json);
     }
 }

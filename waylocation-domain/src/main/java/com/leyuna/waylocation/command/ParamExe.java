@@ -22,7 +22,7 @@ public class ParamExe {
      *
      * @return
      */
-    public String getObjectStructure (Class clazz, String fieldName) {
+    public String getObjectStructure(Class clazz) {
         if (clazz.isPrimitive()) {
             //如果是基本数据类型
             return clazz.getName();
@@ -35,12 +35,22 @@ public class ParamExe {
             //入参无法实例化，则说明参数为抽象属性 或者没有空构造
             if (clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers())) {
                 //如果是集合类 实例一个大概的出去
-                if(Collection.class.isAssignableFrom(clazz)){
+                if (Collection.class.isAssignableFrom(clazz)) {
+                    Type genericSuperclass = clazz.getGenericSuperclass();
+                    Collection collection = null;
+                    try {
+                        collection = collectionLogic(clazz, genericSuperclass);
+                    } catch (Exception e2) {
+                        //理论上没有错误出现
+                    }
+                    return JSONObject.toJSONString(collection, SerializerFeature.WriteMapNullValue, SerializerFeature.WriteNullStringAsEmpty);
                 }
+                
+                //其余场景返回参数类型
                 return clazz.getName();
             }
 
-            //如果是没有无参构造场景时
+            //TODO 如果是没有无参构造场景时
             e.printStackTrace();
         }
         //深度解析对象结构  规则：如果是项目内对象则继续，否则跳过
@@ -51,7 +61,7 @@ public class ParamExe {
     /**
      * 解析参数结构
      */
-    private void resoleParam (Object obj, Class type) {
+    private void resoleParam(Object obj, Class type) {
         if (null == obj) {
             return;
         }
@@ -91,7 +101,7 @@ public class ParamExe {
                         //判断是否是集合一类
                         if (Collection.class.isAssignableFrom(aClass)) {
 
-                            Collection collection = collectionLogic(aClass,genericType);
+                            Collection collection = collectionLogic(aClass, genericType);
                             //没有指定泛型的集合
                             field.set(obj, collection);
                             continue;
@@ -122,7 +132,7 @@ public class ParamExe {
      * @param clazz
      * @return
      */
-    private Collection getNewInstanceWhenCollection (Class clazz) {
+    private Collection getNewInstanceWhenCollection(Class clazz) {
         //判断是否是集合
         if (!Collection.class.isAssignableFrom(clazz)) {
             return null;
@@ -145,7 +155,7 @@ public class ParamExe {
         return null;
     }
 
-    private Map getNewInstanceWhenMap (Class clazz) {
+    private Map getNewInstanceWhenMap(Class clazz) {
         if (!Map.class.isAssignableFrom(clazz)) {
             return null;
         }
@@ -157,7 +167,7 @@ public class ParamExe {
         return null;
     }
 
-    private Collection collectionLogic(Class aClass,Type genericType) throws IllegalAccessException, InstantiationException {
+    private Collection collectionLogic(Class aClass, Type genericType) throws IllegalAccessException, InstantiationException {
         //Collection 逻辑
         Collection collection = null;
         //如果是接口或抽象类
@@ -179,7 +189,7 @@ public class ParamExe {
             try {
                 instance = tempC.newInstance();
             } catch (Exception e) {
-                //如果泛型是抽象属性
+                //TODO  如果泛型是抽象属性 或是没有无参构造场景暂时跳过
             }
             //如果是项目内的集合泛型 则创建一个初始化状态的对象进去
             if (ServerConstant.ClassName.contains(tempC.getName())) {

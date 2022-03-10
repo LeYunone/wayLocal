@@ -1,11 +1,7 @@
 package com.leyuna.waylocation.command;
 
 import com.leyuna.waylocation.bean.dto.MethodInfoDTO;
-import com.leyuna.waylocation.constant.enums.ErrorEnum;
-import com.leyuna.waylocation.response.DataResponse;
-import com.leyuna.waylocation.util.AssertUtil;
 import com.leyuna.waylocation.util.StringResoleUtil;
-import com.sun.deploy.util.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Method;
@@ -34,7 +30,6 @@ public class LocationExe {
             } catch (NoSuchMethodException e) {
                 method = aClass.getDeclaredMethod(methodName,methodInfo.getParams());
             }
-            AssertUtil.isFalse(null==method, ErrorEnum.SELECT_INFO_NOT_FOUND.getName());
             return method;
         } catch (ClassNotFoundException | NoSuchMethodException e) {
             e.printStackTrace();

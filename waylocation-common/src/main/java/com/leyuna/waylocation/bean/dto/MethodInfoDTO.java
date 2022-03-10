@@ -20,6 +20,8 @@ import java.util.List;
 @Accessors(chain = true)
 public class MethodInfoDTO implements Serializable {
 
+    private static final long serialVersionUID = 6133772627258154184L;
+
     /**
      * 全类名
      */

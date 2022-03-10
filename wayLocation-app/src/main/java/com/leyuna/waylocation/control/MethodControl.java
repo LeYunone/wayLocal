@@ -81,6 +81,15 @@ public class MethodControl {
         return DataResponse.of(methodInfo);
     }
 
+    @PostMapping("/export")
+    public DataResponse export(@RequestBody List<MethodInfoDTO> methodInfoDTO,HttpServletResponse response){
+        if(CollectionUtils.isEmpty(methodInfoDTO)){
+            return DataResponse.buildFailure("没有能够导出的数据");
+        }
+        
+        return DataResponse.buildSuccess();
+    }
+    
     private void editHisCookie(String historyClass,HttpServletRequest request,MethodInfoDTO methodInfo,HttpServletResponse response) throws UnsupportedEncodingException {
         //记录本次调用的信息   [使用类]  [使用方法]  [使用参数]
         Cookie cookieMethod = new Cookie("historyMethod:"+request.getCookies().length,
