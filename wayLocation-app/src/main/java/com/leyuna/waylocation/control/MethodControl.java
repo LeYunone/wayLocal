@@ -70,8 +70,18 @@ public class MethodControl {
         if(data!=null){
             //记录本次调用结果
             methodInfo.setReturnParamValue(JSON.toJSONString(data));
+        }else{
+            methodInfo.setReturnParamValue("void");
         }
 
+        //记录历史
+        editHisCookie(historyClass,request,methodInfo,response);
+
+        //返回调用结果
+        return DataResponse.of(methodInfo);
+    }
+
+    private void editHisCookie(String historyClass,HttpServletRequest request,MethodInfoDTO methodInfo,HttpServletResponse response) throws UnsupportedEncodingException {
         //记录本次调用的信息   [使用类]  [使用方法]  [使用参数]
         Cookie cookieMethod = new Cookie("historyMethod:"+request.getCookies().length,
                 URLEncoder.encode(JSONObject.toJSONString(methodInfo),"UTF-8"));
@@ -88,12 +98,5 @@ public class MethodControl {
         Cookie cookieClass=new Cookie("historyClass", URLEncoder.encode(JSON.toJSONString(hisC),"UTF-8"));
         cookieClass.setPath("/");
         response.addCookie(cookieClass);
-
-        //返回调用结果
-        return DataResponse.of(methodInfo);
-    }
-
-    private void editHisCookie(String historyClass,String historyMethod,HttpServletResponse res){
-
     }
 }

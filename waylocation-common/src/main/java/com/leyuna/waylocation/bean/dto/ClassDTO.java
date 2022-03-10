@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 /**
  * @author pengli
  * @create 2022-03-04 16:57
@@ -16,4 +18,6 @@ public class ClassDTO {
     private String key;
 
     private String value;
+
+    private List<LuceneDTO> luceneDTOS;
 }

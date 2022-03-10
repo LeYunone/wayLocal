@@ -28,10 +28,14 @@ public class InvokeDomainService {
      * @return
      */
     public Object invokeMethod (MethodInfoDTO methodInfo) {
+        //返回参数
+        Object result=null;
+
         //定位到具体方法
         Method method = locationExe.locationMethod(methodInfo);
         AssertUtil.isFalse(null == method, "系统无法定位到具体方法");
         boolean accessible = method.isAccessible();
+
         //实例到具体类
         Object bean = null;
         Class<?> aClass = methodInfo.getClazz();
@@ -43,10 +47,11 @@ public class InvokeDomainService {
                 bean = aClass.newInstance();
             } catch (Exception e2) {
                 //如果这个方法是抽象属性 且没有注册到容器中，则返回提示
-                AssertUtil.isFalse(true,"该方法没有注册到容器且无法实例");
+                return result="无法从容器中取得方法 或该方法无法实例";
             }
             e.printStackTrace();
         }
+
         //解析入参值
         Class<?>[] params = methodInfo.getParams();
         Object [] paramObjects=new Object[params.length];
@@ -61,11 +66,11 @@ public class InvokeDomainService {
             }
             paramObjects[i]=o;
         }
-        Object result=null;
         try {
             method.setAccessible(true);
             result=method.invoke(bean,paramObjects);
         } catch (Exception e) {
+            result = e.getMessage();
             e.printStackTrace();
         }finally {
             method.setAccessible(accessible);

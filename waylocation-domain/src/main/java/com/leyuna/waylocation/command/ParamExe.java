@@ -34,7 +34,9 @@ public class ParamExe {
         } catch (Exception e) {
             //入参无法实例化，则说明参数为抽象属性 或者没有空构造
             if (clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers())) {
-                //如果是抽象属性  则跳过解析
+                //如果是集合类 实例一个大概的出去
+                if(Collection.class.isAssignableFrom(clazz)){
+                }
                 return clazz.getName();
             }
 
@@ -88,37 +90,8 @@ public class ParamExe {
                         Type genericType = field.getGenericType();
                         //判断是否是集合一类
                         if (Collection.class.isAssignableFrom(aClass)) {
-                            //Collection 逻辑
-                            Collection collection = null;
-                            //如果是接口或抽象类
-                            if (aClass.isInterface() || Modifier.isAbstract(aClass.getModifiers())) {
-                                //实例化它的可用类
-                                collection = getNewInstanceWhenCollection(aClass);
-                            } else {
-                                //如果是可实例子类，则直接调用
-                                collection = (Collection) aClass.newInstance();
-                            }
 
-                            if (genericType instanceof ParameterizedType) {
-                                //泛型实例
-                                ParameterizedType pt = (ParameterizedType) genericType;
-                                Class<?> tempC = (Class<?>) pt.getActualTypeArguments()[0];
-
-                                //属性
-                                Object instance = null;
-                                try {
-                                    instance = tempC.newInstance();
-                                } catch (Exception e) {
-                                    //如果泛型是抽象属性
-                                }
-                                //如果是项目内的集合泛型 则创建一个初始化状态的对象进去
-                                if (ServerConstant.ClassName.contains(tempC.getName())) {
-                                    //迭代解析
-                                    resoleParam(instance, tempC);
-                                }
-                                //添加一个初始化对象进去
-                                collection.add(instance);
-                            }
+                            Collection collection = collectionLogic(aClass,genericType);
                             //没有指定泛型的集合
                             field.set(obj, collection);
                             continue;
@@ -182,5 +155,40 @@ public class ParamExe {
         }
 
         return null;
+    }
+
+    private Collection collectionLogic(Class aClass,Type genericType) throws IllegalAccessException, InstantiationException {
+        //Collection 逻辑
+        Collection collection = null;
+        //如果是接口或抽象类
+        if (aClass.isInterface() || Modifier.isAbstract(aClass.getModifiers())) {
+            //实例化它的可用类
+            collection = getNewInstanceWhenCollection(aClass);
+        } else {
+            //如果是可实例子类，则直接调用
+            collection = (Collection) aClass.newInstance();
+        }
+
+        if (genericType instanceof ParameterizedType) {
+            //泛型实例
+            ParameterizedType pt = (ParameterizedType) genericType;
+            Class<?> tempC = (Class<?>) pt.getActualTypeArguments()[0];
+
+            //属性
+            Object instance = null;
+            try {
+                instance = tempC.newInstance();
+            } catch (Exception e) {
+                //如果泛型是抽象属性
+            }
+            //如果是项目内的集合泛型 则创建一个初始化状态的对象进去
+            if (ServerConstant.ClassName.contains(tempC.getName())) {
+                //迭代解析
+                resoleParam(instance, tempC);
+            }
+            //添加一个初始化对象进去
+            collection.add(instance);
+        }
+        return collection;
     }
 }

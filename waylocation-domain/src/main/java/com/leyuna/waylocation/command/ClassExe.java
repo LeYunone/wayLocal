@@ -55,9 +55,9 @@ public class ClassExe {
         return result;
     }
 
-    private String getEEEaaa(int i, ClassDTO testDto){
+    private String getEEEaaa(List<String> list, ClassDTO testDto){
         System.out.println(1);
-        return testDto.getKey()+"测试成功" + i ;
+        return testDto.getKey()+"测试成功" + list.size() ;
     }
 
     public void getTest(){
