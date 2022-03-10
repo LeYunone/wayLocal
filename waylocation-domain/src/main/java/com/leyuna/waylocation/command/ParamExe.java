@@ -38,7 +38,7 @@ public class ParamExe {
                 if (Collection.class.isAssignableFrom(clazz)) {
                     Type genericSuperclass = clazz.getGenericSuperclass();
                     Collection collection = null;
-                    try {
+                    try { 
                         collection = collectionLogic(clazz, genericSuperclass);
                     } catch (Exception e2) {
                         //理论上没有错误出现
