@@ -42,6 +42,7 @@
     <el-card class="box-card" style="margin-top: 18px">
         <div class="div-button">
             <el-button plain @click="">保存</el-button>
+            <el-button plain @click="openHistory">历史调用</el-button>
             <el-button plain>清除</el-button>
             <el-button plain @click="invokeMethod">测试</el-button>
         </div>
@@ -105,6 +106,10 @@
             }
         },
         methods: {
+            //调用历史弹窗
+            openHistory(){
+
+            },
             invokeMethod(){
                 axios({
                     url:"/method/invokeMethod",

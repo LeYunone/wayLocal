@@ -49,16 +49,16 @@ public class MethodInfoDTO implements Serializable {
      * 参数列表 
      */
     private Class<?>[] params;
-    
-    /**
-     * 出参列表 逗号分割
-     */
-    private Class<?> returnParams;
 
     /**
      * 入参值 json格式
      */
     private List<String> paramValue;
+
+    /**
+     * 出参列表 逗号分割
+     */
+    private Class<?> returnParams;
 
     /**
      * 出参值

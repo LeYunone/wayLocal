@@ -41,8 +41,18 @@ public class MethodControl {
      * @return
      */
     @RequestMapping("/getHistory")
-    public DataResponse getHistory(@CookieValue("historyMethodInfo") Queue<MethodInfoDTO> historyMethod){
-        return DataResponse.buildSuccess();
+    public DataResponse getHistory(HttpServletRequest request){
+        //需要先进后出的排列
+        Stack<MethodInfoDTO> hisM=new Stack<>();
+        Cookie[] cookies = request.getCookies();
+        for(Cookie cookie : cookies){
+            if(cookie.getName().equals("historyClass")){
+                String value = cookie.getValue();
+                MethodInfoDTO methodInfoDTO = JSONObject.parseObject(value, MethodInfoDTO.class);
+                hisM.push(methodInfoDTO);
+            }
+        }
+        return DataResponse.of(hisM);
     }
 
 
@@ -52,20 +62,8 @@ public class MethodControl {
      * @return
      */
     @PostMapping("/invokeMethod")
-    public DataResponse invokeMethod(@RequestBody MethodInfoDTO methodInfo, HttpServletResponse response,
-                                     HttpServletRequest request,
-                                     @CookieValue(value = "historyClass",required = false)String historyClass,
-                                     @CookieValue(value = "historyMethodInfo",required = false) String historyMethod) throws UnsupportedEncodingException {
-        LinkedHashMap<String,ClassDTO> hisC=new LinkedHashMap<>();
-        Queue<MethodInfoDTO> hisM=new LinkedList<>();
-        Cookie[] cookies = request.getCookies();
-        if(!StringUtils.isEmpty(historyMethod)){
-            hisM= new LinkedList<>(JSONObject.parseArray(historyMethod, MethodInfoDTO.class));
-        }
-        if(!StringUtils.isEmpty(historyClass)){
-            hisC = JSONObject.parseObject(historyClass, hisC.getClass());
-        }
-
+    public DataResponse invokeMethod(@RequestBody MethodInfoDTO methodInfo, HttpServletResponse response,HttpServletRequest request,
+                                     @CookieValue(value = "historyClass",required = false)String historyClass) throws UnsupportedEncodingException {
         //调用方法
         DataResponse dataResponse = methodService.invokeMethod(methodInfo);
         Object data = dataResponse.getData();
@@ -74,18 +72,22 @@ public class MethodControl {
             methodInfo.setReturnParamValue(JSON.toJSONString(data));
         }
 
-        hisM.add(methodInfo);
         //记录本次调用的信息   [使用类]  [使用方法]  [使用参数]
-        Cookie hMethod=new Cookie("historyMethodInfo",URLEncoder.encode(JSON.toJSONString(hisM),"UTF-8") );
-        response.addCookie(hMethod);
+        Cookie cookieMethod = new Cookie("historyMethod:"+request.getCookies().length,
+                URLEncoder.encode(JSONObject.toJSONString(methodInfo),"UTF-8"));
+        response.addCookie(cookieMethod);
 
         //记录本次调用的类
+        LinkedHashMap<String,ClassDTO> hisC=new LinkedHashMap<>();
+        if(!StringUtils.isEmpty(historyClass)){
+            hisC = JSONObject.parseObject(historyClass, hisC.getClass());
+        }
         ClassDTO classDTO=new ClassDTO();
         classDTO.setValue(methodInfo.getClassName());
         hisC.put(methodInfo.getClassName(),classDTO);
-        Cookie hClass=new Cookie("historyClass", URLEncoder.encode(JSON.toJSONString(hisC),"UTF-8"));
-        hClass.setPath("/");
-        response.addCookie(hClass);
+        Cookie cookieClass=new Cookie("historyClass", URLEncoder.encode(JSON.toJSONString(hisC),"UTF-8"));
+        cookieClass.setPath("/");
+        response.addCookie(cookieClass);
 
         //返回调用结果
         return DataResponse.of(methodInfo);
