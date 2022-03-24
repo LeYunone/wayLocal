@@ -15,9 +15,8 @@ import java.util.List;
 @ToString
 public class ClassDTO {
 
-    private String key;
+    private String hightLineKey;
 
     private String value;
 
-    private List<LuceneDTO> luceneDTOS;
 }

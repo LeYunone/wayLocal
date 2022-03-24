@@ -57,7 +57,7 @@ public class ClassExe {
 
     private String getEEEaaa(List<String> list, ClassDTO testDto){
         System.out.println(1);
-        return testDto.getKey()+"测试成功" + list.size() ;
+        return "测试成功" + list.size() ;
     }
 
     public void getTest(){

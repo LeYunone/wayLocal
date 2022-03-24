@@ -154,8 +154,8 @@ public class LuceneExe {
             Query query=qp.parse("key:"+value);
 
             //高亮关键字
-//            SimpleHTMLFormatter simpleHTMLFormatter = new SimpleHTMLFormatter("<span style='color:red'>", "</span>");
-//            Highlighter highlighter = new Highlighter(simpleHTMLFormatter, new QueryScorer(query));
+            SimpleHTMLFormatter simpleHTMLFormatter = new SimpleHTMLFormatter("<span style='color:red'>", "</span>");
+            Highlighter highlighter = new Highlighter(simpleHTMLFormatter, new QueryScorer(query));
 
             //打开索引库输入流
             Directory directory=FSDirectory.open(FileSystems.getDefault().getPath(PathEnum.PATH_CLASS_DIR.getValue()));
@@ -176,15 +176,14 @@ public class LuceneExe {
                 Document doc = indexSearcher.doc(scoreDoc.doc);
                 String className=doc.get("className");
                 classDTO.setValue(className);
-                classDTO.setKey(doc.get("key"));
                 //暂不高亮处理
-//                TokenStream tokenStream = analyzer.tokenStream("className", new StringReader(className));
-//                result.add(highlighter.getBestFragment(tokenStream,className));
+                TokenStream tokenStream = analyzer.tokenStream("className", new StringReader(className));
+                classDTO.setHightLineKey(highlighter.getBestFragment(tokenStream,className));
                 result.add(classDTO);
             }
             luceneDTO.setListData(result);
             luceneDTO.setTotole(topDocs.totalHits);
-        } catch (IOException | ParseException e) {
+        } catch (IOException | ParseException | InvalidTokenOffsetsException e) {
             e.printStackTrace();
         }finally {
             if(indexReader!=null){
@@ -238,7 +237,7 @@ public class LuceneExe {
                 String methodName=doc.get("methodName");
                 //高亮处理
                 TokenStream tokenStream = analyzer.tokenStream("methodName", new StringReader(methodName));
-//                highlighter.getBestFragment(tokenStream,methodName)
+                highlighter.getBestFragment(tokenStream,methodName);
                 MethodInfoDTO method=new MethodInfoDTO();
                 String json=doc.get("value");
                 method = JSON.parseObject(json,MethodInfoDTO.class);
@@ -247,12 +246,12 @@ public class LuceneExe {
                     returnName = method.getReturnParams().getName();
                 }
                 //页面展示
-                method.setValue(returnName+"  "+methodName+"("+ParamsUtil.getParams(method.getParams())+")");
+                method.setHightLineKey(returnName+"  "+methodName+"("+ParamsUtil.getParams(method.getParams())+")");
                 result.add(method);
             }
             luceneDTO.setListData(result);
             luceneDTO.setTotole(topDocs.totalHits);
-        } catch (IOException | ParseException e) {
+        } catch (IOException | ParseException | InvalidTokenOffsetsException e) {
             e.printStackTrace();
         }finally {
             if(indexReader!=null){
@@ -306,7 +305,7 @@ public class LuceneExe {
                 methodName=doc.get("methodName");
                 //高亮处理
                 TokenStream tokenStream = analyzer.tokenStream("methodName", new StringReader(methodName));
-//                methodName=highlighter.getBestFragment(tokenStream,methodName);
+                methodName=highlighter.getBestFragment(tokenStream,methodName);
                 MethodInfoDTO method=new MethodInfoDTO();
                 String json = doc.get("value");
                 method = JSON.parseObject(json,MethodInfoDTO.class);
@@ -315,12 +314,12 @@ public class LuceneExe {
                     returnName = method.getReturnParams().getName();
                 }
                 //页面展示
-                method.setValue(returnName+"  "+methodName+"("+ParamsUtil.getParams(method.getParams())+")");
+                method.setHightLineKey(returnName+"  "+methodName+"("+ParamsUtil.getParams(method.getParams())+")");
                 result.add(method);
             }
             luceneDTO.setListData(result);
             luceneDTO.setTotole(topDocs.totalHits);
-        } catch (IOException | ParseException e) {
+        } catch (IOException | ParseException | InvalidTokenOffsetsException e) {
             e.printStackTrace();
         }finally {
             if(indexReader!=null){

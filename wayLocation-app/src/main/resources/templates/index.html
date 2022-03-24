@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>首页</title>
-<!--    <script th:src="@{js/vue.js}" type="application/javascript"></script>-->
+    <!--    <script th:src="@{js/vue.js}" type="application/javascript"></script>-->
     <script src="./js/vue.js" type="application/javascript"></script>
     <!-- 引入样式 -->
-<!--    <link rel="stylesheet" th:href="@{/element/theme/index.css}"/>-->
+    <!--    <link rel="stylesheet" th:href="@{/element/theme/index.css}"/>-->
     <link rel="stylesheet" href="./element/theme/index.css"/>
     <!-- 引入组件库 -->
-<!--    <script th:src="@{/element/index.js}" type="application/javascript"></script>-->
+    <!--    <script th:src="@{/element/index.js}" type="application/javascript"></script>-->
     <script src="./element/index.js" type="application/javascript"></script>
 
     <script src="./js/axios.js"></script>
@@ -25,8 +25,14 @@
                 clearable
                 :fetch-suggestions="searchClass"
                 @select="selectClassInput"
+                :highlight-first-item="true"
+                :hide-loading="true"
                 placeholder="请输入关键词"
-        ></el-autocomplete>
+        >
+            <template slot-scope="{ item }">
+                <div class="name" v-html="item.hightLineKey"></div>
+            </template>
+        </el-autocomplete>
 
         方法名：
         <el-autocomplete
@@ -36,7 +42,12 @@
                 :fetch-suggestions="searchMethod"
                 @select="selectMethodInput"
                 placeholder="请输入关键词"
-        ></el-autocomplete>
+        >
+            <template slot-scope="{ item }">
+                <div class="name" v-html="item.hightLineKey"></div>
+            </template>
+
+        </el-autocomplete>
         <el-button plain @click="">最优匹配</el-button>
     </el-card>
 
@@ -54,11 +65,11 @@
                 </td>
                 <td class="table-input">
                     <el-input style="width: 350px" v-for="(item,index) in methodInfo.paramValue"
-                            type="textarea"
-                            :key="index"
-                            :autosize="{ minRows: 15}"
-                            placeholder="请输入内容"
-                            v-model="methodInfo.paramValue[index]">
+                              type="textarea"
+                              :key="index"
+                              :autosize="{ minRows: 15}"
+                              placeholder="请输入内容"
+                              v-model="methodInfo.paramValue[index]">
                     </el-input>
                 </td>
             </tr>
@@ -87,116 +98,125 @@
         el: '#app',
         data() {
             return {
-                item:"",
-                loading:false,
-                text:"",
+                item: "",
+                loading: false,
+                text: "",
                 form: {
                     classInfo: [],
                     methodInfo: [],
-                    size:10,
+                    size: 10,
                 },
-                methodInfo:{
-                    className:"",
-                    returnParams:"",
+                methodInfo: {
+                    className: "",
+                    returnParams: "",
                     methodName: "",
-                    params:"",
-                    paramJsonValue:"",
-                    paramValue:[],
-                    returnParamValue:"",
+                    params: "",
+                    paramJsonValue: "",
+                    paramValue: [],
+                    returnParamValue: "",
                 }
             }
         },
         methods: {
             //导出当前的所有历史调用记录
-            exportInfo(){
+            exportInfo() {
                 axios({
-                    url:"/method/"
+                    url: "/method/"
                 })
             },
             //调用历史弹窗
-            openHistory(){
+            openHistory() {
 
             },
-            invokeMethod(){
+            invokeMethod() {
                 axios({
-                    url:"/method/invokeMethod",
-                    method:"POST",
-                    data:this.methodInfo
-                }).then((res)=>{
-                    var data=res.data;
+                    url: "/method/invokeMethod",
+                    method: "POST",
+                    data: this.methodInfo
+                }).then((res) => {
+                    var data = res.data;
                     console.log(data)
-                    if(data.status){
-                        this.methodInfo=data.data;
+                    if (data.status) {
+                        this.methodInfo = data.data;
                     }
                 })
             },
             //类名选择
-            selectClassInput(item){
+            selectClassInput(item) {
 
             },
             //方法选择  如果方法确定则加载出参和入参结构
-            selectMethodInput(item){
-                this.methodInfo=item;
+            selectMethodInput(item) {
+                this.methodInfo = item;
                 console.log(this.methodInfo)
                 axios({
-                    url:"/param/getParam",
-                    method:"POST",
-                    data:this.methodInfo
-                }).then((res)=>{
-                    var data=res.data;
-                    if(data.status){
-                        this.methodInfo.paramValue=data.data;
+                    url: "/param/getParam",
+                    method: "POST",
+                    data: this.methodInfo
+                }).then((res) => {
+                    var data = res.data;
+                    if (data.status) {
+                        this.methodInfo.paramValue = data.data;
                     }
                 })
 
                 axios({
-                    url:"/param/getReturnParam",
-                    method:"POST",
-                    data:this.methodInfo
-                }).then((res)=>{
+                    url: "/param/getReturnParam",
+                    method: "POST",
+                    data: this.methodInfo
+                }).then((res) => {
                     var data = res.data;
-                    if(data.status){
-                        this.methodInfo.returnParamValue=data.data;
+                    if (data.status) {
+                        this.methodInfo.returnParamValue = data.data;
                     }
                 })
             },
             //输入框跟踪方法名模糊查询
-            searchClass(key,callback) {
+            searchClass(key, callback) {
                 axios({
                     url: "/location/getClassName",
                     method: "GET",
                     params: {
                         className: key,
-                        size:this.form.size
+                        size: this.form.size
                     },
-                }).then((res) =>{
-                    var data=res.data;
-                    if(data.status){
-                        this.form.classInfo=data.data.listData;
+                }).then((res) => {
+                    var data = res.data;
+                    if (data.status) {
+                        var list = data.data.listData;
+                        if (list == null) {
+                            this.$notify({
+                                title: '警告',
+                                message: '没有历史使用记录',
+                                type: 'warning'
+                            });
+                            return;
+                        }
+                        this.form.classInfo = list
                         callback(this.form.classInfo);
-                    }else{
+                    } else {
                         this.$message.error(data.message);
                     }
                 })
             },
-            searchMethod(key,callback){
-                if(key.length==0){
+            searchMethod(key, callback) {
+                if (key.length == 0) {
                     return;
                 }
                 axios({
-                    url:"/location/getMethod",
-                    method:"GET",
-                    params:{
-                        className:this.methodInfo.className,
-                        methodName:key,
-                        size:this.form.size
+                    url: "/location/getMethod",
+                    method: "GET",
+                    params: {
+                        className: this.methodInfo.className,
+                        methodName: key,
+                        size: this.form.size
                     }
-                }).then((res)=>{
-                    var data=res.data;
-                    if(data.status){
-                        this.form.methodInfo=data.data;
+                }).then((res) => {
+                    var data = res.data;
+                    if (data.status) {
+                        this.form.methodInfo = data.data;
                         callback(this.form.methodInfo);
-                    }else{
+                    } else {
                         this.$message.error(data.message);
                     }
                 })
@@ -205,13 +225,15 @@
     })
 </script>
 <style>
-    .table-input{
-        width:1000px
+    .table-input {
+        width: 1000px
     }
-    .table-lab{
-        width:100px
+
+    .table-lab {
+        width: 100px
     }
-    .div-button{
+
+    .div-button {
         float: right;
         padding: 0 50px;
         cursor: pointer;

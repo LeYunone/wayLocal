@@ -73,7 +73,7 @@ public class MethodControl {
         }else{
             methodInfo.setReturnParamValue("void");
         }
-
+        methodInfo.setHightLineKey("");
         //记录历史
         editHisCookie(historyClass,request,methodInfo,response);
 
@@ -90,22 +90,26 @@ public class MethodControl {
         return DataResponse.buildSuccess();
     }
     
-    private void editHisCookie(String historyClass,HttpServletRequest request,MethodInfoDTO methodInfo,HttpServletResponse response) throws UnsupportedEncodingException {
+    private void editHisCookie(String historyClass,HttpServletRequest request,MethodInfoDTO methodInfo,HttpServletResponse response){
         //记录本次调用的信息   [使用类]  [使用方法]  [使用参数]
-        Cookie cookieMethod = new Cookie("historyMethod:"+request.getCookies().length,
-                URLEncoder.encode(JSONObject.toJSONString(methodInfo),"UTF-8"));
-        response.addCookie(cookieMethod);
+        try {
+            Cookie cookieMethod = new Cookie("historyMethod:"+request.getCookies().length,
+                    URLEncoder.encode(JSONObject.toJSONString(methodInfo),"UTF-8"));
+            response.addCookie(cookieMethod);
 
-        //记录本次调用的类
-        LinkedHashMap<String,ClassDTO> hisC=new LinkedHashMap<>();
-        if(!StringUtils.isEmpty(historyClass)){
-            hisC = JSONObject.parseObject(historyClass, hisC.getClass());
+            //记录本次调用的类
+            LinkedHashMap<String,ClassDTO> hisC=new LinkedHashMap<>();
+            if(!StringUtils.isEmpty(historyClass)){
+                hisC = JSONObject.parseObject(historyClass, hisC.getClass());
+            }
+            ClassDTO classDTO=new ClassDTO();
+            classDTO.setValue(methodInfo.getClassName());
+            hisC.put(methodInfo.getClassName(),classDTO);
+            Cookie cookieClass=new Cookie("historyClass", URLEncoder.encode(JSON.toJSONString(hisC),"UTF-8"));
+            cookieClass.setPath("/");
+            response.addCookie(cookieClass);
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        ClassDTO classDTO=new ClassDTO();
-        classDTO.setValue(methodInfo.getClassName());
-        hisC.put(methodInfo.getClassName(),classDTO);
-        Cookie cookieClass=new Cookie("historyClass", URLEncoder.encode(JSON.toJSONString(hisC),"UTF-8"));
-        cookieClass.setPath("/");
-        response.addCookie(cookieClass);
     }
 }

@@ -33,9 +33,9 @@ public class MethodInfoDTO implements Serializable {
     private Class<?> clazz;
 
     /**
-     * 展示给页面看到字符串
+     * 展示给页面看到字符串 [高亮版本]
      */
-    private String value;
+    private String hightLineKey;
 
     /**
      * 方法名

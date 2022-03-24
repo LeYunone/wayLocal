@@ -34,7 +34,6 @@ public class LocationControl {
     @RequestMapping("/getClassName")
     public DataResponse getClassName(String className,
                                      @RequestParam(required = false,defaultValue = "10") Integer size,
-                                     HttpServletRequest  request,
                                      @CookieValue(value = "historyClass",required = false)String historyClass){
         if(!StringUtils.isEmpty(className)){
             //模糊查询类
@@ -44,7 +43,7 @@ public class LocationControl {
 
         //查找历史使用类
         if(StringUtils.isEmpty(historyClass)){
-            return DataResponse.buildSuccess();
+            return DataResponse.of(new LuceneDTO());
         }
         classDTOS = JSONObject.parseObject(historyClass, classDTOS.getClass());
         LuceneDTO luceneDTO=new LuceneDTO();
