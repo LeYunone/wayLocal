@@ -73,12 +73,11 @@ public class MethodControl {
         }else{
             methodInfo.setReturnParamValue("void");
         }
-        methodInfo.setHightLineKey("");
         //记录历史
-        editHisCookie(historyClass,request,methodInfo,response);
+//        editHisCookie(historyClass,request,methodInfo,response);
 
         //返回调用结果
-        return DataResponse.of(methodInfo);
+        return DataResponse.of(methodInfo.getReturnParamValue());
     }
 
     @PostMapping("/export")
