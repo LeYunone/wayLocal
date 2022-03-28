@@ -63,7 +63,7 @@ public class MethodControl {
      */
     @PostMapping("/invokeMethod")
     public DataResponse invokeMethod(@RequestBody MethodInfoDTO methodInfo, HttpServletResponse response,HttpServletRequest request,
-                                     @CookieValue(value = "historyClass",required = false)String historyClass) throws UnsupportedEncodingException {
+                                     @CookieValue(value = "historyClass",required = false)String historyClass) {
         //调用方法
         DataResponse dataResponse = methodService.invokeMethod(methodInfo);
         Object data = dataResponse.getData();
