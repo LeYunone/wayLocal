@@ -38,13 +38,15 @@
         <el-autocomplete
                 style="width: 500px"
                 clearable
-                v-model="text"
+                v-model="methodInfo.methodName"
                 :fetch-suggestions="searchMethod"
                 @select="selectMethodInput"
                 placeholder="请输入关键词"
         >
             <template slot-scope="{ item }">
-                <div class="name" v-html="item.hightLineKey"></div>
+                <el-tooltip class="item" effect="dark" :content="item.lineKey" placement="top-start">
+                    <div class="name" v-html="item.hightLineKey"></div>
+                </el-tooltip>
             </template>
 
         </el-autocomplete>
@@ -79,6 +81,7 @@
                     出参：
                 </td>
                 <td class="table-input">
+<!--                    <pre>{{methodInfo.returnParamValue}}</pre>-->
                     <el-input
                             disabled
                             type="textarea"
@@ -100,7 +103,6 @@
             return {
                 item: "",
                 loading: false,
-                text: "",
                 form: {
                     classInfo: [],
                     methodInfo: [],
@@ -137,7 +139,7 @@
                     var data = res.data;
                     console.log(data)
                     if (data.status) {
-                        this.methodInfo = data.data;
+                        this.methodInfo.returnParamValue = data.data;
                     }
                 })
             },

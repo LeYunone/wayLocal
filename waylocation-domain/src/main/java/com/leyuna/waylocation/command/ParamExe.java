@@ -22,7 +22,7 @@ public class ParamExe {
      *
      * @return
      */
-    public String getObjectStructure(Class clazz) {
+    public String getObjectStructure (Class clazz) {
         if (clazz.isPrimitive()) {
             //如果是基本数据类型
             return clazz.getName();
@@ -38,17 +38,23 @@ public class ParamExe {
                 if (Collection.class.isAssignableFrom(clazz)) {
                     Type genericSuperclass = clazz.getGenericSuperclass();
                     Collection collection = null;
-                    try { 
+                    try {
                         collection = collectionLogic(clazz, genericSuperclass);
                     } catch (Exception e2) {
                         //理论上没有错误出现
                     }
                     return JSONObject.toJSONString(collection, SerializerFeature.WriteMapNullValue, SerializerFeature.WriteNullStringAsEmpty);
                 }
-                
+
                 //其余场景返回参数类型
                 return clazz.getName();
             }
+            //如果是包装类，走包装类逻辑里
+            Object pagkLogic = packClassLogic(clazz);
+            if(!StringUtils.isEmpty(pagkLogic)){
+                return String.valueOf(pagkLogic);
+            }
+
 
             //TODO 如果是没有无参构造场景时
             e.printStackTrace();
@@ -61,7 +67,7 @@ public class ParamExe {
     /**
      * 解析参数结构
      */
-    private void resoleParam(Object obj, Class type) {
+    private void resoleParam (Object obj, Class type) {
         if (null == obj) {
             return;
         }
@@ -115,7 +121,9 @@ public class ParamExe {
                             field.set(obj, " ");
                             continue;
                         }
-                        field.set(obj, null);
+                        //准备包装类逻辑  只有两种情况  不是包装类返回null   是包装类，返回默认值
+                        Object packLogic = packClassLogic(aClass);
+                        field.set(obj, packLogic);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -132,7 +140,7 @@ public class ParamExe {
      * @param clazz
      * @return
      */
-    private Collection getNewInstanceWhenCollection(Class clazz) {
+    private Collection getNewInstanceWhenCollection (Class clazz) {
         //判断是否是集合
         if (!Collection.class.isAssignableFrom(clazz)) {
             return null;
@@ -155,7 +163,7 @@ public class ParamExe {
         return null;
     }
 
-    private Map getNewInstanceWhenMap(Class clazz) {
+    private Map getNewInstanceWhenMap (Class clazz) {
         if (!Map.class.isAssignableFrom(clazz)) {
             return null;
         }
@@ -167,7 +175,36 @@ public class ParamExe {
         return null;
     }
 
-    private Collection collectionLogic(Class aClass, Type genericType) throws IllegalAccessException, InstantiationException {
+    /**
+     * 包装类逻辑
+     */
+    private Object packClassLogic (Class clazz) {
+        if (Byte.class.isAssignableFrom(clazz) || Short.class.isAssignableFrom(clazz)
+                || Integer.class.isAssignableFrom(clazz) || Long.class.isAssignableFrom(clazz)) {
+            return 0;
+        }
+        if (Double.class.isAssignableFrom(clazz) || Float.class.isAssignableFrom(clazz)) {
+            return 0.0;
+        }
+        if (Character.class.isAssignableFrom(clazz)) {
+            return ' ';
+        }
+        if (Boolean.class.isAssignableFrom(clazz)) {
+            return true;
+        }
+        return null;
+    }
+
+    /**
+     * 集合类逻辑
+     *
+     * @param aClass
+     * @param genericType
+     * @return
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     */
+    private Collection collectionLogic (Class aClass, Type genericType) throws IllegalAccessException, InstantiationException {
         //Collection 逻辑
         Collection collection = null;
         //如果是接口或抽象类

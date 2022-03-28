@@ -38,6 +38,11 @@ public class MethodInfoDTO implements Serializable {
     private String hightLineKey;
 
     /**
+     * 展示给页面看到字符串 [普通版本]
+     */
+    private String lineKey;
+
+    /**
      * 方法名
      */
     private String methodName;
