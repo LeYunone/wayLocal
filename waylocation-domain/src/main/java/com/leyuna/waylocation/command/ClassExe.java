@@ -1,17 +1,12 @@
 package com.leyuna.waylocation.command;
 
 import com.leyuna.waylocation.bean.dto.ClassDTO;
-import com.leyuna.waylocation.bean.dto.LuceneDTO;
 import com.leyuna.waylocation.bean.dto.MethodInfoDTO;
 import com.leyuna.waylocation.constant.global.ServerConstant;
 import com.leyuna.waylocation.util.ClassOrderUtil;
-import com.leyuna.waylocation.util.ParamsUtil;
-import com.sun.deploy.util.StringUtils;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,9 +50,12 @@ public class ClassExe {
         return result;
     }
 
-    private String getEEEaaa(List<String> list, ClassDTO testDto){
+    private ClassDTO getEEEaaa(List<String> list, ClassDTO testDto){
         System.out.println(1);
-        return "测试成功" + list.size() ;
+        ClassDTO classDTO = new ClassDTO();
+        classDTO.setHightLineKey("test");
+        classDTO.setValue("测试");
+        return  classDTO;
     }
 
     public void getTest(){

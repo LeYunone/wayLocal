@@ -1,9 +1,7 @@
 package com.leyuna.waylocation.util;
 
+import org.apache.commons.lang3.StringUtils;
 
-import com.sun.deploy.util.StringUtils;
-
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
