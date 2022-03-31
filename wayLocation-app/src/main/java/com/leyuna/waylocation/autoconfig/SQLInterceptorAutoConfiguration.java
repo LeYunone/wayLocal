@@ -1,6 +1,6 @@
 package com.leyuna.waylocation.autoconfig;
 
-import com.leyuna.waylocation.Interceptor.SQLInterceptor;
+import com.leyuna.waylocation.Interceptor.DataScopeInterceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration;
 import org.springframework.beans.factory.InitializingBean;
@@ -32,7 +32,7 @@ public class SQLInterceptorAutoConfiguration implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        SQLInterceptor interceptor = new SQLInterceptor();
+        DataScopeInterceptor interceptor = new DataScopeInterceptor();
         for (SqlSessionFactory sqlSessionFactory : sqlSessionFactoryList) {
             org.apache.ibatis.session.Configuration configuration = sqlSessionFactory.getConfiguration();
             configuration.addInterceptor(interceptor);
