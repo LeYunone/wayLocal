@@ -3,7 +3,6 @@ package com.leyuna.waylocation.Interceptor;
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.baomidou.mybatisplus.extension.handlers.AbstractSqlParserHandler;
 import com.leyuna.waylocation.bean.dto.SqlInvokeDTO;
-import com.leyuna.waylocation.constant.global.ServerConstant;
 import com.leyuna.waylocation.constant.global.SqlInvokeConstant;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -3,6 +3,7 @@ package com.leyuna.waylocation.domainservice;
 import com.alibaba.fastjson.JSONObject;
 import com.leyuna.waylocation.bean.dto.MethodInfoDTO;
 import com.leyuna.waylocation.command.LocationExe;
+import com.leyuna.waylocation.constant.global.SqlInvokeConstant;
 import com.leyuna.waylocation.util.SpringContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -77,6 +78,8 @@ public class InvokeDomainService {
                 e.printStackTrace();
             }finally {
                 method.setAccessible(accessible);
+                //清空本次事务目录
+                SqlInvokeConstant.sqlInvokeDTO = null;
             }
         }
         

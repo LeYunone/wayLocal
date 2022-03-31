@@ -32,10 +32,10 @@ public class SQLInterceptorAutoConfiguration implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        DataScopeInterceptor interceptor = new DataScopeInterceptor();
-        for (SqlSessionFactory sqlSessionFactory : sqlSessionFactoryList) {
-            org.apache.ibatis.session.Configuration configuration = sqlSessionFactory.getConfiguration();
-            configuration.addInterceptor(interceptor);
-        }
+//        DataScopeInterceptor interceptor = new DataScopeInterceptor();
+//        for (SqlSessionFactory sqlSessionFactory : sqlSessionFactoryList) {
+//            org.apache.ibatis.session.Configuration configuration = sqlSessionFactory.getConfiguration();
+//            configuration.addInterceptor(interceptor);
+//        }
     }
 }
