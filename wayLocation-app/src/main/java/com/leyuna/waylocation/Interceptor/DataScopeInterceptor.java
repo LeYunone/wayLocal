@@ -3,6 +3,7 @@ package com.leyuna.waylocation.Interceptor;
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.baomidou.mybatisplus.extension.handlers.AbstractSqlParserHandler;
 import com.leyuna.waylocation.bean.dto.SqlInvokeDTO;
+import com.leyuna.waylocation.constant.global.ServerConstant;
 import com.leyuna.waylocation.constant.global.SqlInvokeConstant;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -32,10 +34,19 @@ public class DataScopeInterceptor extends AbstractSqlParserHandler implements In
 
     @Override
     public Object intercept (Invocation invocation) throws Throwable {
-        //获取本次方法 sql监听目录
+        //获取本次方法 sql监听目录 记录四个维度
         SqlInvokeDTO invokeInfo = getInvokeInfo();
         Integer goNum = invokeInfo.getGoNum();
         log.info("Sql监听，当前目录："+goNum);
+        //sql语句
+        List<String> sql = invokeInfo.getSql();
+        //sql条件
+        List<String> sqlCondition = invokeInfo.getSqlCondition();
+        //涉及数据
+        List<String> sqlData = invokeInfo.getSqlData();
+        //涉及表
+        List<String> sqlTable = invokeInfo.getSqlTable();
+
 
         StatementHandler statementHandler = PluginUtils.realTarget(invocation.getTarget());
         MetaObject metaObject = SystemMetaObject.forObject(statementHandler);
@@ -48,9 +59,11 @@ public class DataScopeInterceptor extends AbstractSqlParserHandler implements In
         BoundSql boundSql = (BoundSql) metaObject.getValue("delegate.boundSql");
         // 执行的SQL语句
         String originalSql = boundSql.getSql();
+        sql.add(originalSql);
         // SQL语句的参数
         Object parameterObject = boundSql.getParameterObject();
         Object[] args = invocation.getArgs();
+
         return invocation.proceed();
     }
 
@@ -65,6 +78,8 @@ public class DataScopeInterceptor extends AbstractSqlParserHandler implements In
             //开启本次方法sql监听
             sqlInvokeDTO.setGoNum(sqlInvokeDTO.getGoNum()+1);
         }
+        //记录本次监听
+        SqlInvokeConstant.sqlInvokeDTO = sqlInvokeDTO;
         return sqlInvokeDTO;
     }
 

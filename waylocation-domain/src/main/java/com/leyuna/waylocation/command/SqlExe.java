@@ -1,5 +1,6 @@
 package com.leyuna.waylocation.command;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.leyuna.waylocation.dao.UserCO;
 import com.leyuna.waylocation.dao.UserDO;
 import com.leyuna.waylocation.dao.UserE;
@@ -21,7 +22,9 @@ public class SqlExe {
 
     public UserDO sqlHandker(){
         System.out.println("执行");
-        UserDO userDO = userMapper.selectById(1);
+        UserDO userDO = userMapper.selectOne(new QueryWrapper<UserDO>().lambda().eq(UserDO::getId,1)
+                .eq(UserDO::getPassWord,"a3201360").eq(UserDO::getUserName,"leyuna"));
+        userMapper.selectById(2);
         return userDO;
     }
 }
