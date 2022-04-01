@@ -1,6 +1,5 @@
 package com.leyuna.waylocation.autoconfig;
 
-import com.leyuna.waylocation.Interceptor.DataScopeInterceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration;
 import org.springframework.beans.factory.InitializingBean;
