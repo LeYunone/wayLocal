@@ -41,4 +41,9 @@ public class SqlInvokeDTO {
      * 涉及数据
      */
     private List<String> sqlData = new ArrayList<>();
+
+    /**
+     * 本次sql操作
+     */
+    private List<String> sqlAction = new ArrayList<>();
 }

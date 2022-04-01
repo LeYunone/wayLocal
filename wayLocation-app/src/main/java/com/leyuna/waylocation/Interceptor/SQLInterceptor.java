@@ -32,11 +32,17 @@ import java.util.Locale;
  * 
  *  MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class, CacheKey.class, BoundSql.class
  */
-@Intercepts({@Signature(
-        type = Executor.class,
-        method = "query",
-        args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}
-)})
+@Intercepts(value = {
+        @Signature(type = Executor.class,
+                method = "update",
+                args = {MappedStatement.class, Object.class}),
+        @Signature(type = Executor.class,
+                method = "query",
+                args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class,
+                        CacheKey.class, BoundSql.class}),
+        @Signature(type = Executor.class,
+                method = "query",
+                args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class})})
 @Component
 @Slf4j
 public class SQLInterceptor implements Interceptor {
@@ -51,6 +57,8 @@ public class SQLInterceptor implements Interceptor {
         List<String> sql = invokeInfo.getSql();
         //sql条件
         List<String> sqlCondition = invokeInfo.getSqlCondition();
+        //sql操作
+        List<String> sqlAction = invokeInfo.getSqlAction();
         //涉及数据
         List<String> sqlData = invokeInfo.getSqlData();
         //涉及表
@@ -68,16 +76,42 @@ public class SQLInterceptor implements Interceptor {
         BoundSql boundSql = mappedStatement.getBoundSql(parameter);
         //DB配置员
         Configuration configuration = mappedStatement.getConfiguration();
-
+        //操作类型
+        SqlCommandType sqlCommandType = mappedStatement.getSqlCommandType();
         //获取sql语句
         String strSql = getSql(configuration, boundSql);
-        //sql语句 条件
+
+        //记录语句
         sql.add(strSql);
         //sql条件
-        sqlCondition.add(strSql.substring(strSql.indexOf("WHERE")+5,strSql.length()));
+        if(sqlCommandType == SqlCommandType.SELECT){
+            //如果是查询则记录条件
+            sqlCondition.add(strSql.substring(strSql.indexOf("WHERE")+5));
+        }else{
+            sqlCondition.add("");
+        }
+        //sql操作类型
+        sqlAction.add(getSqlAction(sqlCommandType));
+
         return invocation.proceed();
     }
 
+    private String getSqlAction(SqlCommandType type){
+        switch (type){
+            case INSERT:
+                return "INSERT";
+            case SELECT:
+                return "SELECT";
+            case UPDATE:
+                return "UPDATE";
+            case DELETE:
+                return "DELETE";
+            case FLUSH:
+                return "FLUSH";
+            default:
+                return "UNKNOWN";
+        }
+    }
 
     private SqlInvokeDTO getInvokeInfo () {
         SqlInvokeDTO sqlInvokeDTO = null;

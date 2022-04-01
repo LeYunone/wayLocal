@@ -25,6 +25,11 @@ public class SqlExe {
         UserDO userDO = userMapper.selectOne(new QueryWrapper<UserDO>().lambda().eq(UserDO::getId,1)
                 .eq(UserDO::getPassWord,"a3201360").eq(UserDO::getUserName,"leyuna"));
         userMapper.selectById(2);
+        UserDO ud=new UserDO();
+        ud.setId("4");
+        ud.setUserName("test");
+        ud.setPassWord("test");
+        userMapper.insert(ud);
         return userDO;
     }
 }
