@@ -31,23 +31,13 @@
 //
 //    @Override
 //    public Object intercept (Invocation invocation) throws Throwable {
-//        //获取本次方法 sql监听目录 记录四个维度
-//        SqlInvokeDTO invokeInfo = getInvokeInfo();
-//        Integer goNum = invokeInfo.getGoNum();
-//        log.info("Sql监听，当前目录："+goNum);
-//        //sql语句
-//        List<String> sql = invokeInfo.getSql();
-//        //sql条件
-//        List<String> sqlCondition = invokeInfo.getSqlCondition();
-//        //涉及数据
-//        List<String> sqlData = invokeInfo.getSqlData();
-//        //涉及表
-//        List<String> sqlTable = invokeInfo.getSqlTable();
 //
 //        StatementHandler statementHandler = PluginUtils.realTarget(invocation.getTarget());
+//        //获取 StatementHandler 包装类
 //        MetaObject metaObject = SystemMetaObject.forObject(statementHandler);
 //        this.sqlParser(metaObject);
-//        // 先判断是不是SELECT操作 不是直接过滤
+//
+//        //获取接口的映射信息
 //        MappedStatement mappedStatement = (MappedStatement) metaObject.getValue("delegate.mappedStatement");
 //        if (!SqlCommandType.SELECT.equals(mappedStatement.getSqlCommandType())) {
 //            return invocation.proceed();
@@ -55,10 +45,6 @@
 //        BoundSql boundSql = (BoundSql) metaObject.getValue("delegate.boundSql");
 //        // 执行的SQL语句
 //        String originalSql = boundSql.getSql();
-//        sql.add(originalSql);
-//        // SQL语句的参数
-//        Object parameterObject = boundSql.getParameterObject();
-//        Object[] args = invocation.getArgs();
 //
 //        return invocation.proceed();
 //    }

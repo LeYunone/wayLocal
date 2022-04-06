@@ -1,5 +1,6 @@
 package com.leyuna.waylocation.Interceptor;
 
+import com.alibaba.fastjson.JSONObject;
 import com.leyuna.waylocation.bean.dto.SqlInvokeDTO;
 import com.leyuna.waylocation.constant.global.SqlInvokeConstant;
 import lombok.extern.slf4j.Slf4j;
@@ -21,15 +22,16 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.DateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 /**
- * @author cocowwy.cn   
+ * @author cocowwy.cn
  * @create 2022-02-02-14:04
- * 
- *  MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class, CacheKey.class, BoundSql.class
+ * <p>
+ * MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class, CacheKey.class, BoundSql.class
  */
 @Intercepts(value = {
         @Signature(type = Executor.class,
@@ -45,13 +47,13 @@ import java.util.Locale;
 @Component
 @Slf4j
 public class SQLInterceptor implements Interceptor {
-    
+
     @Override
-    public Object intercept(Invocation invocation) throws Throwable {
+    public Object intercept (Invocation invocation) throws Throwable {
         //获取本次方法 sql监听目录 记录四个维度
         SqlInvokeDTO invokeInfo = getInvokeInfo();
         Integer goNum = invokeInfo.getGoNum();
-        log.info("Sql监听，当前目录："+goNum);
+        log.info("Sql监听，当前目录：" + goNum);
         //sql语句
         List<String> sql = invokeInfo.getSql();
         //sql条件
@@ -82,21 +84,27 @@ public class SQLInterceptor implements Interceptor {
 
         //记录语句
         sql.add(strSql);
+        //执行sql 记录数据
+        Object result = invocation.proceed();
         //sql条件
-        if(sqlCommandType == SqlCommandType.SELECT){
+        if (sqlCommandType == SqlCommandType.SELECT) {
             //如果是查询则记录条件
-            sqlCondition.add(strSql.substring(strSql.indexOf("WHERE")+5));
-        }else{
+            sqlCondition.add(strSql.substring(strSql.indexOf("WHERE") + 5));
+            System.out.println(result);
+            //记录结果
+            sqlData.add(JSONObject.toJSONString(result));
+        } else {
             sqlCondition.add("");
+            //操作类型：成功数目
+            sqlData.add(getSqlAction(sqlCommandType)+":"+result);
         }
         //sql操作类型
         sqlAction.add(getSqlAction(sqlCommandType));
-
-        return invocation.proceed();
+        return result;
     }
 
-    private String getSqlAction(SqlCommandType type){
-        switch (type){
+    private String getSqlAction (SqlCommandType type) {
+        switch (type) {
             case INSERT:
                 return "INSERT";
             case SELECT:
@@ -121,14 +129,14 @@ public class SQLInterceptor implements Interceptor {
         } else {
             sqlInvokeDTO = SqlInvokeConstant.sqlInvokeDTO;
             //开启本次方法sql监听
-            sqlInvokeDTO.setGoNum(sqlInvokeDTO.getGoNum()+1);
+            sqlInvokeDTO.setGoNum(sqlInvokeDTO.getGoNum() + 1);
         }
         //记录本次监听
         SqlInvokeConstant.sqlInvokeDTO = sqlInvokeDTO;
         return sqlInvokeDTO;
     }
 
-    private String getSql(Configuration configuration, BoundSql boundSql) {
+    private String getSql (Configuration configuration, BoundSql boundSql) {
         Object parameterObject = boundSql.getParameterObject();
         List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
         String sql = boundSql.getSql().replaceAll("[\\s]+", " ");
@@ -158,11 +166,11 @@ public class SQLInterceptor implements Interceptor {
         return sql;
     }
 
-    private String getParameterValue(Object obj) {
+    private String getParameterValue (Object obj) {
         String value = null;
         if (obj instanceof String) {
             value = "'" + obj.toString() + "'";
-        } else if (obj instanceof Date) {
+        } else if (obj instanceof LocalDateTime) {
             DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.CHINA);
             value = "'" + formatter.format(obj) + "'";
         } else {

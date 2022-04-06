@@ -1,4 +1,4 @@
-package com.leyuna.waylocation.dao;
+package com.leyuna.waylocation.autoconfig;
 
 
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
@@ -30,7 +30,7 @@ public class MybatisPlusConfig {
     public MapperScannerConfigurer mapperScannerConfigurer(){
         MapperScannerConfigurer scannerConfigurer = new MapperScannerConfigurer();
         //可以通过环境变量获取你的mapper路径,这样mapper扫描可以通过配置文件配置了
-        scannerConfigurer.setBasePackage("com.leyuna.waylocation.dao");
+        scannerConfigurer.setBasePackage("com.leyuna.waylocation.dao.mapper");
         return scannerConfigurer;
     }
 

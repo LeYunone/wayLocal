@@ -1,5 +1,6 @@
 package com.leyuna.waylocation.dao;
 
+import com.leyuna.waylocation.dao.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 
 /**

@@ -1,10 +1,8 @@
 package com.leyuna.waylocation.command;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.leyuna.waylocation.dao.UserCO;
 import com.leyuna.waylocation.dao.UserDO;
-import com.leyuna.waylocation.dao.UserE;
-import com.leyuna.waylocation.dao.UserMapper;
+import com.leyuna.waylocation.dao.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,16 +18,11 @@ public class SqlExe {
     @Autowired
     UserMapper userMapper;
 
-    public UserDO sqlHandker(){
+    public UserCO sqlHandker(){
         System.out.println("执行");
-        UserDO userDO = userMapper.selectOne(new QueryWrapper<UserDO>().lambda().eq(UserDO::getId,1)
-                .eq(UserDO::getPassWord,"a3201360").eq(UserDO::getUserName,"leyuna"));
-        userMapper.selectById(2);
-        UserDO ud=new UserDO();
-        ud.setId("4");
-        ud.setUserName("test");
-        ud.setPassWord("test");
-        userMapper.insert(ud);
-        return userDO;
+        UserDO userDO=new UserDO();
+        userDO.setId("4");
+        List<UserCO> listAndTest = userMapper.getListAndTest(userDO);
+        return listAndTest.get(0);
     }
 }
