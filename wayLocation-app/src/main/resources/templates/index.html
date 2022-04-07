@@ -57,7 +57,7 @@
         <div class="div-button">
             <el-button plain @click="exportInfo">保存</el-button>
             <el-button plain @click="openHistory">历史调用</el-button>
-            <el-button plain>清除</el-button>
+            <el-button plain @click="clearAll">清除</el-button>
             <el-button plain @click="invokeMethod">测试</el-button>
         </div>
         <table>
@@ -81,7 +81,7 @@
                     出参：
                 </td>
                 <td class="table-input">
-<!--                    <pre>{{methodInfo.returnParamValue}}</pre>-->
+                    <!--                    <pre>{{methodInfo.returnParamValue}}</pre>-->
                     <el-input
                             disabled
                             type="textarea"
@@ -92,6 +92,48 @@
                 </td>
             </tr>
         </table>
+        <el-table
+                :data="methodInfo.sqlInvokeDTO"
+                border>
+            <el-table-column
+                    prop="sql"
+                    label="SQL语句"
+                    width="300">
+            </el-table-column>
+            <el-table-column
+                    prop="sqlData"
+                    label="db数据"
+                    width="200">
+            </el-table-column>
+            <el-table-column
+                    prop="sqlTime"
+                    label="执行速度"
+                    width="90">
+            </el-table-column>
+            <el-table-column
+                    prop="sqlCondition"
+                    label="条件"
+                    width="120">
+            </el-table-column>
+            <el-table-column
+                    prop="sqlTable"
+                    label="涉及表名"
+                    width="100">
+            </el-table-column>
+            <el-table-column
+                    prop="sqlAction"
+                    label="操作类型"
+                    width="80">
+            </el-table-column>
+            <el-table-column
+                    fixed="right"
+                    label="操作"
+                    width="60">
+                <template slot-scope="scope">
+                    <el-button @click="backClick(scope.row)" type="text" size="medium">回滚</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
     </el-card>
 </div>
 </body>
@@ -116,10 +158,19 @@
                     paramJsonValue: "",
                     paramValue: [],
                     returnParamValue: "",
+                    sqlInvokeDTO: [],
                 }
             }
         },
         methods: {
+            //清除
+            clearAll() {
+                this.methodInfo = {};
+            },
+            //回滚
+            backClick(row) {
+
+            },
             //导出当前的所有历史调用记录
             exportInfo() {
                 axios({
@@ -139,7 +190,7 @@
                     var data = res.data;
                     console.log(data)
                     if (data.status) {
-                        this.methodInfo.returnParamValue = data.data;
+                        this.methodInfo = data.data;
                     }
                 })
             },

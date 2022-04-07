@@ -24,13 +24,13 @@ public class SQLInterceptorAutoConfiguration implements InitializingBean {
     private final List<SqlSessionFactory> sqlSessionFactoryList;
 
     @Autowired(required = false)
-    public SQLInterceptorAutoConfiguration(List<SqlSessionFactory> sqlSessionFactoryList) {
+    public SQLInterceptorAutoConfiguration (List<SqlSessionFactory> sqlSessionFactoryList) {
         this.sqlSessionFactoryList = sqlSessionFactoryList;
     }
 
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet () throws Exception {
 //        DataScopeInterceptor interceptor = new DataScopeInterceptor();
 //        for (SqlSessionFactory sqlSessionFactory : sqlSessionFactoryList) {
 //            org.apache.ibatis.session.Configuration configuration = sqlSessionFactory.getConfiguration();

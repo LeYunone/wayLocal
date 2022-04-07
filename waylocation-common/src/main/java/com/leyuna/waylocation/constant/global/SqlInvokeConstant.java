@@ -2,6 +2,9 @@ package com.leyuna.waylocation.constant.global;
 
 import com.leyuna.waylocation.bean.dto.SqlInvokeDTO;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author pengli
  * @create 2022-03-31 15:32
@@ -10,7 +13,7 @@ import com.leyuna.waylocation.bean.dto.SqlInvokeDTO;
 public class SqlInvokeConstant {
 
     //sql信息表
-    public static SqlInvokeDTO sqlInvokeDTO = null;
+    public static List<SqlInvokeDTO> sqlInvokeDTO = null;
 
     public static boolean isGO = false;
 }

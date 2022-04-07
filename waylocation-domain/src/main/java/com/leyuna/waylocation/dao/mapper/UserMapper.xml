@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.leyuna.waylocation.dao.mapper.UserMapper">
     <select id="getListAndTest" parameterType="com.leyuna.waylocation.dao.UserDO" resultType="com.leyuna.waylocation.dao.UserCO">
-        select * from user u left join type t on u.id=t.id where u.id = ${userDO.id}
+        select * from user u left join type t on u.id=t.id where u.id = ${id}
     </select>
 </mapper>
 

@@ -25,25 +25,30 @@ public class SqlInvokeDTO {
     /**
      * sql语句
      */
-    private List<String> sql = new ArrayList<>();
+    private String sql;
 
     /**
      * 涉及表格
      */
-    private List<String> sqlTable = new ArrayList<>();
+    private String sqlTable ;
 
     /**
      * sql条件
      */
-    private List<String> sqlCondition = new ArrayList<>();
+    private String sqlCondition;
 
     /**
      * 涉及数据
      */
-    private List<String> sqlData = new ArrayList<>();
+    private String sqlData;
 
     /**
      * 本次sql操作
      */
-    private List<String> sqlAction = new ArrayList<>();
+    private String sqlAction;
+
+    /**
+     * 本次sql执行时间
+     */
+    private String sqlTime;
 }

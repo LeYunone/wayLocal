@@ -71,4 +71,9 @@ public class MethodInfoDTO implements Serializable {
      * 出参值
      */
     private String returnParamValue;
+
+    /**
+     * 方法涉及的db目录
+     */
+    private List<SqlInvokeDTO> sqlInvokeDTO;
 }

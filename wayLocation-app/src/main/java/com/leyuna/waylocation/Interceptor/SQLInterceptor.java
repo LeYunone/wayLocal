@@ -4,6 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.leyuna.waylocation.bean.dto.SqlInvokeDTO;
 import com.leyuna.waylocation.constant.global.SqlInvokeConstant;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.jsqlparser.parser.CCJSqlParserUtil;
+import net.sf.jsqlparser.statement.Statement;
+import net.sf.jsqlparser.util.TablesNamesFinder;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
@@ -16,20 +20,19 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.TypeHandlerRegistry;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.text.DateFormat;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 /**
  * @author cocowwy.cn
  * @create 2022-02-02-14:04
+ * <p>
+ * JsqlParser 插件
  * <p>
  * MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class, CacheKey.class, BoundSql.class
  */
@@ -50,20 +53,6 @@ public class SQLInterceptor implements Interceptor {
 
     @Override
     public Object intercept (Invocation invocation) throws Throwable {
-        //获取本次方法 sql监听目录 记录四个维度
-        SqlInvokeDTO invokeInfo = getInvokeInfo();
-        Integer goNum = invokeInfo.getGoNum();
-        log.info("Sql监听，当前目录：" + goNum);
-        //sql语句
-        List<String> sql = invokeInfo.getSql();
-        //sql条件
-        List<String> sqlCondition = invokeInfo.getSqlCondition();
-        //sql操作
-        List<String> sqlAction = invokeInfo.getSqlAction();
-        //涉及数据
-        List<String> sqlData = invokeInfo.getSqlData();
-        //涉及表
-        List<String> sqlTable = invokeInfo.getSqlTable();
 
         //获得本次db操作对应的存储信息
         MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
@@ -79,28 +68,53 @@ public class SQLInterceptor implements Interceptor {
         Configuration configuration = mappedStatement.getConfiguration();
         //操作类型
         SqlCommandType sqlCommandType = mappedStatement.getSqlCommandType();
-        //获取sql语句
-        String strSql = getSql(configuration, boundSql);
+        //获取大写sql语句
+        String strSql = getSql(configuration, boundSql).toUpperCase();
+        String conditionString = "";
+        String dataString = "";
+        //操作类型
+        String sqlAction = getSqlAction(sqlCommandType);
+        //涉及表
+        String tableString = StringUtils.join(getSqlTabName(strSql), "/");
 
-        //记录语句
-        sql.add(strSql);
-        //执行sql 记录数据
+        long startTime = System.currentTimeMillis();
         Object result = invocation.proceed();
-        //sql条件
+        long endTime = System.currentTimeMillis();
+        //执行时间
+        String sqlTime = String.valueOf(endTime - startTime);
+
         if (sqlCommandType == SqlCommandType.SELECT) {
             //如果是查询则记录条件
-            sqlCondition.add(strSql.substring(strSql.indexOf("WHERE") + 5));
-            System.out.println(result);
+            conditionString = strSql.substring(strSql.indexOf("WHERE") + 5);
             //记录结果
-            sqlData.add(JSONObject.toJSONString(result));
+            dataString = JSONObject.toJSONString(result);
         } else {
-            sqlCondition.add("");
             //操作类型：成功数目
-            sqlData.add(getSqlAction(sqlCommandType)+":"+result);
+            dataString = getSqlAction(sqlCommandType) + ":" + result;
         }
-        //sql操作类型
-        sqlAction.add(getSqlAction(sqlCommandType));
+
+        //登记db
+        registerDB(strSql, conditionString, dataString, sqlAction, tableString, sqlTime);
         return result;
+    }
+
+    /**
+     * 登记本次db操作
+     */
+    private void registerDB (String sql, String condition, String data, String action, String tableString, String sqlTime) {
+        //获取本次方法 sql监听目录 记录四个维度
+        List<SqlInvokeDTO> invokeInfo = getInvokeInfo();
+        Integer goNum = invokeInfo.size() + 1;
+        log.info("Sql监听，当前目录：" + goNum);
+        SqlInvokeDTO invokeDTO = new SqlInvokeDTO();
+        invokeDTO.setGoNum(goNum);
+        invokeDTO.setSql(sql);
+        invokeDTO.setSqlCondition(condition);
+        invokeDTO.setSqlData(data);
+        invokeDTO.setSqlAction(action);
+        invokeDTO.setSqlTable(tableString);
+        invokeDTO.setSqlTime(sqlTime);
+        invokeInfo.add(invokeDTO);
     }
 
     private String getSqlAction (SqlCommandType type) {
@@ -120,16 +134,12 @@ public class SQLInterceptor implements Interceptor {
         }
     }
 
-    private SqlInvokeDTO getInvokeInfo () {
-        SqlInvokeDTO sqlInvokeDTO = null;
+    private List<SqlInvokeDTO> getInvokeInfo () {
+        List<SqlInvokeDTO> sqlInvokeDTO = null;
         if (SqlInvokeConstant.sqlInvokeDTO == null) {
-            sqlInvokeDTO = new SqlInvokeDTO();
-            //初始化监听目录
-            sqlInvokeDTO.setGoNum(1);
+            sqlInvokeDTO = new ArrayList<>();
         } else {
             sqlInvokeDTO = SqlInvokeConstant.sqlInvokeDTO;
-            //开启本次方法sql监听
-            sqlInvokeDTO.setGoNum(sqlInvokeDTO.getGoNum() + 1);
         }
         //记录本次监听
         SqlInvokeConstant.sqlInvokeDTO = sqlInvokeDTO;
@@ -181,5 +191,16 @@ public class SQLInterceptor implements Interceptor {
             }
         }
         return value;
+    }
+
+    private List<String> getSqlTabName (String sql) {
+        Statement statement = null;
+        try {
+            statement = CCJSqlParserUtil.parse(sql);
+        } catch (Exception e) {
+        }
+        TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
+        List<String> tableList = tablesNamesFinder.getTableList(statement);
+        return tableList;
     }
 }

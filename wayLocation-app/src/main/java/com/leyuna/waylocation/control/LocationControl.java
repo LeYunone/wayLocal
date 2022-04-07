@@ -32,39 +32,39 @@ public class LocationControl {
     private LocationService locationService;
 
     @RequestMapping("/getClassName")
-    public DataResponse getClassName(String className,
-                                     @RequestParam(required = false,defaultValue = "10") Integer size,
-                                     @CookieValue(value = "historyClass",required = false)String historyClass){
-        if(!StringUtils.isEmpty(className)){
+    public DataResponse getClassName (String className,
+                                      @RequestParam(required = false, defaultValue = "10") Integer size,
+                                      @CookieValue(value = "historyClass", required = false) String historyClass) {
+        if (!StringUtils.isEmpty(className)) {
             //模糊查询类
             return locationService.getClassName(className, size);
         }
-        LinkedHashMap<String,ClassDTO> classDTOS=new LinkedHashMap<>();
+        LinkedHashMap<String, ClassDTO> classDTOS = new LinkedHashMap<>();
 
         //查找历史使用类
-        if(StringUtils.isEmpty(historyClass)){
+        if (StringUtils.isEmpty(historyClass)) {
             return DataResponse.of(new LuceneDTO());
         }
         classDTOS = JSONObject.parseObject(historyClass, classDTOS.getClass());
-        LuceneDTO luceneDTO=new LuceneDTO();
+        LuceneDTO luceneDTO = new LuceneDTO();
         luceneDTO.setListData(new LinkedList<>(classDTOS.values()));
         luceneDTO.setTotole(classDTOS.size());
         return DataResponse.of(luceneDTO);
     }
 
     @RequestMapping("/getMethod")
-    public DataResponse getMethod(String className,String methodName,@RequestParam(required = false,defaultValue = "10") Integer size){
+    public DataResponse getMethod (String className, String methodName, @RequestParam(required = false, defaultValue = "10") Integer size) {
         //如果没有指明类
-        if(StringUtils.isEmpty(className)){
-            return locationService.getMethod(methodName,size);
+        if (StringUtils.isEmpty(className)) {
+            return locationService.getMethod(methodName, size);
         }
         try {
             //如果指明类非常清晰
             Class.forName(className);
-            return locationService.getMethod(className,methodName,true);
+            return locationService.getMethod(className, methodName, true);
         } catch (ClassNotFoundException e) {
             //如果指明类为模糊查询
-            return locationService.getMethod(className,methodName,false);
+            return locationService.getMethod(className, methodName, false);
         }
     }
 }

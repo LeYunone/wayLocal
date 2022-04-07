@@ -29,21 +29,23 @@ public class ParamControl {
 
     /**
      * 获得方法入参结构
+     *
      * @param methodInfo 方法具体信息
      * @return
      */
     @PostMapping("/getParam")
-    public DataResponse getParam(@RequestBody MethodInfoDTO methodInfo){
+    public DataResponse getParam (@RequestBody MethodInfoDTO methodInfo) {
         return paramService.getParam(methodInfo.getParams());
     }
 
     /**
      * 获得方法出参结构
+     *
      * @param methodInfo
      * @return
      */
     @PostMapping("/getReturnParam")
-    public DataResponse getReturnParam(@RequestBody MethodInfoDTO methodInfo){
+    public DataResponse getReturnParam (@RequestBody MethodInfoDTO methodInfo) {
         return paramService.getReturnParam(methodInfo.getReturnParams());
     }
 }
