@@ -1,19 +1,11 @@
 package com.leyuna.waylocation.service.param;
 
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.leyuna.waylocation.command.ParamExe;
-import com.leyuna.waylocation.response.DataResponse;
+import com.leunya.waylocation.command.ParamExe;
+import com.leunya.waylocation.response.DataResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author pengli

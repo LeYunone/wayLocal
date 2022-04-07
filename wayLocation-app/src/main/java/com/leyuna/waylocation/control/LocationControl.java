@@ -1,22 +1,17 @@
 package com.leyuna.waylocation.control;
 
 import com.alibaba.fastjson.JSONObject;
-import com.leyuna.waylocation.bean.dto.ClassDTO;
-import com.leyuna.waylocation.bean.dto.LuceneDTO;
-import com.leyuna.waylocation.bean.dto.MethodInfoDTO;
-import com.leyuna.waylocation.response.DataResponse;
+import com.leunya.waylocation.dto.ClassDTO;
+import com.leunya.waylocation.dto.LuceneDTO;
+import com.leunya.waylocation.response.DataResponse;
 import com.leyuna.waylocation.service.method.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 /**

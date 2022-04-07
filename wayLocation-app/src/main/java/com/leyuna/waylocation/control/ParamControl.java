@@ -1,7 +1,7 @@
 package com.leyuna.waylocation.control;
 
-import com.leyuna.waylocation.bean.dto.MethodInfoDTO;
-import com.leyuna.waylocation.response.DataResponse;
+import com.leunya.waylocation.dto.MethodInfoDTO;
+import com.leunya.waylocation.response.DataResponse;
 import com.leyuna.waylocation.service.method.LocationService;
 import com.leyuna.waylocation.service.param.ParamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.lang.reflect.Method;
 
 /**
  * @author pengli

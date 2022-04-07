@@ -1,8 +1,8 @@
 package com.leyuna.waylocation.service.search;
 
-import com.leyuna.waylocation.bean.dto.MethodInfoDTO;
-import com.leyuna.waylocation.command.ClassExe;
-import com.leyuna.waylocation.command.LuceneExe;
+import com.leunya.waylocation.command.ClassExe;
+import com.leunya.waylocation.command.LuceneExe;
+import com.leunya.waylocation.dto.MethodInfoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
