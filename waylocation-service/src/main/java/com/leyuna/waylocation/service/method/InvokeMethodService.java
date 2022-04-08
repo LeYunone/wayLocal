@@ -1,12 +1,10 @@
 package com.leyuna.waylocation.service.method;
 
-import com.leunya.waylocation.command.InvokeMethodExe;
-import com.leunya.waylocation.dto.MethodInfoDTO;
-import com.leunya.waylocation.response.DataResponse;
+import com.leyuna.waylocation.command.InvokeMethodExe;
+import com.leyuna.waylocation.dto.MethodInfoDTO;
+import com.leyuna.waylocation.response.DataResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.lang.reflect.Method;
 
 /**
  * @author pengli

@@ -1,8 +1,8 @@
 package com.leyuna.waylocation.Interceptor;
 
 import com.alibaba.fastjson.JSONObject;
-import com.leunya.waylocation.constant.global.SqlInvokeConstant;
-import com.leunya.waylocation.dto.SqlInvokeDTO;
+import com.leyuna.waylocation.constant.global.SqlInvokeConstant;
+import com.leyuna.waylocation.dto.SqlInvokeDTO;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
@@ -23,8 +23,10 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.text.DateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -51,6 +53,7 @@ import java.util.Locale;
                 method = "query",
                 args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class})})
 @Component
+@ConditionalOnClass(DataSource.class)
 @Slf4j
 public class SQLInterceptor implements Interceptor {
 

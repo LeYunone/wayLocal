@@ -1,6 +1,6 @@
 package com.leyuna.waylocation.config;
 
-import com.leyuna.waylocation.service.search.SearchService;
+import com.leyuna.waylocation.service.search.SearchLibraryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class ClazzOrderRunner implements ApplicationRunner {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private SearchService searchService;
+    private SearchLibraryService searchService;
 
     @Override
     public void run (ApplicationArguments args) throws Exception {

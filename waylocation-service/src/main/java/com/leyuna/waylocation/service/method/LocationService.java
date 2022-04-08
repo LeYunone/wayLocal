@@ -1,11 +1,11 @@
 package com.leyuna.waylocation.service.method;
 
-import com.leunya.waylocation.command.LocationExe;
-import com.leunya.waylocation.command.LuceneExe;
-import com.leunya.waylocation.dto.ClassDTO;
-import com.leunya.waylocation.dto.LuceneDTO;
-import com.leunya.waylocation.dto.MethodInfoDTO;
-import com.leunya.waylocation.response.DataResponse;
+import com.leyuna.waylocation.command.LocationExe;
+import com.leyuna.waylocation.command.WaylocationLuceneExe;
+import com.leyuna.waylocation.dto.ClassDTO;
+import com.leyuna.waylocation.dto.LuceneDTO;
+import com.leyuna.waylocation.dto.MethodInfoDTO;
+import com.leyuna.waylocation.response.DataResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -22,7 +22,7 @@ import java.util.List;
 public class LocationService {
 
     @Autowired
-    private LuceneExe luceneExe;
+    private WaylocationLuceneExe luceneExe;
 
     @Autowired
     private LocationExe locationExe;

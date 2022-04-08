@@ -1,7 +1,7 @@
 package com.leyuna.waylocation.control;
 
-import com.leunya.waylocation.dto.MethodInfoDTO;
-import com.leunya.waylocation.response.DataResponse;
+import com.leyuna.waylocation.dto.MethodInfoDTO;
+import com.leyuna.waylocation.response.DataResponse;
 import com.leyuna.waylocation.service.method.LocationService;
 import com.leyuna.waylocation.service.param.ParamService;
 import org.springframework.beans.factory.annotation.Autowired;
