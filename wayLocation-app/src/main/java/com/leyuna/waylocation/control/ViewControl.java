@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/")
 public class ViewControl {
 
-    @GetMapping("/methodtest")
+    @GetMapping("/waylocation")
     public String htmlView(){
         return "waylocation";
     }

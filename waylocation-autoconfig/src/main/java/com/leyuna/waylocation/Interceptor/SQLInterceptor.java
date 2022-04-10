@@ -25,6 +25,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.sql.DataSource;
 import java.text.DateFormat;
@@ -78,10 +79,14 @@ public class SQLInterceptor implements Interceptor {
         String strSql = getSql(configuration, boundSql).toUpperCase();
         String conditionString = "";
         String dataString = "";
+        String tableString= " ";
         //操作类型
         String sqlAction = getSqlAction(sqlCommandType);
         //涉及表
-        String tableString = StringUtils.join(getSqlTabName(strSql), "/");
+        List<String> sqlTabName = getSqlTabName(strSql);
+        if(!CollectionUtils.isEmpty(sqlTabName)){
+            tableString  = StringUtils.join(sqlTabName, "/");
+        }
 
         long startTime = System.currentTimeMillis();
         Object result = invocation.proceed();
@@ -206,6 +211,10 @@ public class SQLInterceptor implements Interceptor {
         } catch (Exception e) {
         }
         TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
+        //解析不出来则返回空
+        if(null==statement){
+            return null;
+        }
         List<String> tableList = tablesNamesFinder.getTableList(statement);
         return tableList;
     }
