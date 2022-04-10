@@ -98,12 +98,12 @@
             <el-table-column
                     prop="sql"
                     label="SQL语句"
-                    width="300">
+                    width="600">
             </el-table-column>
             <el-table-column
                     prop="sqlData"
                     label="db数据"
-                    width="200">
+                    width="300">
             </el-table-column>
             <el-table-column
                     prop="sqlTime"
@@ -113,12 +113,12 @@
             <el-table-column
                     prop="sqlCondition"
                     label="条件"
-                    width="120">
+                    width="280">
             </el-table-column>
             <el-table-column
                     prop="sqlTable"
                     label="涉及表名"
-                    width="100">
+                    width="200">
             </el-table-column>
             <el-table-column
                     prop="sqlAction"
@@ -183,7 +183,7 @@
             },
             invokeMethod() {
                 axios({
-                    url: "/method/invokeMethod",
+                    url: "method/invokeMethod",
                     method: "POST",
                     data: this.methodInfo
                 }).then((res) => {
@@ -203,7 +203,7 @@
                 this.methodInfo = item;
                 console.log(this.methodInfo)
                 axios({
-                    url: "/param/getParam",
+                    url: "param/getParam",
                     method: "POST",
                     data: this.methodInfo
                 }).then((res) => {
@@ -214,7 +214,7 @@
                 })
 
                 axios({
-                    url: "/param/getReturnParam",
+                    url: "param/getReturnParam",
                     method: "POST",
                     data: this.methodInfo
                 }).then((res) => {
@@ -227,7 +227,7 @@
             //输入框跟踪方法名模糊查询
             searchClass(key, callback) {
                 axios({
-                    url: "/location/getClassName",
+                    url: "location/getClassName",
                     method: "GET",
                     params: {
                         className: key,
@@ -257,7 +257,7 @@
                     return;
                 }
                 axios({
-                    url: "/location/getMethod",
+                    url: "location/getMethod",
                     method: "GET",
                     params: {
                         className: this.methodInfo.className,

@@ -18,15 +18,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.leyuna</groupId>
             <artifactId>waylocation-app</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.leyuna</groupId>
-            <artifactId>waylocation-core</artifactId>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

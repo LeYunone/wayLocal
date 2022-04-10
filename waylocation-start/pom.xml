@@ -28,10 +28,6 @@
             <groupId>com.leyuna</groupId>
             <artifactId>waylocation-spring-boot-autoconfig</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.leyuna</groupId>
-            <artifactId>waylocation-core</artifactId>
-        </dependency>
     </dependencies>
 
 </project>
