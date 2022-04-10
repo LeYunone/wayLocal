@@ -19,7 +19,6 @@
 
     <modules>
         <module>waylocation-start</module>
-        <module>waylocation-service</module>
         <module>wayLocation-app</module>
         <module>waylocation-core</module>
         <module>waylocation-autoconfig</module>
@@ -46,11 +45,6 @@
             <dependency>
                 <groupId>com.leyuna</groupId>
                 <artifactId>waylocation-start</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.leyuna</groupId>
-                <artifactId>waylocation-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

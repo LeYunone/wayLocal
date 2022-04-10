@@ -13,7 +13,6 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-
     <build>
         <plugins>
             <plugin>
@@ -28,6 +27,10 @@
         <dependency>
             <groupId>com.leyuna</groupId>
             <artifactId>waylocation-spring-boot-autoconfig</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.leyuna</groupId>
+            <artifactId>waylocation-core</artifactId>
         </dependency>
     </dependencies>
 
