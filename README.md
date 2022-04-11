@@ -30,27 +30,33 @@
 
 **2022-4-11**： 0.0.1-SNAPSHOT:
 
+#### 引入依赖
+
 ```java
-        <dependency>
-            <groupId>xyz.leyuna</groupId>
-            <artifactId>waylocation-spring-boot-start</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
+<dependency>
+   <groupId>xyz.leyuna</groupId>
+   <artifactId>waylocation-spring-boot-start</artifactId>
+   <version>0.0.1-SNAPSHOT</version>
+</dependency>
 ```
 
-### 配置文件
+#### 打开页面
+
+**XXXXX[项目地址]/waylocation**
+
+#### 配置文件
 
 ```properties
 waylocation.saveType=XXX   
 ```
 
-**saveType:**决定历史数据[历史类、历史方法、历史调用]的保存方式。
+**saveType**:决定历史数据[历史类、历史方法、历史调用]的保存方式。
 
 1. **“cookie”**，默认值，仅保留少量信息
 2. **“session”**,保存本次测试的所有信息，仅这次会话有用
 3. **“file”**，写入机械磁盘中，除非手动清除，则永不消失
 
-### 版本环境
+#### 版本环境
 
 |    依赖    |    版本号     |
 | :--------: | :-----------: |
