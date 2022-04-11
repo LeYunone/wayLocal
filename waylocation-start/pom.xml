@@ -4,7 +4,6 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>xyz.leyuna</groupId>
     <artifactId>waylocation-spring-boot-start</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>waylocation-spring-boot-start</name>
 
     <parent>
@@ -13,15 +12,15 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <build>
-        <plugins>
-            <plugin>
-                <!--该插件主要用途：构建可执行的JAR -->
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+<!--    <build>-->
+<!--        <plugins>-->
+<!--            <plugin>-->
+<!--                &lt;!&ndash;该插件主要用途：构建可执行的JAR &ndash;&gt;-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--            </plugin>-->
+<!--        </plugins>-->
+<!--    </build>-->
 
     <dependencies>
         <dependency>
