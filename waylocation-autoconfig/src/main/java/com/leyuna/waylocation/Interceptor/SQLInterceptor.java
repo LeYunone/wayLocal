@@ -230,6 +230,7 @@ public class SQLInterceptor implements Interceptor {
         TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
         //解析不出来则返回空
         if(null==statement){
+            //TODO
             return null;
         }
         List<String> tableList = tablesNamesFinder.getTableList(statement);
