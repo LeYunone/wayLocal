@@ -12,4 +12,6 @@ public class ServerConstant {
 
     //项目内所有类的类名
     public static Set<String> ClassName=new HashSet<>();
+    
+    public static String saveType = "cookie";
 }

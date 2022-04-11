@@ -12,23 +12,12 @@ public class WayLocationProperties {
 
     private String saveType;
 
-    private int port;
-
     public String getSaveType () {
         return saveType;
     }
 
     public WayLocationProperties setSaveType (String saveType) {
         this.saveType = saveType;
-        return this;
-    }
-
-    public int getPort () {
-        return port;
-    }
-
-    public WayLocationProperties setPort (int port) {
-        this.port = port;
         return this;
     }
 }
