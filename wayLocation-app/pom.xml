@@ -6,13 +6,13 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>waylocation-app</name>
     <parent>
-        <groupId>com.leyuna</groupId>
+        <groupId>xyz.leyuna</groupId>
         <artifactId>waylocation</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <dependencies>
         <dependency>
-            <groupId>com.leyuna</groupId>
+            <groupId>xyz.leyuna</groupId>
             <artifactId>waylocation-core</artifactId>
         </dependency>
         <dependency>

@@ -67,6 +67,8 @@ public class MethodControl {
         if (SqlInvokeConstant.isGO) {
             return DataResponse.buildFailure("有一个数据库事务在进行");
         }
+        //开启本次测试流程
+        SqlInvokeConstant.isGO = true;
         //调用方法
         DataResponse dataResponse = methodService.invokeMethod(methodInfo);
         Object data = dataResponse.getData();
@@ -79,9 +81,6 @@ public class MethodControl {
         //记录历史
 //        editHisCookie(historyClass,request,methodInfo,response);
         methodInfo.setSqlInvokeDTO(SqlInvokeConstant.sqlInvokeDTO);
-        //清空本次事务目录
-        SqlInvokeConstant.sqlInvokeDTO = null;
-        SqlInvokeConstant.isGO = false;
         return DataResponse.of(methodInfo);
     }
 

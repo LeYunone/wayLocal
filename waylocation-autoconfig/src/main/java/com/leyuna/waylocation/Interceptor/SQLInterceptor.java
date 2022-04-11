@@ -60,7 +60,10 @@ public class SQLInterceptor implements Interceptor {
 
     @Override
     public Object intercept (Invocation invocation) throws Throwable {
-
+        //判断是否开启的测试流程
+        if(!isGO()){
+            return invocation.proceed();
+        }
         //获得本次db操作对应的存储信息
         MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
         Object parameter = null;
@@ -107,6 +110,19 @@ public class SQLInterceptor implements Interceptor {
         //登记db
         registerDB(strSql, conditionString, dataString, sqlAction, tableString, sqlTime);
         return result;
+    }
+
+    /**
+     * 判断是否开启监听sql服务
+     * @return
+     */
+    private boolean isGO(){
+        if(SqlInvokeConstant.isGO){
+            if(null != SqlInvokeConstant.sqlInvokeDTO){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -209,6 +225,7 @@ public class SQLInterceptor implements Interceptor {
         try {
             statement = CCJSqlParserUtil.parse(sql);
         } catch (Exception e) {
+            e.printStackTrace();
         }
         TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
         //解析不出来则返回空

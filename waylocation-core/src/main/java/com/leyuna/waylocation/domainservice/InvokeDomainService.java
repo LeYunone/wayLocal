@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -72,6 +73,8 @@ public class InvokeDomainService {
             }
             try {
                 method.setAccessible(true);
+                //执行方法前，初始化本次sql目录
+                SqlInvokeConstant.sqlInvokeDTO = new ArrayList<>();
                 result = method.invoke(bean, paramObjects);
             } catch (Exception e) {
                 result = e.getMessage();
@@ -82,6 +85,9 @@ public class InvokeDomainService {
             } finally {
                 method.setAccessible(accessible);
 
+                //执行结束 格式化sql目录
+                SqlInvokeConstant.isGO = false;
+                SqlInvokeConstant.sqlInvokeDTO = null;
             }
         }
 

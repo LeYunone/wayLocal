@@ -7,7 +7,7 @@
     <name>waylocation-core</name>
 
     <parent>
-        <groupId>com.leyuna</groupId>
+        <groupId>xyz.leyuna</groupId>
         <artifactId>waylocation</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>

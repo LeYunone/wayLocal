@@ -2,14 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.leyuna</groupId>
+    <groupId>xyz.leyuna</groupId>
     <artifactId>waylocation-spring-boot-autoconfig</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>waylocation-spring-boot-autoconfig</name>
     <description>Demo project for Spring Boot</description>
 
     <parent>
-        <groupId>com.leyuna</groupId>
+        <groupId>xyz.leyuna</groupId>
         <artifactId>waylocation</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
@@ -20,7 +20,7 @@
             <artifactId>spring-boot-autoconfigure</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.leyuna</groupId>
+            <groupId>xyz.leyuna</groupId>
             <artifactId>waylocation-app</artifactId>
         </dependency>
         <dependency>
