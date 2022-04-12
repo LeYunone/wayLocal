@@ -36,7 +36,7 @@
 <dependency>
    <groupId>xyz.leyuna</groupId>
    <artifactId>waylocation-spring-boot-start</artifactId>
-   <version>0.0.1-SNAPSHOT</version>
+   <version>0.0.1</version>
 </dependency>
 ```
 
