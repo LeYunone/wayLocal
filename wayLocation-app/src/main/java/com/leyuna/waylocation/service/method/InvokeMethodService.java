@@ -6,6 +6,7 @@ import com.leyuna.waylocation.command.HistoryExe;
 import com.leyuna.waylocation.command.InvokeMethodExe;
 import com.leyuna.waylocation.constant.global.ServerConstant;
 import com.leyuna.waylocation.constant.global.SqlInvokeConstant;
+import com.leyuna.waylocation.dto.ClassDTO;
 import com.leyuna.waylocation.dto.MethodInfoDTO;
 import com.leyuna.waylocation.response.DataResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -47,11 +48,11 @@ public class InvokeMethodService {
             switch (ServerConstant.saveType){
                 case "cookie":
                     //cookie存储 少量信息
-                    this.saveHistoryCookie(o,methodInfo,response);
+                    this.saveHistoryCookie(methodInfo,request,response);
                     break;
-                case "session":
+                case "object":
                     //session存储 本次会话全部信息
-                    this.saveHistorySession(o,methodInfo,request);
+                    this.saveHistoryObject(o,methodInfo);
                     break;
                 case "file":
                     //file存储 持久化全部信息
@@ -66,41 +67,72 @@ public class InvokeMethodService {
         return DataResponse.of(o);
     }
 
+    /**
+     * 调用记录存储到cookie中
+     * @param 
+     * @param methodInfo
+     * @param request
+     * @param response
+     * @throws UnsupportedEncodingException
+     */
+    private void saveHistoryCookie(MethodInfoDTO methodInfo,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+        Cookie[] cookies = request.getCookies();
+        //类名集合
+        List<String> classList = new ArrayList<>();
+        //记录集合
+        List<MethodInfoDTO> methodList = new ArrayList<>();
+        if(null != cookies){
+            for(Cookie cookie:cookies){
+                if(cookie.getName().equals(ServerConstant.saveClass)){
+                    //取之前存储的类名集合
+                    String value = cookie.getValue();
+                    classList = JSONObject.parseArray(value,String.class);
+                }
+                if(cookie.getName().equals(ServerConstant.saveMethod)){
+                    //去之前存储的记录集合
+                    String value = cookie.getValue();
+                    methodList = JSONObject.parseArray(value,MethodInfoDTO.class);
+                }
+            }
+        }
 
-    private void saveHistoryCookie(Object o, MethodInfoDTO methodInfo, HttpServletResponse response) throws UnsupportedEncodingException {
+        //存储调用类
+        classList.add(methodInfo.getClassName());
+        Set set = new HashSet();
+        set.addAll(classList);
+        List<String> resultList = new ArrayList<>(set);
+        Cookie classCookie = new Cookie(ServerConstant.saveClass,JSONObject.toJSONString(resultList));
+        
+        //存储记录
         MethodInfoDTO methodInfoDTO = new MethodInfoDTO();
         methodInfoDTO.setClassName(methodInfo.getClassName());
         methodInfoDTO.setMethodName(methodInfo.getMethodName());
+        methodList.add(methodInfoDTO);
 
-        Cookie cookie = new Cookie("Waylocation:"+methodInfo.getMethodId(),
-                URLEncoder.encode(JSONObject.toJSONString(methodInfo), "UTF-8"));
-        response.addCookie(cookie);
+        Cookie methodCookie = new Cookie(ServerConstant.saveMethod,
+                JSONObject.toJSONString(methodList));
+        
+        //保存cookie
+        response.addCookie(methodCookie);
+        response.addCookie(classCookie);
     }
 
-    private void saveHistorySession(Object o, MethodInfoDTO methodInfo,HttpServletRequest request){
-        HttpSession session = request.getSession();
-
-        //保存本次调用类名class
-        Object classNames = session.getAttribute("waylocation:class");
-        List<String> classList = new ArrayList<>();
-        if(null != classNames){
-            classList = JSONObject.parseArray(classNames.toString(),String.class);
-        }
-        classList.add(methodInfo.getClassName());
-        //去重
-        Set set = new HashSet();
-        set.addAll(classList);
-        List<String> classResult = new ArrayList(set);
-        session.setAttribute("waylocation:class", JSONObject.toJSON(classResult));
-
-        //保存本次方法
-        Object historys = session.getAttribute("waylocation:history");
-        List<MethodInfoDTO> methodInfoDTOS = new ArrayList<>();
-        if(null != historys){
-            methodInfoDTOS = JSONObject.parseArray(historys.toString(), MethodInfoDTO.class);
-        }
+    
+    /**
+     * 保存全部信息到 应用中
+     * @param o
+     * @param methodInfo
+     */
+    private void saveHistoryObject(Object o, MethodInfoDTO methodInfo){
+        
+        //存储本次调用记录
         methodInfo.setReturnParamValue(JSONObject.toJSONString(o));
-        methodInfoDTOS.add(methodInfo);
-        session.setAttribute("waylocation:history", JSONObject.toJSON(methodInfoDTOS));
+        ServerConstant.historyMethod.push(methodInfo);
+        
+        //存储本次调用类
+        ClassDTO classDTO = new ClassDTO();
+        classDTO.setHightLineKey(methodInfo.getClassName());
+        classDTO.setValue(methodInfo.getClassName());
+        ServerConstant.historyClass.add(classDTO);
     }
 }

@@ -48,14 +48,18 @@
 
 ```properties
 waylocation.saveType=XXX   
+waylocation.savePath = xxx
 ```
 
 **saveType**:决定历史数据[历史类、历史方法、历史调用]的保存方式。
 
-1. **“cookie”**，默认值，仅保留少量信息
-2. **“session”**,保存本次测试的所有信息，仅这次会话有用
+1. **“object”**，默认值，保存本次测试的所有信息，仅当前会话应用有用
+2. **“cookie”**,仅保留少量信息，但是基于cookie会话
 3. **“file”**，写入机械磁盘中，除非手动清除，则永不消失
 
+
+**savePath**:保存方式为file时，记录文档的保存路径。
+默认为C:/waylocation
 #### 版本环境 🌳
 
 |    依赖    |    版本号     |
