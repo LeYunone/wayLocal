@@ -23,6 +23,9 @@ public class WaylocationAutoConfiguration {
         String saveType = wayLocationProperties.getSaveType();
         if(StringUtils.isNotBlank(saveType)){
             ServerConstant.saveType = saveType;
+        }else{
+            //默认为cookie保存
+            ServerConstant.saveType = "cookie";
         }
     }
 }

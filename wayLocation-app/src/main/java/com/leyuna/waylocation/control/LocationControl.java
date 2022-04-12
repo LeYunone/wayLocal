@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.*;
 
 /**
@@ -29,7 +31,7 @@ public class LocationControl {
     @RequestMapping("/getClassName")
     public DataResponse getClassName (String className,
                                       @RequestParam(required = false, defaultValue = "10") Integer size,
-                                      @CookieValue(value = "historyClass", required = false) String historyClass) {
+                                      HttpServletRequest request) {
         if (!StringUtils.isEmpty(className)) {
             //模糊查询类
             return locationService.getClassName(className, size);
@@ -37,13 +39,8 @@ public class LocationControl {
         LinkedHashMap<String, ClassDTO> classDTOS = new LinkedHashMap<>();
 
         //查找历史使用类
-        if (StringUtils.isEmpty(historyClass)) {
-            return DataResponse.of(new LuceneDTO());
-        }
-        classDTOS = JSONObject.parseObject(historyClass, classDTOS.getClass());
         LuceneDTO luceneDTO = new LuceneDTO();
-        luceneDTO.setListData(new LinkedList<>(classDTOS.values()));
-        luceneDTO.setTotole(classDTOS.size());
+        luceneDTO.setListData(this.getHistoryMethod(request));
         return DataResponse.of(luceneDTO);
     }
 
@@ -61,5 +58,21 @@ public class LocationControl {
             //如果指明类为模糊查询
             return locationService.getMethod(className, methodName, false);
         }
+    }
+
+    public List<ClassDTO> getHistoryMethod(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        Object attribute = session.getAttribute("waylocation:class");
+        List<ClassDTO> classDTOS = new ArrayList<>();
+        if(null != attribute){
+            List<String> strings = JSONObject.parseArray(attribute.toString(), String.class);
+            for(String className:strings){
+                ClassDTO classDTO=new ClassDTO();
+                classDTO.setValue(className);
+                classDTO.setHightLineKey(className);
+                classDTOS.add(classDTO);
+            }
+        }
+        return classDTOS;
     }
 }

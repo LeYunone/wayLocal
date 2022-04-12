@@ -237,7 +237,7 @@
                     var data = res.data;
                     if (data.status) {
                         var list = data.data.listData;
-                        if (list == null) {
+                        if (list == null || list.size == 0) {
                             this.$notify({
                                 title: '警告',
                                 message: '没有历史使用记录',

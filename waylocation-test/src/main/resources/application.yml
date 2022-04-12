@@ -22,10 +22,6 @@ spring:
     multipart:
       max-file-size: -1
       max-request-size: -1
-### 接口配置
-server:
-  servlet:
-    context-path: '/leyuna'
 
 ## 打印日志级别
 logging:

@@ -5,6 +5,8 @@ import com.leyuna.waylocation.command.LocationExe;
 import com.leyuna.waylocation.constant.global.SqlInvokeConstant;
 import com.leyuna.waylocation.dto.MethodInfoDTO;
 import com.leyuna.waylocation.util.SpringContextUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +23,8 @@ public class InvokeDomainService {
 
     @Autowired
     private LocationExe locationExe;
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * 调用方法
@@ -54,7 +58,7 @@ public class InvokeDomainService {
                     result = "无法从容器中取得方法 或该方法无法实例";
                     return result;
                 }
-                e.printStackTrace();
+                logger.error("Waylocaiton Spring Error:"+e.getMessage());
             }
 
             //解析入参值
@@ -75,19 +79,13 @@ public class InvokeDomainService {
                 method.setAccessible(true);
                 //执行方法前，初始化本次sql目录
                 SqlInvokeConstant.sqlInvokeDTO = new ArrayList<>();
+                //执行方法
                 result = method.invoke(bean, paramObjects);
             } catch (Exception e) {
                 result = e.getMessage();
-                e.printStackTrace();
-                //清空本次事务目录
-                SqlInvokeConstant.sqlInvokeDTO = null;
-                SqlInvokeConstant.isGO = false;
+                logger.error("waylocation Error : "+e.getMessage());
             } finally {
                 method.setAccessible(accessible);
-
-                //执行结束 格式化sql目录
-                SqlInvokeConstant.isGO = false;
-                SqlInvokeConstant.sqlInvokeDTO = null;
             }
         }
 

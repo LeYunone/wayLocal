@@ -20,7 +20,9 @@ public class ParamsUtil {
     public static String getParams(Class<?> [] cs){
         List<String> result=new ArrayList<>();
         for(Class clazz:cs){
-            result.add(clazz.getName());
+            if(null != clazz){
+                result.add(clazz.getName());
+            }
         }
         return StringUtils.join(result,",");
     }

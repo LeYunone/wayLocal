@@ -70,7 +70,7 @@ public class MethodControl {
         //开启本次测试流程
         SqlInvokeConstant.isGO = true;
         //调用方法
-        DataResponse dataResponse = methodService.invokeMethod(methodInfo);
+        DataResponse dataResponse = methodService.invokeMethod(methodInfo,response,request);
         Object data = dataResponse.getData();
         if (data != null) {
             //记录本次调用结果
@@ -81,6 +81,9 @@ public class MethodControl {
         //记录历史
 //        editHisCookie(historyClass,request,methodInfo,response);
         methodInfo.setSqlInvokeDTO(SqlInvokeConstant.sqlInvokeDTO);
+        //清空本次事务目录
+        SqlInvokeConstant.sqlInvokeDTO = null;
+        SqlInvokeConstant.isGO = false;
         return DataResponse.of(methodInfo);
     }
 
