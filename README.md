@@ -7,12 +7,11 @@
 方法定位使用，名如其名。当前开源社区中有很多很多基于接口的测试工具，但在实际的开发过程中，有很多场景都需要测试调用某个方法；
 或在项目出现业务漏洞时，也需要直接用设置好的参数来判断业务接口的某个方法是否可行，来以此定位bug位置。
 厌倦了"test"接口中，new 方法调用的这种手法，是时候有必要去实现一个去定位方法与参数，简化方法调用的工具了。
-
-
-
+git地址：[https://github.com/LeYunone/wayLocation](https://github.com/LeYunone/wayLocation)
+目前屏蔽部分功能，还在开发中
 ## 简单页面 ❀
 
-![waylocation](https://www.leyuna.xyz/image/2022-04-11/QQ截图20220410224721.png)
+![waylocation](https://img-blog.csdnimg.cn/img_convert/a33fb106a10176e342ccb34386cffa5b.png)
 
 ## 工具定位 🏠
 
@@ -57,7 +56,7 @@ waylocation.savePath = xxx
 
 1. **“object”**，默认值，保存本次测试的所有信息，仅当前会话应用有用
 2. **“cookie”**,仅保留少量信息，但是基于cookie会话
-3. **“file”**，写入机械磁盘中，除非手动清除，则永不消失
+3. **“file”**，写入机械磁盘中，除非手动清除，则永不消失，生成的excel文档：**savePath+/history.xlsx**
 
 
 **savePath**:保存方式为file时，记录文档的保存路径。
