@@ -28,7 +28,9 @@
 
 ### 快速开始 🏃‍
 
-**2022-4-11**： 0.0.1-SNAPSHOT:
+**2022-4-11**:  0.0.1-SNAPSHOT:
+
+**2022-4-12**:  0.0.2.RELEASE;
 
 #### 引入依赖 📕
 
@@ -36,7 +38,7 @@
 <dependency>
    <groupId>xyz.leyuna</groupId>
    <artifactId>waylocation-spring-boot-start</artifactId>
-   <version>0.0.1</version>
+   <version>0.0.2.RELEASE</version>
 </dependency>
 ```
 
