@@ -1,9 +1,11 @@
 package com.leyuna.waylocation.constant.global;
 
 import com.leyuna.waylocation.dto.ClassDTO;
+import com.leyuna.waylocation.dto.MethodExcelDTO;
 import com.leyuna.waylocation.dto.MethodInfoDTO;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
@@ -28,4 +30,6 @@ public class ServerConstant {
     public static Set<ClassDTO> historyClass = null;
     
     public static Stack<MethodInfoDTO> historyMethod = null;
+
+    public static List<MethodExcelDTO> historyExcel = null;
 }

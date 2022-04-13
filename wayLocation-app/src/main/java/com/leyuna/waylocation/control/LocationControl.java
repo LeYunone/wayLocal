@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.leyuna.waylocation.constant.global.ServerConstant;
 import com.leyuna.waylocation.dto.ClassDTO;
 import com.leyuna.waylocation.dto.LuceneDTO;
+import com.leyuna.waylocation.dto.MethodExcelDTO;
 import com.leyuna.waylocation.response.DataResponse;
 import com.leyuna.waylocation.service.method.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author pengli
@@ -63,15 +65,14 @@ public class LocationControl {
     private List<ClassDTO> getHistoryName(HttpServletRequest request){
         switch(ServerConstant.saveType){
             case "cookie":
-                return cookieClassName(request);
+                return this.cookieClassName(request);
             case "object":
-                return objectClassName();
+                return this.objectClassName();
             case "file":
-                break;
+                return this.fileClassName();
             default:
                 return null;
         }
-        return null;
     }
 
     /**
@@ -103,5 +104,18 @@ public class LocationControl {
      */
     private List<ClassDTO> objectClassName(){
         return new ArrayList<>(ServerConstant.historyClass);
+    }
+
+    private List<ClassDTO> fileClassName(){
+        List<ClassDTO> result = new ArrayList<>();
+        List<MethodExcelDTO> historyExcel = ServerConstant.historyExcel;
+        Set<String> collect = historyExcel.stream().map(MethodExcelDTO::getClassName).collect(Collectors.toSet());
+        for(String className:collect){
+            ClassDTO classDTO = new ClassDTO();
+            classDTO.setValue(className);
+            classDTO.setHightLineKey(className);
+            result.add(classDTO);
+        }
+        return result;
     }
 }

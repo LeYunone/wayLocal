@@ -1,6 +1,9 @@
 package com.leyuna.waylocation.autoconfig;
 
+import com.alibaba.excel.EasyExcel;
+import com.leyuna.waylocation.config.EasyExcelOrderListener;
 import com.leyuna.waylocation.constant.global.ServerConstant;
+import com.leyuna.waylocation.dto.MethodExcelDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +14,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Stack;
 
@@ -45,7 +50,8 @@ public class WaylocationAutoConfiguration {
                 ServerConstant.historyMethod = new Stack<>();
             }else if(saveType.equals("file")){
                 //file
-                solveSavePath(savePath);
+                ServerConstant.historyExcel = new ArrayList<>();
+                solveFileSave(savePath);
             }else{
                 //cookie
             }
@@ -62,11 +68,11 @@ public class WaylocationAutoConfiguration {
      * 处理file方式的保存路径
      * @param savePath
      */
-    private void solveSavePath(String savePath){
+    private void solveFileSave(String savePath){
         if(StringUtils.isNotBlank(savePath)){
             ServerConstant.savePath = savePath;
         }else{
-            ServerConstant.savePath = "C:/waylocation";
+            ServerConstant.savePath = "C:/waylocation/";
         }
         
         //创建文件夹
@@ -78,6 +84,21 @@ public class WaylocationAutoConfiguration {
             }
         }else{
             logger.info("waylocation Success : file - 文件夹创建成功 路径: "+ServerConstant.savePath);
+        }
+
+        //读取历史文件
+        String fileName = ServerConstant.savePath+"/history.xlsx";
+        File history = new File(fileName);
+        if(!history.exists()){
+            try {
+                history.createNewFile();
+            } catch (IOException e) {
+                logger.error("waylocation Error : create file fail");
+            }
+        }
+        if(history.length()!=0){
+            //读取文档的同时，组装新文档
+            EasyExcel.read(fileName, MethodExcelDTO.class,new EasyExcelOrderListener()).sheet().doRead();
         }
     }
 }

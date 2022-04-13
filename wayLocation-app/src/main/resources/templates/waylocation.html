@@ -253,9 +253,6 @@
                 })
             },
             searchMethod(key, callback) {
-                if (key.length == 0) {
-                    return;
-                }
                 axios({
                     url: "location/getMethod",
                     method: "GET",
