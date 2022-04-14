@@ -3,6 +3,8 @@ package com.leyuna.waylocation.command;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.leyuna.waylocation.constant.global.ServerConstant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -19,6 +21,8 @@ import java.util.*;
  */
 @Service
 public class ParamExe {
+    
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * 获取对象的完整结构
@@ -58,9 +62,8 @@ public class ParamExe {
                 return String.valueOf(pagkLogic);
             }
 
-
             //TODO 如果是没有无参构造场景时
-            e.printStackTrace();
+            logger.error("Waylocation : Error getObjectStructure error");
         }
         //深度解析对象结构  规则：如果是项目内对象则继续，否则跳过
         resoleParam(obj, clazz);
@@ -129,7 +132,7 @@ public class ParamExe {
                         field.set(obj, packLogic);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error("waylocation : Error resoleParam error");
                 } finally {
                     field.setAccessible(accessible);
                 }

@@ -24,6 +24,8 @@ import org.apache.lucene.search.highlight.QueryScorer;
 import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -41,6 +43,8 @@ import java.util.List;
  */
 @Service
 public class WaylocationLuceneExe {
+    
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * 创建方法索引库文档
@@ -67,13 +71,13 @@ public class WaylocationLuceneExe {
             indexWriter.addDocuments(documents);
             //关闭输出流
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Waylocation : Error Lucene error");
         } finally {
             if (indexWriter != null) {
                 try {
                     indexWriter.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error("Waylocation : Error Lucene error");
                 }
             }
         }
@@ -99,13 +103,12 @@ public class WaylocationLuceneExe {
             indexWriter.addDocuments(documents);
             //关闭输出流
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Waylocation : Error Lucene error");
         } finally {
             if (indexWriter != null) {
                 try {
                     indexWriter.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
         }
@@ -185,13 +188,12 @@ public class WaylocationLuceneExe {
             luceneDTO.setListData(result);
             luceneDTO.setTotole(topDocs.totalHits);
         } catch (IOException | ParseException | InvalidTokenOffsetsException e) {
-            e.printStackTrace();
+            logger.error("Waylocation : Error Lucene error");
         } finally {
             if (indexReader != null) {
                 try {
                     indexReader.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
         }
@@ -256,13 +258,13 @@ public class WaylocationLuceneExe {
             luceneDTO.setListData(result);
             luceneDTO.setTotole(topDocs.totalHits);
         } catch (IOException | ParseException | InvalidTokenOffsetsException e) {
-            e.printStackTrace();
+            logger.error("Waylocation : Error Lucene error");
         } finally {
             if (indexReader != null) {
                 try {
                     indexReader.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error("Waylocation : Error Lucene error");
                 }
             }
         }
@@ -325,13 +327,12 @@ public class WaylocationLuceneExe {
             luceneDTO.setListData(result);
             luceneDTO.setTotole(topDocs.totalHits);
         } catch (IOException | ParseException | InvalidTokenOffsetsException e) {
-            e.printStackTrace();
+            logger.error("Waylocation : Error Lucene error");
         } finally {
             if (indexReader != null) {
                 try {
                     indexReader.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
         }

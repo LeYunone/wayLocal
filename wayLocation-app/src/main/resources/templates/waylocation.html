@@ -233,7 +233,8 @@
                     sqlInvokeDTO: [],
                     invokeTime: ""
                 },
-                methodInfos: []
+                methodInfos: [],
+                exportList: [] 
             }
         },
         methods: {
@@ -242,6 +243,7 @@
                 this.methodInfo=val;
             },
             exportHistory(val){
+                this.exportList = val;
                 console.log(val);
             },
             //清除
@@ -254,16 +256,28 @@
             },
             //导出当前的所有历史调用记录
             exportInfo() {
+                if(this.exportList.length==0){
+                    this.$message.error("没有导出的数据，请重新选择");
+                    return;
+                }
                 axios({
                     url: "method/export",
                     method: "POST",
-                    data: this.methodInfo
+                    data: this.exportList,
+                    responseType: 'blob'
                 }).then((res) => {
-                    var data = res.data;
-                    if (data.status) {
-                    } else {
-                        this.$message.error(data.message);
-                    }
+                    console.log(res)
+                    console.log(res)
+                    const filename = res.headers["content-disposition"];
+                    const blob = new Blob([res.data]);
+                    var downloadElement = document.createElement("a");
+                    var href = window.URL.createObjectURL(blob);
+                    downloadElement.href = href;
+                    downloadElement.download = decodeURIComponent(filename.split("filename=")[1]);
+                    document.body.appendChild(downloadElement);
+                    downloadElement.click();
+                    document.body.removeChild(downloadElement);
+                    window.URL.revokeObjectURL(href);
                 })
             },
             //调用历史弹窗

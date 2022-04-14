@@ -25,7 +25,6 @@ public class ClassOrderUtil {
         try {
             urls = load.getResources("");
         } catch (IOException e) {
-            e.printStackTrace();
         }
         //放所有类型
         List<Class> classes = new ArrayList<>();

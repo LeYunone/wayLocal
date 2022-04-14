@@ -1,5 +1,6 @@
 package com.leyuna.waylocation.control;
 
+import com.alibaba.excel.EasyExcel;
 import com.leyuna.waylocation.constant.enums.ResolveHistoryTypeEnum;
 import com.leyuna.waylocation.constant.global.SqlInvokeConstant;
 import com.leyuna.waylocation.dto.MethodInfoDTO;
@@ -62,11 +63,7 @@ public class MethodControl {
     }
 
     @PostMapping("/export")
-    public DataResponse export (@RequestBody List<MethodInfoDTO> methodInfoDTO, HttpServletResponse response) {
-        if (CollectionUtils.isEmpty(methodInfoDTO)) {
-            return DataResponse.buildFailure("没有能够导出的数据");
-        }
-
-        return DataResponse.buildSuccess();
+    public void export (@RequestBody List<MethodInfoDTO> methodInfoDTO) {
+        historyService.export(methodInfoDTO);
     }
 }

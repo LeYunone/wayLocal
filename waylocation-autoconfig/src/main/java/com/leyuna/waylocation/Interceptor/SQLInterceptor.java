@@ -225,7 +225,7 @@ public class SQLInterceptor implements Interceptor {
         try {
             statement = CCJSqlParserUtil.parse(sql);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("waylocation Error : sql statement get fail");
         }
         TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
         //解析不出来则返回空

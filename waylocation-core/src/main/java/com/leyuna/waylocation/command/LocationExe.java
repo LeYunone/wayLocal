@@ -37,7 +37,6 @@ public class LocationExe {
             }
             return method;
         } catch (ClassNotFoundException | NoSuchMethodException e) {
-            e.printStackTrace();
         }
         return null;
     }

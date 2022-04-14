@@ -11,11 +11,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -36,15 +39,41 @@ public class HistoryService {
     @Resource
     private HttpServletResponse response;
 
+    public void export(List<MethodInfoDTO> methodInfos){
+        
+        response.setHeader("Content-Disposition", "attachment;filename=export.xlsx");
+        response.setContentType("application/octet-stream");
+        response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
+        try {
+//            从HttpServletResponse中获取OutputStream输出流
+            ServletOutputStream outputStream = response.getOutputStream();
+            //TODO 2022-4-14 等待扩展自定义文档功能
+            List<MethodExcelDTO> exportData = new ArrayList<>();
+            methodInfos.forEach(co ->{
+                MethodExcelDTO methodExcelDTO = new MethodExcelDTO();
+                methodExcelDTO.setClassName(co.getClassName());
+                methodExcelDTO.setInvokeTime(co.getInvokeTime());
+                methodExcelDTO.setMethodName(co.getMethodName());
+                methodExcelDTO.setParamValue(co.getParamValue());
+                methodExcelDTO.setReturnParamValue(co.getReturnParamValue());
+                exportData.add(methodExcelDTO);
+            });
+            
+            EasyExcel.write(outputStream, MethodExcelDTO.class).sheet().doWrite(exportData);
+        } catch (IOException e) {
+            logger.error("Waylocation : Error export Error");
+        }
+    }
+    
     //处理 [读取、保存、导出] 历史记录入口
-    public List<MethodInfoDTO> resolveHistory(ResolveHistoryTypeEnum historyTypeEnum,MethodInfoDTO methodInfoDTO){
+    public List<MethodInfoDTO> resolveHistory(ResolveHistoryTypeEnum historyTypeEnum,List<MethodInfoDTO> methodInfos){
         switch (ServerConstant.saveType){
             case "cookie":
                 switch (historyTypeEnum){
                     case READ:
                         return this.getHistoryToCookie();
                     case SAVE:
-                        this.saveHistoryToCookie(methodInfoDTO);
+                        this.saveHistoryToCookie(methodInfos);
                         return null;
                     default:
                         break;
@@ -55,7 +84,7 @@ public class HistoryService {
                     case READ:
                         return this.getHistoryToObject();
                     case SAVE:
-                        this.saveHistoryToObject(methodInfoDTO);
+                        this.saveHistoryToObject(methodInfos);
                         return null;
                     default:
                         break;
@@ -66,7 +95,7 @@ public class HistoryService {
                     case READ:
                         return this.getHistoryToFile();
                     case SAVE:
-                        this.saveHistoryToFile(methodInfoDTO);
+                        this.saveHistoryToFile(methodInfos);
                         return null;
                     default:
                         break;
@@ -81,10 +110,9 @@ public class HistoryService {
     /**
      * 调用记录存储到cookie中
      * @param
-     * @param methodInfo
      * @throws UnsupportedEncodingException
      */
-    private void saveHistoryToCookie(MethodInfoDTO methodInfo) {
+    private void saveHistoryToCookie(List<MethodInfoDTO> methodInfos) {
         Cookie[] cookies = request.getCookies();
         //记录集合
         List<MethodInfoDTO> methodList = new ArrayList<>();
@@ -98,10 +126,12 @@ public class HistoryService {
             }
         }
         //存储记录
-        MethodInfoDTO methodInfoDTO = new MethodInfoDTO();
-        methodInfoDTO.setClassName(methodInfo.getClassName());
-        methodInfoDTO.setMethodName(methodInfo.getMethodName());
-        methodList.add(methodInfoDTO);
+        for(MethodInfoDTO methodInfo:methodInfos){
+            MethodInfoDTO methodInfoDTO = new MethodInfoDTO();
+            methodInfoDTO.setClassName(methodInfo.getClassName());
+            methodInfoDTO.setMethodName(methodInfo.getMethodName());
+            methodList.add(methodInfoDTO);
+        }
 
         Cookie methodCookie = new Cookie(ServerConstant.saveMethod,
                 JSONObject.toJSONString(methodList));
@@ -113,24 +143,25 @@ public class HistoryService {
 
     /**
      * 保存全部信息到 应用中
-     * @param methodInfo
      */
-    private void saveHistoryToObject( MethodInfoDTO methodInfo){
+    private void saveHistoryToObject( List<MethodInfoDTO> methodInfos){
 
         //存储本次调用记录
-        methodInfo.setInvokeTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
-        ServerConstant.historyMethod.push(methodInfo);
+        methodInfos.forEach(co->co.setInvokeTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))));
+        ServerConstant.historyMethod.addAll(methodInfos);
     }
 
-    private void saveHistoryToFile (MethodInfoDTO methodInfo) {
+    private void saveHistoryToFile (List<MethodInfoDTO> methodInfos) {
         File file = new File(ServerConstant.savePath + "/history.xlsx");
-        MethodExcelDTO excelDTO = new MethodExcelDTO();
-        excelDTO.setClassName(methodInfo.getClassName());
-        excelDTO.setInvokeTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
-        excelDTO.setMethodName(methodInfo.getMethodName());
-        excelDTO.setParamValue(methodInfo.getParamValue());
-        excelDTO.setReturnParamValue(methodInfo.getReturnParamValue());
-        ServerConstant.historyExcel.add(excelDTO);
+        for(MethodInfoDTO methodInfo:methodInfos){
+            MethodExcelDTO excelDTO = new MethodExcelDTO();
+            excelDTO.setClassName(methodInfo.getClassName());
+            excelDTO.setInvokeTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+            excelDTO.setMethodName(methodInfo.getMethodName());
+            excelDTO.setParamValue(methodInfo.getParamValue());
+            excelDTO.setReturnParamValue(methodInfo.getReturnParamValue());
+            ServerConstant.historyExcel.add(excelDTO);
+        }
 
         //写文档
         EasyExcel.write(file, MethodExcelDTO.class).sheet().doWrite(ServerConstant.historyExcel);

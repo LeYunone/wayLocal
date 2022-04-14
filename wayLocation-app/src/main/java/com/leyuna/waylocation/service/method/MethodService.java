@@ -10,6 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author pengli
  * @create 2022-02-23 15:01
@@ -38,7 +41,9 @@ public class MethodService {
             o = invokeMethodExe.invokeMethod(methodInfo);
             methodInfo.setReturnParamValue(o==null?"": JSONObject.toJSONString(o));
             //历史保存任务
-            historyService.resolveHistory(ResolveHistoryTypeEnum.SAVE,methodInfo);
+            List<MethodInfoDTO> dList = new ArrayList<>();
+            dList.add(methodInfo);
+            historyService.resolveHistory(ResolveHistoryTypeEnum.SAVE,dList);
         }catch (Exception e){
             logger.error("Waylocation Error : "+e.getMessage());
         }
