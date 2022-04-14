@@ -7,8 +7,6 @@ import com.leyuna.waylocation.dto.MethodExcelDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +14,6 @@ import org.springframework.context.annotation.Configuration;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Stack;
 
 /**
@@ -46,7 +43,6 @@ public class WaylocationAutoConfiguration {
             ServerConstant.saveType = saveType;
             if(saveType.equals("object")){
                 //初始化站内记录
-                ServerConstant.historyClass = new HashSet<>();
                 ServerConstant.historyMethod = new Stack<>();
             }else if(saveType.equals("file")){
                 //file
@@ -59,7 +55,6 @@ public class WaylocationAutoConfiguration {
             //默认为cookie保存
             ServerConstant.saveType = "object";
             //初始化站内记录
-            ServerConstant.historyClass = new HashSet<>();
             ServerConstant.historyMethod = new Stack<>();
         }
     }
@@ -69,10 +64,9 @@ public class WaylocationAutoConfiguration {
      * @param savePath
      */
     private void solveFileSave(String savePath){
+        ServerConstant.savePath = "C:/waylocation/";
         if(StringUtils.isNotBlank(savePath)){
             ServerConstant.savePath = savePath;
-        }else{
-            ServerConstant.savePath = "C:/waylocation/";
         }
         
         //创建文件夹
@@ -83,7 +77,7 @@ public class WaylocationAutoConfiguration {
                 logger.info("waylocation Success : file - 文件夹创建成功 路径: "+ServerConstant.savePath);
             }
         }else{
-            logger.info("waylocation Success : file - 文件夹创建成功 路径: "+ServerConstant.savePath);
+            logger.info("waylocation Success : file - 文件夹定位成功 路径: "+ServerConstant.savePath);
         }
 
         //读取历史文件

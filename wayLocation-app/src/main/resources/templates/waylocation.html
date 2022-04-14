@@ -55,8 +55,8 @@
 
     <el-card class="box-card" style="margin-top: 18px">
         <div class="div-button">
-            <el-button plain @click="exportInfo">保存</el-button>
-            <el-button plain @click="openHistory">历史调用</el-button>
+            <el-button plain @click="openHistory(1)">历史导出</el-button>
+            <el-button plain @click="openHistory(2)">历史调用</el-button>
             <el-button plain @click="clearAll">清除</el-button>
             <el-button plain @click="invokeMethod">测试</el-button>
         </div>
@@ -135,6 +135,75 @@
             </el-table-column>
         </el-table>
     </el-card>
+    <el-dialog title="选择记录填充" :visible.sync='dialogSelectHistory'>
+        <el-table
+                ref="singleTable"
+                :data="methodInfos"
+                highlight-current-row
+                @current-change="selectHistory"
+                style="width: 100%">
+            <el-table-column
+                    type="index"
+                    width="50">
+            </el-table-column>
+            <el-table-column
+                    prop="invokeTime"
+                    label="调用时间"
+                    width="120">
+            </el-table-column>
+            <el-table-column
+                    prop="methodName"
+                    label="方法名"
+                    width="120">
+            </el-table-column>
+            <el-table-column
+                    prop="className"
+                    label="类名"
+                    show-overflow-tooltip>
+            </el-table-column>
+            <el-table-column
+                    prop="paramValue"
+                    label="入参"
+                    show-overflow-tooltip>
+            </el-table-column>
+        </el-table>
+    </el-dialog>
+    <el-dialog title="历史记录" :visible.sync="dialogExportHistory">
+        <el-table
+                ref="multipleTable"
+                :data="methodInfos"
+                tooltip-effect="dark"
+                style="width: 100%"
+                @selection-change="exportHistory">
+            <el-table-column
+                    type="selection"
+                    width="55">
+            </el-table-column>
+            <el-table-column
+                    prop="invokeTime"
+                    label="调用时间"
+                    width="120">
+            </el-table-column>
+            <el-table-column
+                    prop="methodName"
+                    label="方法名"
+                    width="120">
+            </el-table-column>
+            <el-table-column
+                    prop="className"
+                    label="类名"
+                    show-overflow-tooltip>
+            </el-table-column>
+            <el-table-column
+                    prop="paramValue"
+                    label="入参"
+                    show-overflow-tooltip>
+            </el-table-column>
+        </el-table>
+        <div>
+            <el-button @click="exportInfo()">导出Excel</el-button>
+        </div>
+    </el-dialog>
 </div>
 </body>
 </html>
@@ -143,6 +212,9 @@
         el: '#app',
         data() {
             return {
+                dialogSelectHistory: false,
+                dialogExportHistory: false,
+                dialogType: 1,
                 item: "",
                 loading: false,
                 form: {
@@ -159,10 +231,18 @@
                     paramValue: [],
                     returnParamValue: "",
                     sqlInvokeDTO: [],
-                }
+                    invokeTime: ""
+                },
+                methodInfos: []
             }
         },
         methods: {
+            selectHistory(val){
+              console.log(val);
+            },
+            exportHistory(val){
+                console.log(val);
+            },
             //清除
             clearAll() {
                 this.methodInfo = {};
@@ -174,12 +254,35 @@
             //导出当前的所有历史调用记录
             exportInfo() {
                 axios({
-                    url: "/method/"
+                    url: "method/export",
+                    method: "POST",
+                    data: this.methodInfo
+                }).then((res) => {
+                    var data = res.data;
+                    if (data.status) {
+                    } else {
+                        this.$message.error(data.message);
+                    }
                 })
             },
             //调用历史弹窗
-            openHistory() {
-
+            openHistory(type) {
+                axios({
+                    url: "method/getHistory"
+                }).then((res) => {
+                    var data = res.data;
+                    if (data.status) {
+                        this.methodInfos = data.data;
+                    } else {
+                        this.$message.error(data.message);
+                    }
+                })
+                if (type === 1) {
+                    this.dialogExportHistory = true;
+                }
+                if (type === 2) {
+                    this.dialogSelectHistory = true;
+                }
             },
             invokeMethod() {
                 axios({
@@ -191,6 +294,8 @@
                     console.log(data)
                     if (data.status) {
                         this.methodInfo = data.data;
+                    } else {
+                        this.$message.error(data.message);
                     }
                 })
             },
@@ -237,7 +342,7 @@
                     var data = res.data;
                     if (data.status) {
                         var list = data.data.listData;
-                        if (list == null || list.size == 0) {
+                        if (list == null || list.length === 0) {
                             this.$notify({
                                 title: '警告',
                                 message: '没有历史使用记录',

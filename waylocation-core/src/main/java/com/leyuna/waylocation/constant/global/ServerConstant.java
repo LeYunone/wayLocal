@@ -1,6 +1,5 @@
 package com.leyuna.waylocation.constant.global;
 
-import com.leyuna.waylocation.dto.ClassDTO;
 import com.leyuna.waylocation.dto.MethodExcelDTO;
 import com.leyuna.waylocation.dto.MethodInfoDTO;
 
@@ -23,11 +22,7 @@ public class ServerConstant {
     
     public static String savePath = null;
 
-    public static String saveClass = "waylocation-class";
-    
     public static String saveMethod = "waylocation-history";
-    
-    public static Set<ClassDTO> historyClass = null;
     
     public static Stack<MethodInfoDTO> historyMethod = null;
 

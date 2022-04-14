@@ -1,22 +1,16 @@
 package com.leyuna.waylocation.control;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.leyuna.waylocation.constant.enums.ResolveHistoryTypeEnum;
 import com.leyuna.waylocation.constant.global.SqlInvokeConstant;
-import com.leyuna.waylocation.dto.ClassDTO;
 import com.leyuna.waylocation.dto.MethodInfoDTO;
 import com.leyuna.waylocation.response.DataResponse;
-import com.leyuna.waylocation.service.method.InvokeMethodService;
-import com.leyuna.waylocation.service.method.LocationService;
+import com.leyuna.waylocation.service.method.HistoryService;
+import com.leyuna.waylocation.service.method.MethodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.net.URLEncoder;
 import java.util.*;
 
 /**
@@ -29,10 +23,10 @@ import java.util.*;
 public class MethodControl {
 
     @Autowired
-    private LocationService locationMethodService;
+    private MethodService methodService;
 
     @Autowired
-    private InvokeMethodService methodService;
+    private HistoryService historyService;
 
     /**
      * 获得历史方法调用记录
@@ -40,18 +34,8 @@ public class MethodControl {
      * @return
      */
     @RequestMapping("/getHistory")
-    public DataResponse getHistory (HttpServletRequest request) {
-        //需要先进后出的排列
-        Stack<MethodInfoDTO> hisM = new Stack<>();
-        Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("historyClass")) {
-                String value = cookie.getValue();
-                MethodInfoDTO methodInfoDTO = JSONObject.parseObject(value, MethodInfoDTO.class);
-                hisM.push(methodInfoDTO);
-            }
-        }
-        return DataResponse.of(hisM);
+    public DataResponse getHistory () {
+        return DataResponse.of(historyService.resolveHistory(ResolveHistoryTypeEnum.READ,null));
     }
 
 
@@ -62,24 +46,14 @@ public class MethodControl {
      * @return
      */
     @PostMapping("/invokeMethod")
-    public DataResponse invokeMethod (@RequestBody MethodInfoDTO methodInfo, HttpServletResponse response, HttpServletRequest request,
-                                      @CookieValue(value = "historyClass", required = false) String historyClass) {
+    public DataResponse invokeMethod (@RequestBody MethodInfoDTO methodInfo) {
         if (SqlInvokeConstant.isGO) {
             return DataResponse.buildFailure("有一个数据库事务在进行");
         }
         //开启本次测试流程
         SqlInvokeConstant.isGO = true;
         //调用方法
-        DataResponse dataResponse = methodService.invokeMethod(methodInfo,response,request);
-        Object data = dataResponse.getData();
-        if (data != null) {
-            //记录本次调用结果
-            methodInfo.setReturnParamValue(JSON.toJSONString(data));
-        } else {
-            methodInfo.setReturnParamValue("void");
-        }
-        //记录历史
-//        editHisCookie(historyClass,request,methodInfo,response);
+        methodService.invokeMethod(methodInfo);
         methodInfo.setSqlInvokeDTO(SqlInvokeConstant.sqlInvokeDTO);
         //清空本次事务目录
         SqlInvokeConstant.sqlInvokeDTO = null;
@@ -94,28 +68,5 @@ public class MethodControl {
         }
 
         return DataResponse.buildSuccess();
-    }
-
-    private void editHisCookie (String historyClass, HttpServletRequest request, MethodInfoDTO methodInfo, HttpServletResponse response) {
-        //记录本次调用的信息   [使用类]  [使用方法]  [使用参数]
-        try {
-            Cookie cookieMethod = new Cookie("historyMethod:" + request.getCookies().length,
-                    URLEncoder.encode(JSONObject.toJSONString(methodInfo), "UTF-8"));
-            response.addCookie(cookieMethod);
-
-            //记录本次调用的类
-            LinkedHashMap<String, ClassDTO> hisC = new LinkedHashMap<>();
-            if (!StringUtils.isEmpty(historyClass)) {
-                hisC = JSONObject.parseObject(historyClass, hisC.getClass());
-            }
-            ClassDTO classDTO = new ClassDTO();
-            classDTO.setValue(methodInfo.getClassName());
-            hisC.put(methodInfo.getClassName(), classDTO);
-            Cookie cookieClass = new Cookie("historyClass", URLEncoder.encode(JSON.toJSONString(hisC), "UTF-8"));
-            cookieClass.setPath("/");
-            response.addCookie(cookieClass);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }
