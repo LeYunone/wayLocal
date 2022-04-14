@@ -1,5 +1,3 @@
- 
-
 # way location use方法定位使用工具
 
 ## 工具介绍 🤓
@@ -9,6 +7,7 @@
 厌倦了"test"接口中，new 方法调用的这种手法，是时候有必要去实现一个去定位方法与参数，简化方法调用的工具了。
 git地址：[https://github.com/LeYunone/wayLocation](https://github.com/LeYunone/wayLocation)
 目前屏蔽部分功能，还在开发中
+
 ## 简单页面 ❀
 
 ![waylocation](https://img-blog.csdnimg.cn/img_convert/a33fb106a10176e342ccb34386cffa5b.png)
@@ -31,13 +30,15 @@ git地址：[https://github.com/LeYunone/wayLocation](https://github.com/LeYunon
 
 **2022-4-12**:  0.0.2.RELEASE;
 
+**2022-4-14**：0.0.3-SNAPSHOT
+
 #### 引入依赖 📕
 
 ```java
 <dependency>
    <groupId>xyz.leyuna</groupId>
    <artifactId>waylocation-spring-boot-start</artifactId>
-   <version>0.0.2.RELEASE</version>
+   <version>0.0.3</version>
 </dependency>
 ```
 
@@ -61,6 +62,7 @@ waylocation.savePath = xxx
 
 **savePath**:保存方式为file时，记录文档的保存路径。
 默认为C:/waylocation
+
 #### 版本环境 🌳
 
 |    依赖    |    版本号     |
@@ -156,7 +158,7 @@ waylocation.savePath = xxx
 
 
 
-#### 保存
+#### 历史导出
 
 导出本次页面面板值，即包括：
 
@@ -170,11 +172,11 @@ waylocation.savePath = xxx
 
 保存到自定义路径，工具规定模板Excel
 
-
+![https://www.leyuna.xyz/image/2022-04-14/导入.png](https://www.leyuna.xyz/image/2022-04-14/导入.png)
 
 #### 历史调用
 
-展示历史调用，包括：
+展示历史调用，选择一条填充本次测试数据，包括：
 
 1、类名
 
@@ -184,7 +186,7 @@ waylocation.savePath = xxx
 
 4、出参结果
 
-
+![https://www.leyuna.xyz/image/2022-04-14/导出.png](https://www.leyuna.xyz/image/2022-04-14/导出.png)
 
 #### 测试
 
