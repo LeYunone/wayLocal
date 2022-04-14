@@ -24,7 +24,7 @@ public class MethodExcelDTO {
     private String methodName;
 
     @ExcelProperty("入参值")
-    private List<String> paramValue;
+    private String paramValue;
 
     @ExcelProperty("出参值")
     private String returnParamValue;

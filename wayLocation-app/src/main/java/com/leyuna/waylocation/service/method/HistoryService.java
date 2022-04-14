@@ -54,7 +54,7 @@ public class HistoryService {
                 methodExcelDTO.setClassName(co.getClassName());
                 methodExcelDTO.setInvokeTime(co.getInvokeTime());
                 methodExcelDTO.setMethodName(co.getMethodName());
-                methodExcelDTO.setParamValue(co.getParamValue());
+                methodExcelDTO.setParamValue(JSONObject.toJSONString(co.getParamValue()));
                 methodExcelDTO.setReturnParamValue(co.getReturnParamValue());
                 exportData.add(methodExcelDTO);
             });
@@ -158,7 +158,7 @@ public class HistoryService {
             excelDTO.setClassName(methodInfo.getClassName());
             excelDTO.setInvokeTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
             excelDTO.setMethodName(methodInfo.getMethodName());
-            excelDTO.setParamValue(methodInfo.getParamValue());
+            excelDTO.setParamValue(JSONObject.toJSONString(methodInfo.getParamValue()));
             excelDTO.setReturnParamValue(methodInfo.getReturnParamValue());
             ServerConstant.historyExcel.add(excelDTO);
         }
@@ -193,7 +193,7 @@ public class HistoryService {
             methodInfoDTO.setClassName(co.getClassName());
             methodInfoDTO.setInvokeTime(co.getInvokeTime());
             methodInfoDTO.setMethodName(co.getMethodName());
-            methodInfoDTO.setParamValue(co.getParamValue());
+            methodInfoDTO.setParamValue(JSONObject.parseArray(co.getParamValue(),String.class));
             methodInfoDTO.setReturnParamValue(co.getReturnParamValue());
             result.add(methodInfoDTO);
         });
