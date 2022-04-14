@@ -98,12 +98,12 @@
             <el-table-column
                     prop="sql"
                     label="SQL语句"
-                    width="600">
+                    show-overflow-tooltip>
             </el-table-column>
             <el-table-column
                     prop="sqlData"
                     label="db数据"
-                    width="300">
+                    show-overflow-tooltip>
             </el-table-column>
             <el-table-column
                     prop="sqlTime"
@@ -135,7 +135,7 @@
             </el-table-column>
         </el-table>
     </el-card>
-    <el-dialog title="选择记录填充" :visible.sync='dialogSelectHistory'>
+    <el-dialog title="请选择一条记录填充" :visible.sync='dialogSelectHistory'>
         <el-table
                 ref="singleTable"
                 :data="methodInfos"
@@ -149,16 +149,16 @@
             <el-table-column
                     prop="invokeTime"
                     label="调用时间"
-                    width="120">
-            </el-table-column>
-            <el-table-column
-                    prop="methodName"
-                    label="方法名"
-                    width="120">
+                    width="150">
             </el-table-column>
             <el-table-column
                     prop="className"
                     label="类名"
+                    show-overflow-tooltip>
+            </el-table-column>
+            <el-table-column
+                    prop="methodName"
+                    label="方法名"
                     show-overflow-tooltip>
             </el-table-column>
             <el-table-column
@@ -182,16 +182,16 @@
             <el-table-column
                     prop="invokeTime"
                     label="调用时间"
-                    width="120">
-            </el-table-column>
-            <el-table-column
-                    prop="methodName"
-                    label="方法名"
-                    width="120">
+                    width="150">
             </el-table-column>
             <el-table-column
                     prop="className"
                     label="类名"
+                    show-overflow-tooltip>
+            </el-table-column>
+            <el-table-column
+                    prop="methodName"
+                    label="方法名"
                     show-overflow-tooltip>
             </el-table-column>
             <el-table-column
@@ -238,7 +238,8 @@
         },
         methods: {
             selectHistory(val){
-              console.log(val);
+                this.dialogSelectHistory=false;
+                this.methodInfo=val;
             },
             exportHistory(val){
                 console.log(val);

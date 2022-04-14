@@ -1,6 +1,9 @@
 package com.leyuna.waylocation.util;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -13,6 +16,8 @@ import java.util.List;
  * @create 2022-02-21 16:32
  */
 public class ClassOrderUtil {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     
     //通过loader加载所有类
     public static List<Class> loadClassByLoader(ClassLoader load){
@@ -20,7 +25,7 @@ public class ClassOrderUtil {
         try {
             urls = load.getResources("");
         } catch (IOException e) {
-//            log(e.getMessage());
+            e.printStackTrace();
         }
         //放所有类型
         List<Class> classes = new ArrayList<>();

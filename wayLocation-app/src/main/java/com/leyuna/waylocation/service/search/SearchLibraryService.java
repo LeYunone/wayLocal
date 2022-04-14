@@ -23,17 +23,11 @@ public class SearchLibraryService {
 
     /**
      * 解析整理出项目内所有的方法 [只有当项目第一次启动时使用]
-     * 
+     *
      */
-    public void resoleAllMethod(){
-        //拿到项目中所有方法信息
-        List<MethodInfoDTO> methodInfoDTOS = classExe.orderClassToMethod(SearchLibraryService.class.getClassLoader());
-
-        //生成本项目方法的搜索库
-        luceneExe.addMethodDir(methodInfoDTOS);
-    }
-
     public void resoleAllMethod(Class clazz){
+        //创建索引库前，检测是否已经有遗留记录
+        this.deleteMethodDirFile();
         //拿到项目中所有方法信息
         List<MethodInfoDTO> methodInfoDTOS = classExe.orderClassToMethod(clazz.getClassLoader());
 
