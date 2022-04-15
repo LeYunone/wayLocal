@@ -9,9 +9,7 @@ import com.leyuna.waylocation.service.method.HistoryService;
 import com.leyuna.waylocation.service.method.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,6 +29,12 @@ public class LocationControl {
     @Autowired
     private HistoryService historyService;
 
+    /**
+     * 类名框搜索定位
+     * @param className
+     * @param size
+     * @return
+     */
     @RequestMapping("/getClassName")
     public DataResponse getClassName (String className,
                                       @RequestParam(required = false, defaultValue = "10") Integer size) {
@@ -44,12 +48,19 @@ public class LocationControl {
         return DataResponse.of(luceneDTO);
     }
 
+    /**
+     * 方法框搜索定位
+     * @param className
+     * @param methodName
+     * @param size
+     * @return
+     */
     @RequestMapping("/getMethod")
     public DataResponse getMethod (String className, String methodName, @RequestParam(required = false, defaultValue = "10") Integer size) {
         //如果没有指明类
         if (StringUtils.isEmpty(className)) {
             return locationService.getMethod(methodName, size);
-        }
+        }  
         try {
             //如果指明类非常清晰
             Class.forName(className);
@@ -60,6 +71,16 @@ public class LocationControl {
         }
     }
 
+    /**
+     * 最佳匹配搜索定位
+     * @param className
+     * @return
+     */
+    @GetMapping("/getOptimalMatch")
+    public DataResponse getOptimalMatch(String className,String methodName){
+        return locationService.getOptimalMatch(className,methodName); 
+    }
+    
     private List<ClassDTO> getHistoryName(){
         List<MethodInfoDTO> list = historyService.resolveHistory(ResolveHistoryTypeEnum.READ, null);
         Set<String> collect = list.stream().map(MethodInfoDTO::getClassName).collect(Collectors.toSet());

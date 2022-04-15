@@ -64,8 +64,13 @@ public class HistoryService {
             logger.error("Waylocation : Error export Error");
         }
     }
-    
-    //处理 [读取、保存、导出] 历史记录入口
+
+    /**
+     * 处理 [读取、保存、导出] 历史记录入口
+     * @param historyTypeEnum
+     * @param methodInfos
+     * @return
+     */
     public List<MethodInfoDTO> resolveHistory(ResolveHistoryTypeEnum historyTypeEnum,List<MethodInfoDTO> methodInfos){
         switch (ServerConstant.saveType){
             case "cookie":
@@ -110,7 +115,6 @@ public class HistoryService {
     /**
      * 调用记录存储到cookie中
      * @param
-     * @throws UnsupportedEncodingException
      */
     private void saveHistoryToCookie(List<MethodInfoDTO> methodInfos) {
         Cookie[] cookies = request.getCookies();

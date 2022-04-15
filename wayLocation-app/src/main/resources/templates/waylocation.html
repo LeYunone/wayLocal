@@ -44,13 +44,16 @@
                 placeholder="请输入关键词"
         >
             <template slot-scope="{ item }">
-                <el-tooltip class="item" effect="dark" :content="item.lineKey" placement="top-start">
+                <el-tooltip v-if="item.lineKey != null" class="item" effect="dark" :content="item.lineKey" placement="top-start">
                     <div class="name" v-html="item.hightLineKey"></div>
+                </el-tooltip>
+                <el-tooltip v-else class="item" effect="dark" :content="item.methodName" placement="top-start">
+                    <div class="name" v-html="item.methodName"></div>
                 </el-tooltip>
             </template>
 
         </el-autocomplete>
-        <el-button plain @click="">最优匹配</el-button>
+        <el-button plain @click="optimalMatch()">最优匹配</el-button>
     </el-card>
 
     <el-card class="box-card" style="margin-top: 18px">
@@ -98,7 +101,7 @@
             <el-table-column
                     prop="sql"
                     label="SQL语句"
-                    show-overflow-tooltip>
+                    width="600">
             </el-table-column>
             <el-table-column
                     prop="sqlData"
@@ -238,6 +241,23 @@
             }
         },
         methods: {
+            optimalMatch(){
+                 axios({
+                     url:"location/getOptimalMatch",
+                     method:"GET",
+                     params:{
+                         className:this.methodInfo.className,
+                         methodName:this.methodInfo.methodName
+                     }
+                 }).then((res) => {
+                     var data = res.data;
+                     if(data.status){
+                         this.methodInfo = data.data;
+                     }else{
+                         this.$message.error(data.message);
+                     }
+                 })          
+            },
             selectHistory(val){
                 this.dialogSelectHistory=false;
                 this.methodInfo=val;

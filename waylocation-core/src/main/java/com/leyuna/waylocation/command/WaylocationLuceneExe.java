@@ -280,7 +280,7 @@ public class WaylocationLuceneExe {
             //关键词
             BooleanQuery.Builder booleanQueryBuilder = new BooleanQuery.Builder();
             QueryParser query = new QueryParser("methodName", analyzer);
-            Query parse = query.parse(methodName);
+            Query parse = query.parse("methodName:"+methodName);
             Query query2 = new TermQuery(new Term("className", className));
 
             booleanQueryBuilder.add(parse, BooleanClause.Occur.MUST);
@@ -311,9 +311,8 @@ public class WaylocationLuceneExe {
                 methodName = doc.get("methodName");
                 //高亮处理
                 TokenStream tokenStream = analyzer.tokenStream("methodName", new StringReader(methodName));
-                MethodInfoDTO method = new MethodInfoDTO();
                 String json = doc.get("value");
-                method = JSON.parseObject(json, MethodInfoDTO.class);
+                MethodInfoDTO method = JSON.parseObject(json, MethodInfoDTO.class);
                 String returnName = "void";
                 if (null != method.getReturnParams()) {
                     returnName = method.getReturnParams().getName();

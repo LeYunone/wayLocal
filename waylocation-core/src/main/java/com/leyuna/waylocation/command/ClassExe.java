@@ -22,8 +22,13 @@ public class ClassExe {
      * 遍历请求项目里所有的文件
      */
     public List<MethodInfoDTO> orderClassToMethod(ClassLoader load){
-        List<MethodInfoDTO> result=new ArrayList<>();
         List<Class> clazzs = ClassOrderUtil.loadClassByLoader(load);
+
+        return this.resoleClassForMethod(clazzs);
+    }
+    
+    private List<MethodInfoDTO> resoleClassForMethod(List<Class> clazzs){
+        List<MethodInfoDTO> result=new ArrayList<>();
         int numId=0;
         //处理项目中所有的类，并且将其方法整理出来
         for(Class clazz:clazzs){
@@ -50,16 +55,20 @@ public class ClassExe {
         return result;
     }
 
-    private ClassDTO getEEEaaa(List<String> list, ClassDTO testDto){
-        System.out.println(1);
-        ClassDTO classDTO = new ClassDTO();
-        classDTO.setHightLineKey("test");
-        classDTO.setValue("测试");
-        return  classDTO;
+    /**
+     * 获得指定class的所有方法
+     * @param className
+     * @return
+     */
+    public List<MethodInfoDTO> getMethodInfoInClass(String className){
+        try {
+            Class<?> aClass = Class.forName(className);
+            List<Class> classes = new ArrayList<>();
+            classes.add(aClass);
+            return this.resoleClassForMethod(classes);
+        } catch (ClassNotFoundException e) {
+        }
+        return null;
     }
 
-    public void getTest(){
-        System.out.println("22");
-        System.out.println("33");
-    }
 }
