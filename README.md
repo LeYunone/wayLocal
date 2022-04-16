@@ -34,12 +34,28 @@ git地址：[https://github.com/LeYunone/wayLocation](https://github.com/LeYunon
 
 #### 引入依赖 📕
 
+依赖版本：**0.0.X** > **0.0.X-SNAPSHOT** > **0.0.X.RELEASE**
+
 ```java
 <dependency>
    <groupId>xyz.leyuna</groupId>
    <artifactId>waylocation-spring-boot-start</artifactId>
    <version>0.0.3</version>
 </dependency>
+```
+
+快照版-SNAPSHOT需要引入-SNAPSHOT仓库：
+
+```java
+<repositories>
+    <repository>
+        <id>showdb-snapshots</id>
+        <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+    </repository>
+</repositories>
 ```
 
 #### 打开页面 
