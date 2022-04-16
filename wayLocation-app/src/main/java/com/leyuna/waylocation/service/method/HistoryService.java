@@ -79,7 +79,6 @@ public class HistoryService {
                         return this.getHistoryToCookie();
                     case SAVE:
                         this.saveHistoryToCookie(methodInfos);
-                        return null;
                     default:
                         break;
                 }
@@ -90,7 +89,6 @@ public class HistoryService {
                         return this.getHistoryToObject();
                     case SAVE:
                         this.saveHistoryToObject(methodInfos);
-                        return null;
                     default:
                         break;
                 }
@@ -101,7 +99,6 @@ public class HistoryService {
                         return this.getHistoryToFile();
                     case SAVE:
                         this.saveHistoryToFile(methodInfos);
-                        return null;
                     default:
                         break;
                 }

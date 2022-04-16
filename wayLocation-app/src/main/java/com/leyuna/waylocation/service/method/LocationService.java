@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Method;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author pengli
@@ -43,6 +43,17 @@ public class LocationService {
      * @return
      */
     public DataResponse getMethod(String methodName, Integer size) {
+        if(StringUtils.isBlank(methodName)){
+            List<MethodInfoDTO> methodInfoDTOS = historyService.resolveHistory(ResolveHistoryTypeEnum.READ, null);
+            Set<MethodInfoDTO> set= new TreeSet(new Comparator<MethodInfoDTO>() {
+                @Override
+                public int compare(MethodInfoDTO o1, MethodInfoDTO o2) { 
+                    return o1.getMethodName().compareTo(o2.getMethodName());
+                }
+            });
+            set.addAll(methodInfoDTOS);
+            return DataResponse.of(new ArrayList(set));
+        }
         //默认走索引库搜索拿出最近十条匹配的数据展示
         LuceneDTO methodDirByMethodName = luceneExe.getMethodDir("methodName", methodName, size);
         return DataResponse.of(methodDirByMethodName.getListData());
