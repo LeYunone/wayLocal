@@ -6,7 +6,7 @@
     <artifactId>waylocation</artifactId>
     <packaging>pom</packaging>
 <!--    <version>0.0.2-SNAPSHOT</version>-->
-    <version>0.0.3</version>
+    <version>0.0.3-SNAPSHOT</version>
     <name>waylocation</name>
     <properties>
         <java.version>1.8</java.version>
@@ -53,8 +53,8 @@
     <profiles>
         <profile>
             <!--注意,此id必须与setting.xml中指定的一致,不要自作聪明改它名字-->
-<!--            <id>ossrh</id>-->
-            <id>release</id>
+            <id>ossrh</id>
+<!--            <id>release</id>-->
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -63,30 +63,30 @@
                 <pluginManagement>
                     <plugins>
                         <!--测试包插件-->
-<!--                        <plugin>-->
-<!--                            <groupId>org.sonatype.plugins</groupId>-->
-<!--                            <artifactId>nexus-staging-maven-plugin</artifactId>-->
-<!--                            <version>1.6.7</version>-->
-<!--                            <extensions>true</extensions>-->
-<!--                            <configuration>-->
-<!--                                <serverId>ossrh</serverId>-->
-<!--                                <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>-->
-<!--&lt;!&ndash;                                <autoReleaseAfterClose>true</autoReleaseAfterClose>&ndash;&gt;-->
-<!--                            </configuration>-->
-<!--                        </plugin>-->
-                        
-                        <!--正式环境插件-->
                         <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-release-plugin</artifactId>
-                            <version>2.5.3</version>
+                            <groupId>org.sonatype.plugins</groupId>
+                            <artifactId>nexus-staging-maven-plugin</artifactId>
+                            <version>1.6.7</version>
+                            <extensions>true</extensions>
                             <configuration>
-                                <autoVersionSubmodules>true</autoVersionSubmodules>
-                                <useReleaseProfile>false</useReleaseProfile>
-                                <releaseProfiles>release</releaseProfiles>
-                                <goals>deploy</goals>
+                                <serverId>ossrh</serverId>
+                                <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+<!--                                <autoReleaseAfterClose>true</autoReleaseAfterClose>-->
                             </configuration>
                         </plugin>
+                        
+                        <!--正式环境插件-->
+<!--                        <plugin>-->
+<!--                            <groupId>org.apache.maven.plugins</groupId>-->
+<!--                            <artifactId>maven-release-plugin</artifactId>-->
+<!--                            <version>2.5.3</version>-->
+<!--                            <configuration>-->
+<!--                                <autoVersionSubmodules>true</autoVersionSubmodules>-->
+<!--                                <useReleaseProfile>false</useReleaseProfile>-->
+<!--                                <releaseProfiles>release</releaseProfiles>-->
+<!--                                <goals>deploy</goals>-->
+<!--                            </configuration>-->
+<!--                        </plugin>-->
 
 
                         <!--生成API文档插件-->

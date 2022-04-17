@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class InvokeDomainService {
      * @param methodInfo
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public Object invokeMethod (MethodInfoDTO methodInfo) {
         //返回参数
         Object result = null;
