@@ -1,16 +1,22 @@
 package com.leyuna.waylocation.autoconfig;
 
 import com.alibaba.excel.EasyExcel;
+import com.github.shyiko.mysql.binlog.BinaryLogClient;
 import com.leyuna.waylocation.config.EasyExcelOrderListener;
 import com.leyuna.waylocation.constant.global.ServerConstant;
 import com.leyuna.waylocation.dto.MethodExcelDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,14 +30,22 @@ import java.util.Stack;
 @ComponentScan({"com.leyuna.waylocation"})
 @EnableConfigurationProperties(WayLocationProperties.class)
 public class WaylocationAutoConfiguration {
-    
+
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public WaylocationAutoConfiguration(WayLocationProperties wayLocationProperties){
+    public WaylocationAutoConfiguration(WayLocationProperties wayLocationProperties,BinaryLogClient binaryLogClient){
         //保存类型，由用户决定保存方式：session cookie file
         String saveType = wayLocationProperties.getSaveType();
         String savePath = wayLocationProperties.getSavePath();
         solveSave(saveType,savePath);
+
+        //判断是否开启Binglog日志监听
+        try {
+            binaryLogClient.connect();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -68,7 +82,7 @@ public class WaylocationAutoConfiguration {
         if(StringUtils.isNotBlank(savePath)){
             ServerConstant.savePath = savePath;
         }
-        
+
         //创建文件夹
         File file = new File(ServerConstant.savePath);
         if(!file.exists()){
