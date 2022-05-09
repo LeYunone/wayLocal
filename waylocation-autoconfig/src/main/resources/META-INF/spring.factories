@@ -1,3 +1,4 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.leyuna.waylocation.autoconfig.WaylocationAutoConfiguration
+com.leyuna.waylocation.autoconfig.WaylocationAutoConfiguration,\
+com.leyuna.waylocation.autoconfig.BingLogListenerAutoConfiguration

@@ -21,7 +21,7 @@ import java.util.*;
  */
 @Service
 public class ParamExe {
-    
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
@@ -52,7 +52,6 @@ public class ParamExe {
                     }
                     return JSONObject.toJSONString(collection, SerializerFeature.WriteMapNullValue, SerializerFeature.WriteNullStringAsEmpty);
                 }
-
                 //其余场景返回参数类型
                 return clazz.getName();
             }
