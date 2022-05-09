@@ -1,4 +1,4 @@
-# way location use方法定位使用工具
+ # way location use方法定位使用工具
 
 ## 工具介绍 🤓
 
@@ -14,7 +14,7 @@ git地址：[https://github.com/LeYunone/wayLocation](https://github.com/LeYunon
 
 ## 工具定位 🏠
 
-拆箱即用，搭载在本项目中，自由选择项目中的方法，通过className[模糊] + methodName[模糊] 定位。
+拆箱即用，0侵入性，搭载在本项目中，自由选择项目中的方法，通过className[模糊] + methodName[模糊] 定位。
 
 注意点：在项目启动时会生成本项目的类名与方法名搜索库，在项目结束后悔自动删除搜索库文件，即要注意：确保项目的正常启动和结束
 
@@ -241,5 +241,9 @@ Object，提供情况：
 #### 高并发测试
 
 选择并发量，由工具自定义接口去实现并发方法实现
+
+**待开发**
+
+#### 数据库BingLog日志
 
 **待开发**
