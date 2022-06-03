@@ -34,17 +34,16 @@ public class WaylocationAutoConfiguration {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public WaylocationAutoConfiguration(WayLocationProperties wayLocationProperties,BinaryLogClient binaryLogClient){
+    public WaylocationAutoConfiguration(WayLocationProperties wayLocationProperties,BinaryLogClient binaryLogClient) throws IOException {
         //保存类型，由用户决定保存方式：session cookie file
         String saveType = wayLocationProperties.getSaveType();
         String savePath = wayLocationProperties.getSavePath();
         solveSave(saveType,savePath);
+        Boolean bingLog = wayLocationProperties.getBingLog();
 
         //判断是否开启Binglog日志监听
-        try {
+        if(null!=bingLog && bingLog){
             binaryLogClient.connect();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

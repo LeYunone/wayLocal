@@ -11,8 +11,18 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 public class WayLocationProperties {
 
     private String saveType;
-    
+
     private String savePath;
+
+    private Boolean isBingLog;
+
+    public Boolean getBingLog() {
+        return isBingLog;
+    }
+
+    public void setBingLog(Boolean bingLog) {
+        isBingLog = bingLog;
+    }
 
     public String getSavePath() {
         return savePath;
