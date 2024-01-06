@@ -2,12 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>xyz.leyuna</groupId>
-    <artifactId>waylocation</artifactId>
+    <groupId>com.leyunone</groupId>
+    <artifactId>way-local</artifactId>
     <packaging>pom</packaging>
-<!--    <version>0.0.2-SNAPSHOT</version>-->
-    <version>0.0.3-SNAPSHOT</version>
-    <name>waylocation</name>
+    <version>0.0.1-RELEASE</version>
+    <name>way-local</name>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,10 +18,9 @@
     </properties>
 
     <modules>
-        <module>waylocation-start</module>
-        <module>wayLocation-app</module>
-        <module>waylocation-core</module>
-        <module>waylocation-autoconfig</module>
+        <module>way-local-start</module>
+        <module>way-local-app</module>
+        <module>way-local-core</module>
     </modules>
 
     <!--协议-->
@@ -45,9 +43,9 @@
 
     <!--本项目仓库-->
     <scm>
-        <connection>scm:git@github.com:leyunone/waylocation.git</connection>
-        <developerConnection>scm:git@github.com:leyunone/waylocation.git</developerConnection>
-        <url>git@github.com:leyunone/waylocation.git</url>
+        <connection>scm:git@github.com:leyunone/waylocal.git</connection>
+        <developerConnection>scm:git@github.com:leyunone/waylocal.git</developerConnection>
+        <url>git@github.com:leyunone/waylocal.git</url>
     </scm>
 
     <profiles>
@@ -163,23 +161,8 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>xyz.leyuna</groupId>
-                <artifactId>waylocation-app</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>xyz.leyuna</groupId>
-                <artifactId>waylocation-start</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>xyz.leyuna</groupId>
-                <artifactId>waylocation-spring-boot-autoconfig</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>xyz.leyuna</groupId>
-                <artifactId>waylocation-core</artifactId>
+                <groupId>com.leyunone</groupId>
+                <artifactId>way-local-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <!-- spring boot 依赖 -->

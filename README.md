@@ -5,12 +5,12 @@
 方法定位使用，名如其名。当前开源社区中有很多很多基于接口的测试工具，但在实际的开发过程中，有很多场景都需要测试调用某个方法；
 或在项目出现业务漏洞时，也需要直接用设置好的参数来判断业务接口的某个方法是否可行，来以此定位bug位置。
 厌倦了"test"接口中，new 方法调用的这种手法，是时候有必要去实现一个去定位方法与参数，简化方法调用的工具了。
-git地址：[https://github.com/LeYunone/wayLocation](https://github.com/LeYunone/wayLocation)
+git地址：[https://github.com/LeYunone/waylocal](https://github.com/LeYunone/waylocal)
 目前屏蔽部分功能，还在开发中
 
 ## 简单页面 ❀
 
-![waylocation](https://img-blog.csdnimg.cn/img_convert/a33fb106a10176e342ccb34386cffa5b.png)
+![waylocal](https://img-blog.csdnimg.cn/img_convert/a33fb106a10176e342ccb34386cffa5b.png)
 
 ## 工具定位 🏠
 
@@ -38,8 +38,8 @@ git地址：[https://github.com/LeYunone/wayLocation](https://github.com/LeYunon
 
 ```java
 <dependency>
-   <groupId>xyz.leyuna</groupId>
-   <artifactId>waylocation-spring-boot-start</artifactId>
+   <groupId>com.leyunone</groupId>
+   <artifactId>waylocal-spring-boot-start</artifactId>
    <version>0.0.3</version>
 </dependency>
 ```
@@ -60,13 +60,13 @@ git地址：[https://github.com/LeYunone/wayLocation](https://github.com/LeYunon
 
 #### 打开页面 
 
-**XXXXX[项目地址]/waylocation**
+**XXXXX[项目地址]/waylocal**
 
 #### 配置文件 ⚙
 
 ```properties
-waylocation.saveType=XXX   
-waylocation.savePath = xxx
+waylocal.saveType=XXX   
+waylocal.savePath = xxx
 ```
 
 **saveType**:决定历史数据[历史类、历史方法、历史调用]的保存方式。
@@ -77,7 +77,7 @@ waylocation.savePath = xxx
 
 
 **savePath**:保存方式为file时，记录文档的保存路径。
-默认为C:/waylocation
+默认为C:/waylocal
 
 #### 版本环境 🌳
 
