@@ -1,7 +1,7 @@
 package com.leyunone.waylocal.util;
 
 /**
- * @author pengli
+ * @author leyunone
  * @create 2022-02-22 17:18
  */
 public class StringResoleUtil {

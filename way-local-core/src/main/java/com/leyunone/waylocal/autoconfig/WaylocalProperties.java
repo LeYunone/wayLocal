@@ -3,7 +3,7 @@ package com.leyunone.waylocal.autoconfig;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * @author pengli
+ * @author leyunone
  * @create 2022-04-08 10:39
  */
 @ConfigurationProperties(prefix ="waylocal")

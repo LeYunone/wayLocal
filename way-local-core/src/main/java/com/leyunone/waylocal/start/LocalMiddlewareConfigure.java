@@ -20,7 +20,7 @@ import java.util.Properties;
  * 中间件本地化 配置覆写
  * ip / port
  *
- * @Author pengli
+ * @Author leyunone
  * @Date 2024/1/4 10:45
  */
 @Component

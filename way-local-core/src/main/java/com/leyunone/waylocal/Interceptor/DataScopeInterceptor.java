@@ -20,7 +20,7 @@ package com.leyunone.waylocal.Interceptor;//package com.leyunone.waylocal.Interc
 //import java.util.Properties;
 //
 ///**
-// * @author pengli
+// * @author leyunone
 // * @create 2022-03-31-14:04
 // */
 //@Slf4j

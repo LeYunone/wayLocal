@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.Stack;
 
 /**
- * @author pengli
+ * @author leyunone
  * @create 2022-02-25 11:00
  * 应用通用常数
  */

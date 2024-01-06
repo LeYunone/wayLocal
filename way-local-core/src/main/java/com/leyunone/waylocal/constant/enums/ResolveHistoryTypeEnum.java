@@ -1,7 +1,7 @@
 package com.leyunone.waylocal.constant.enums;
 
 /**
- * @author pengli
+ * @author leyunone
  * @create 2022-04-14 14:51
  */
 public enum ResolveHistoryTypeEnum {

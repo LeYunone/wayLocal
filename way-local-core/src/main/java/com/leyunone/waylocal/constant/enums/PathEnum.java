@@ -1,7 +1,7 @@
 package com.leyunone.waylocal.constant.enums;
 
 /**
- * @author pengli
+ * @author leyunone
  * @create 2022-02-22 14:51
  * 路径
  */

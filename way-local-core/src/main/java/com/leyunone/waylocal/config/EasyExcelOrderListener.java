@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @author pengli
+ * @author leyunone
  * @create 2022-04-13 14:48
  */
 @Configuration

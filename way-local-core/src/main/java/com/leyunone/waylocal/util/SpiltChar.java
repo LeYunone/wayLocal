@@ -8,7 +8,7 @@ import org.apache.lucene.util.AttributeFactory;
 import java.io.IOException;
 
 /**
- * @author pengli
+ * @author leyunone
  * @create 2022-02-23 11:03
  * 自定义分词器  -  单个字符分词
  */

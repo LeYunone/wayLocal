@@ -3,7 +3,7 @@ package com.leyunone.waylocal.response;
 import lombok.*;
 
 /**
- * @author pengli
+ * @author leyunone
  * @date  2021-08-10 15:05
  *   一般响应结果集
  */

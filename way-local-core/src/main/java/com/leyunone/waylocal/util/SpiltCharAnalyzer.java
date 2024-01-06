@@ -4,7 +4,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.Tokenizer;
 
 /**
- * @author pengli
+ * @author leyunone
  * @create 2022-02-23 11:13
  */
 public class SpiltCharAnalyzer extends Analyzer {
