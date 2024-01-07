@@ -1,7 +1,7 @@
 package com.leyunone.waylocal.constant.global;
 
-import com.leyunone.waylocal.dto.MethodExcelDTO;
-import com.leyunone.waylocal.dto.MethodInfoDTO;
+import com.leyunone.waylocal.bean.dto.MethodExcelDTO;
+import com.leyunone.waylocal.bean.dto.MethodInfoDTO;
 
 import java.util.HashSet;
 import java.util.List;

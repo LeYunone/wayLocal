@@ -3,7 +3,7 @@ package com.leyunone.waylocal.service.method;
 import com.alibaba.fastjson.JSONObject;
 import com.leyunone.waylocal.command.InvokeMethodExe;
 import com.leyunone.waylocal.constant.enums.ResolveHistoryTypeEnum;
-import com.leyunone.waylocal.dto.MethodInfoDTO;
+import com.leyunone.waylocal.bean.dto.MethodInfoDTO;
 import com.leyunone.waylocal.response.DataResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

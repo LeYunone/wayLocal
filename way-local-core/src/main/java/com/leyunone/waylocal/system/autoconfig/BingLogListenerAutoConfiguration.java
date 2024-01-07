@@ -1,4 +1,4 @@
-package com.leyunone.waylocal.autoconfig;
+package com.leyunone.waylocal.system.autoconfig;
 
 import com.github.shyiko.mysql.binlog.BinaryLogClient;
 import com.leyunone.waylocal.config.BingLogEventListener;

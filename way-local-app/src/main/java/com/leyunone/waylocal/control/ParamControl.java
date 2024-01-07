@@ -1,6 +1,6 @@
 package com.leyunone.waylocal.control;
 
-import com.leyunone.waylocal.dto.MethodInfoDTO;
+import com.leyunone.waylocal.bean.dto.MethodInfoDTO;
 import com.leyunone.waylocal.response.DataResponse;
 import com.leyunone.waylocal.service.method.LocationService;
 import com.leyunone.waylocal.service.param.ParamService;

@@ -2,7 +2,7 @@ package com.leyunone.waylocal.service.search;
 
 import com.leyunone.waylocal.command.ClassExe;
 import com.leyunone.waylocal.command.WaylocalLuceneExe;
-import com.leyunone.waylocal.dto.MethodInfoDTO;
+import com.leyunone.waylocal.bean.dto.MethodInfoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

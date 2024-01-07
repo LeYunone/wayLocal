@@ -1,7 +1,7 @@
 package com.leyunone.waylocal.command;
 
 import com.leyunone.waylocal.constant.global.ServerConstant;
-import com.leyunone.waylocal.dto.MethodInfoDTO;
+import com.leyunone.waylocal.bean.dto.MethodInfoDTO;
 import com.leyunone.waylocal.util.ClassOrderUtil;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.leyunone.waylocal.Interceptor;//package com.leyunone.waylocal.Interceptor;
+package com.leyunone.waylocal.system.Interceptor;//package com.leyunone.waylocal.system.Interceptor;
 //
 //import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 //import com.baomidou.mybatisplus.extension.handlers.AbstractSqlParserHandler;

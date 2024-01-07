@@ -1,4 +1,4 @@
-package com.leyunone.waylocal.config;
+package com.leyunone.waylocal.system.config;
 
 import com.github.shyiko.mysql.binlog.BinaryLogClient;
 import com.github.shyiko.mysql.binlog.event.Event;

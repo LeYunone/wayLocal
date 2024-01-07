@@ -1,4 +1,4 @@
-package com.leyunone.waylocal.autoconfig;
+package com.leyunone.waylocal.system.autoconfig;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

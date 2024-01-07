@@ -1,6 +1,6 @@
 package com.leyunone.waylocal.command;
 
-import com.leyunone.waylocal.dto.MethodInfoDTO;
+import com.leyunone.waylocal.bean.dto.MethodInfoDTO;
 import com.leyunone.waylocal.domainservice.InvokeDomainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

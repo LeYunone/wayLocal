@@ -1,4 +1,4 @@
-package com.leyunone.waylocal.autoconfig;//package com.leyunone.waylocal.autoconfig;
+package com.leyunone.waylocal.system.autoconfig;//package com.leyunone.waylocal.autoconfig;
 //
 //import org.apache.ibatis.session.SqlSessionFactory;
 //import org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration;

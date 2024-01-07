@@ -1,4 +1,4 @@
-package com.leyunone.waylocal.dto;
+package com.leyunone.waylocal.bean.dto;
 
 import com.alibaba.excel.annotation.ExcelProperty;
 import lombok.*;

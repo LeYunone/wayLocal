@@ -1,7 +1,7 @@
 package com.leyunone.waylocal.constant.global;
 
 
-import com.leyunone.waylocal.dto.SqlInvokeDTO;
+import com.leyunone.waylocal.bean.dto.SqlInvokeDTO;
 
 import java.util.List;
 

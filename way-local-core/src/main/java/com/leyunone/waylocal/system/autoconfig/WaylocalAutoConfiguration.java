@@ -1,10 +1,10 @@
-package com.leyunone.waylocal.autoconfig;
+package com.leyunone.waylocal.system.autoconfig;
 
 import com.alibaba.excel.EasyExcel;
 import com.github.shyiko.mysql.binlog.BinaryLogClient;
+import com.leyunone.waylocal.bean.dto.MethodExcelDTO;
 import com.leyunone.waylocal.config.EasyExcelOrderListener;
 import com.leyunone.waylocal.constant.global.ServerConstant;
-import com.leyunone.waylocal.dto.MethodExcelDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,7 @@ public class WaylocalAutoConfiguration {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public WaylocalAutoConfiguration(WaylocalProperties waylocalProperties,BinaryLogClient binaryLogClient) throws IOException {
+    public WaylocalAutoConfiguration(WaylocalProperties waylocalProperties, BinaryLogClient binaryLogClient) throws IOException {
         //保存类型，由用户决定保存方式：session cookie file
         String saveType = waylocalProperties.getSaveType();
         String savePath = waylocalProperties.getSavePath();

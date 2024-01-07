@@ -1,9 +1,9 @@
-package com.leyunone.waylocal.config;
+package com.leyunone.waylocal.system.config;
 
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
+import com.leyunone.waylocal.bean.dto.MethodExcelDTO;
 import com.leyunone.waylocal.constant.global.ServerConstant;
-import com.leyunone.waylocal.dto.MethodExcelDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;

@@ -1,9 +1,9 @@
 package com.leyunone.waylocal.control;
 
 import com.leyunone.waylocal.constant.enums.ResolveHistoryTypeEnum;
-import com.leyunone.waylocal.dto.ClassDTO;
-import com.leyunone.waylocal.dto.LuceneDTO;
-import com.leyunone.waylocal.dto.MethodInfoDTO;
+import com.leyunone.waylocal.bean.dto.ClassDTO;
+import com.leyunone.waylocal.bean.dto.LuceneDTO;
+import com.leyunone.waylocal.bean.dto.MethodInfoDTO;
 import com.leyunone.waylocal.response.DataResponse;
 import com.leyunone.waylocal.service.method.HistoryService;
 import com.leyunone.waylocal.service.method.LocationService;

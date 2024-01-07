@@ -1,8 +1,8 @@
-package com.leyunone.waylocal.Interceptor;
+package com.leyunone.waylocal.system.Interceptor;
 
 import com.alibaba.fastjson.JSONObject;
 import com.leyunone.waylocal.constant.global.SqlInvokeConstant;
-import com.leyunone.waylocal.dto.SqlInvokeDTO;
+import com.leyunone.waylocal.bean.dto.SqlInvokeDTO;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
