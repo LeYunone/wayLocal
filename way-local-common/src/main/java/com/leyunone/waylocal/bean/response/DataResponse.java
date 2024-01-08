@@ -1,4 +1,4 @@
-package com.leyunone.waylocal.response;
+package com.leyunone.waylocal.bean.response;
 
 import lombok.*;
 

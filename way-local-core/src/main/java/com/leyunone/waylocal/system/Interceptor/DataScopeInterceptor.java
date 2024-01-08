@@ -3,7 +3,7 @@ package com.leyunone.waylocal.system.Interceptor;//package com.leyunone.waylocal
 //import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 //import com.baomidou.mybatisplus.extension.handlers.AbstractSqlParserHandler;
 //import com.leyunone.waylocal.bean.dto.SqlInvokeDTO;
-//import com.leyunone.waylocal.constant.global.SqlInvokeConstant;
+//import com.leyunone.waylocal.common.SqlInvokeConstant;
 //import lombok.AllArgsConstructor;
 //import lombok.extern.slf4j.Slf4j;
 //import org.apache.ibatis.executor.statement.StatementHandler;

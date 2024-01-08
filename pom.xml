@@ -21,6 +21,7 @@
         <module>way-local-start</module>
         <module>way-local-app</module>
         <module>way-local-core</module>
+        <module>way-local-common</module>
     </modules>
 
     <!--协议-->
@@ -163,6 +164,11 @@
             <dependency>
                 <groupId>com.leyunone</groupId>
                 <artifactId>way-local-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.leyunone</groupId>
+                <artifactId>way-local-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <!-- spring boot 依赖 -->

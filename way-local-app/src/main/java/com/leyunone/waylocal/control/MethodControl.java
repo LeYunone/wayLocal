@@ -1,11 +1,11 @@
 package com.leyunone.waylocal.control;
 
 import com.leyunone.waylocal.constant.enums.ResolveHistoryTypeEnum;
-import com.leyunone.waylocal.constant.global.SqlInvokeConstant;
+import com.leyunone.waylocal.common.SqlInvokeConstant;
 import com.leyunone.waylocal.bean.dto.MethodInfoDTO;
-import com.leyunone.waylocal.response.DataResponse;
-import com.leyunone.waylocal.service.method.HistoryService;
-import com.leyunone.waylocal.service.method.MethodService;
+import com.leyunone.waylocal.bean.response.DataResponse;
+import com.leyunone.waylocal.service.HistoryService;
+import com.leyunone.waylocal.service.impl.method.MethodServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +21,7 @@ import java.util.*;
 public class MethodControl {
 
     @Autowired
-    private MethodService methodService;
+    private MethodServiceImpl methodServiceImpl;
 
     @Autowired
     private HistoryService historyService;
@@ -51,7 +51,7 @@ public class MethodControl {
         //开启本次测试流程
         SqlInvokeConstant.isGO = true;
         //调用方法
-        methodService.invokeMethod(methodInfo);
+        methodServiceImpl.invokeMethod(methodInfo);
         methodInfo.setSqlInvokeDTO(SqlInvokeConstant.sqlInvokeDTO);
         //清空本次事务目录
         SqlInvokeConstant.sqlInvokeDTO = null;

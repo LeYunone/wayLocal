@@ -1,7 +1,8 @@
-package com.leyunone.waylocal.service.search;
+package com.leyunone.waylocal.service.impl.search;
 
 import com.leyunone.waylocal.command.ClassExe;
-import com.leyunone.waylocal.command.WaylocalLuceneExe;
+import com.leyunone.waylocal.service.SearchLibraryService;
+import com.leyunone.waylocal.support.lucene.WaylocalLuceneExe;
 import com.leyunone.waylocal.bean.dto.MethodInfoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import java.util.List;
  *  搜索库服务接口
  */
 @Service
-public class SearchLibraryService {
+public class SearchLibraryServiceImpl implements SearchLibraryService {
     @Autowired
     private ClassExe classExe;
 

@@ -1,4 +1,4 @@
-package com.leyunone.waylocal.service.sql;
+package com.leyunone.waylocal.service.impl.sql;
 
 import org.springframework.stereotype.Service;
 
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
  * @create 2022-03-30 13:50
  */
 @Service
-public class SqlService {
+public class SqlServiceImpl {
 
 
 }

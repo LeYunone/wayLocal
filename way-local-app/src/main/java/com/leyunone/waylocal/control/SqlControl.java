@@ -1,6 +1,6 @@
 package com.leyunone.waylocal.control;
 
-import com.leyunone.waylocal.response.DataResponse;
+import com.leyunone.waylocal.bean.response.DataResponse;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

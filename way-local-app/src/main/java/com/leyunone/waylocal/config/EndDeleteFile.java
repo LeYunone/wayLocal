@@ -1,6 +1,6 @@
 package com.leyunone.waylocal.config;
 
-import com.leyunone.waylocal.service.search.SearchLibraryService;
+import com.leyunone.waylocal.service.impl.search.SearchLibraryServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
@@ -17,7 +17,7 @@ public class EndDeleteFile implements DisposableBean {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private SearchLibraryService searchService;
+    private SearchLibraryServiceImpl searchService;
 
     @Override
     public void destroy () throws Exception {

@@ -7,9 +7,7 @@
         <artifactId>way-local</artifactId>
         <version>0.0.1-RELEASE</version>
     </parent>
-    <groupId>com.leyunone</groupId>
     <artifactId>way-local-common</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
 
     <name>way-local-common</name>
     <description>Demo project for Spring Boot</description>
@@ -17,6 +15,11 @@
         <java.version>17</java.version>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.12</version>
+        </dependency>
     </dependencies>
 
 </project>

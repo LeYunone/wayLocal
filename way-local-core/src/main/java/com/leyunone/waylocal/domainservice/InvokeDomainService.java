@@ -2,7 +2,7 @@ package com.leyunone.waylocal.domainservice;
 
 import com.alibaba.fastjson.JSONObject;
 import com.leyunone.waylocal.command.LocationExe;
-import com.leyunone.waylocal.constant.global.SqlInvokeConstant;
+import com.leyunone.waylocal.common.SqlInvokeConstant;
 import com.leyunone.waylocal.bean.dto.MethodInfoDTO;
 import com.leyunone.waylocal.util.SpringContextUtil;
 import org.slf4j.Logger;

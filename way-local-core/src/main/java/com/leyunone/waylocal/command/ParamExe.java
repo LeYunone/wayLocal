@@ -2,7 +2,7 @@ package com.leyunone.waylocal.command;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.leyunone.waylocal.constant.global.ServerConstant;
+import com.leyunone.waylocal.common.ServerConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

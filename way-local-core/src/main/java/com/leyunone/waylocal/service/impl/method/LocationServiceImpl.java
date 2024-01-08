@@ -1,13 +1,15 @@
-package com.leyunone.waylocal.service.method;
+package com.leyunone.waylocal.service.impl.method;
 
 import com.leyunone.waylocal.command.ClassExe;
 import com.leyunone.waylocal.command.LocationExe;
-import com.leyunone.waylocal.command.WaylocalLuceneExe;
+import com.leyunone.waylocal.service.HistoryService;
+import com.leyunone.waylocal.service.LocationService;
+import com.leyunone.waylocal.support.lucene.WaylocalLuceneExe;
 import com.leyunone.waylocal.constant.enums.ResolveHistoryTypeEnum;
 import com.leyunone.waylocal.bean.dto.ClassDTO;
 import com.leyunone.waylocal.bean.dto.LuceneDTO;
 import com.leyunone.waylocal.bean.dto.MethodInfoDTO;
-import com.leyunone.waylocal.response.DataResponse;
+import com.leyunone.waylocal.bean.response.DataResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +24,7 @@ import java.util.*;
  * 定位接口
  */
 @Service
-public class LocationService {
+public class LocationServiceImpl implements LocationService {
 
     @Autowired
     private WaylocalLuceneExe luceneExe;

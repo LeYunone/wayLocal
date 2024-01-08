@@ -1,7 +1,8 @@
-package com.leyunone.waylocal.service.param;
+package com.leyunone.waylocal.service.impl.param;
 
 import com.leyunone.waylocal.command.ParamExe;
-import com.leyunone.waylocal.response.DataResponse;
+import com.leyunone.waylocal.bean.response.DataResponse;
+import com.leyunone.waylocal.service.ParamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ import java.util.List;
  * 参数服务
  */
 @Service
-public class ParamService {
+public class ParamServiceImpl implements ParamService {
 
     @Autowired
     private ParamExe paramExe;

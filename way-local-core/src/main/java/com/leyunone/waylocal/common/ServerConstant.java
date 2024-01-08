@@ -1,4 +1,4 @@
-package com.leyunone.waylocal.constant.global;
+package com.leyunone.waylocal.common;
 
 import com.leyunone.waylocal.bean.dto.MethodExcelDTO;
 import com.leyunone.waylocal.bean.dto.MethodInfoDTO;

@@ -1,9 +1,9 @@
 package com.leyunone.waylocal.control;
 
 import com.leyunone.waylocal.bean.dto.MethodInfoDTO;
-import com.leyunone.waylocal.response.DataResponse;
-import com.leyunone.waylocal.service.method.LocationService;
-import com.leyunone.waylocal.service.param.ParamService;
+import com.leyunone.waylocal.bean.response.DataResponse;
+import com.leyunone.waylocal.service.LocationService;
+import com.leyunone.waylocal.service.impl.param.ParamServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +24,7 @@ public class ParamControl {
     private LocationService locationService;
 
     @Autowired
-    private ParamService paramService;
+    private ParamServiceImpl paramServiceImpl;
 
     /**
      * 获得方法入参结构
@@ -34,7 +34,7 @@ public class ParamControl {
      */
     @PostMapping("/getParam")
     public DataResponse getParam (@RequestBody MethodInfoDTO methodInfo) {
-        return paramService.getParam(methodInfo.getParams());
+        return paramServiceImpl.getParam(methodInfo.getParams());
     }
 
     /**
@@ -45,6 +45,6 @@ public class ParamControl {
      */
     @PostMapping("/getReturnParam")
     public DataResponse getReturnParam (@RequestBody MethodInfoDTO methodInfo) {
-        return paramService.getReturnParam(methodInfo.getReturnParams());
+        return paramServiceImpl.getReturnParam(methodInfo.getReturnParams());
     }
 }

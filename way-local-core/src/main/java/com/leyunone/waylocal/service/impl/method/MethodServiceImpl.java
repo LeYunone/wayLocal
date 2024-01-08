@@ -1,10 +1,12 @@
-package com.leyunone.waylocal.service.method;
+package com.leyunone.waylocal.service.impl.method;
 
 import com.alibaba.fastjson.JSONObject;
 import com.leyunone.waylocal.command.InvokeMethodExe;
 import com.leyunone.waylocal.constant.enums.ResolveHistoryTypeEnum;
 import com.leyunone.waylocal.bean.dto.MethodInfoDTO;
-import com.leyunone.waylocal.response.DataResponse;
+import com.leyunone.waylocal.bean.response.DataResponse;
+import com.leyunone.waylocal.service.HistoryService;
+import com.leyunone.waylocal.service.MethodService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,7 @@ import java.util.List;
  * 调用方法服务
  */
 @Service
-public class MethodService {
+public class MethodServiceImpl implements MethodService {
 
     @Autowired
     private InvokeMethodExe invokeMethodExe;
