@@ -3,6 +3,7 @@ package com.leyunone.waylocal.handler.history;
 import com.alibaba.fastjson.JSONObject;
 import com.leyunone.waylocal.annotate.StrategyKey;
 import com.leyunone.waylocal.bean.dto.MethodInfoDTO;
+import com.leyunone.waylocal.bean.vo.MethodInfoVO;
 import com.leyunone.waylocal.common.ServerConstant;
 import com.leyunone.waylocal.constant.global.WayLocalConstants;
 import com.leyunone.waylocal.handler.factory.AbstractStrategyFactory;
@@ -24,7 +25,7 @@ import java.util.List;
  */
 @StrategyKey(key = WayLocalConstants.COOKIE + "_READ")
 @RequiredArgsConstructor
-public class CookieReadHandler extends HistoryReadHandler<MethodInfoDTO,Object> {
+public class CookieReadHandler extends HistoryReadHandler<MethodInfoVO,Object> {
 
     private final HistoryHandlerFactory historyHandlerFactory;
     private final HttpServletRequest request;
@@ -36,13 +37,13 @@ public class CookieReadHandler extends HistoryReadHandler<MethodInfoDTO,Object> 
     }
 
     @Override
-    public List<MethodInfoDTO> get() {
+    public List<MethodInfoVO> get() {
         Cookie[] cookies = request.getCookies();
-        List<MethodInfoDTO> result = new ArrayList<>();
+        List<MethodInfoVO> result = new ArrayList<>();
         for(Cookie cookie:cookies){
             if(cookie.getName().equals(ServerConstant.historyMethod)){
                 String value = cookie.getValue();
-                return JSONObject.parseArray(value, MethodInfoDTO.class);
+                return JSONObject.parseArray(value, MethodInfoVO.class);
             }
         }
         return result;

@@ -1,16 +1,37 @@
 package com.leyunone.waylocal.support.lucene;
 
+import com.alibaba.fastjson.JSON;
+import com.leyunone.waylocal.bean.dto.ClassDTO;
 import com.leyunone.waylocal.bean.dto.LuceneDTO;
+import com.leyunone.waylocal.bean.dto.MethodInfoDTO;
+import com.leyunone.waylocal.bean.vo.ClassInfoVO;
+import com.leyunone.waylocal.bean.vo.MethodInfoVO;
+import com.leyunone.waylocal.constant.enums.PathEnum;
+import com.leyunone.waylocal.util.ParamsUtil;
+import com.leyunone.waylocal.util.SpiltCharAnalyzer;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.Query;
+import org.apache.lucene.search.*;
 import org.apache.lucene.search.highlight.Highlighter;
+import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
+import org.apache.lucene.search.highlight.QueryScorer;
+import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.nio.file.FileSystems;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,12 +43,13 @@ import java.util.List;
 @Service
 public class SearchCommandService {
 
+    private final Logger logger = LoggerFactory.getLogger(SearchCommandService.class);
 
-    public LuceneDTO getClassDir (String value, Integer size) {
-        LuceneDTO luceneDTO = new LuceneDTO();
+    public List<ClassInfoVO> getClassDir(String value, Integer size) {
         IndexReader indexReader = null;
+        List<ClassInfoVO> result = new ArrayList<>();
+
         try {
-            List<ClassDTO> result = new ArrayList();
             Analyzer analyzer = new SpiltCharAnalyzer();
             //关键词
             QueryParser qp = new QueryParser("key", analyzer);
@@ -51,18 +73,16 @@ public class SearchCommandService {
             long len = scoreDocs.length;
             for (int i = 0; i < len; i++) {
                 ScoreDoc scoreDoc = scoreDocs[i];
-                ClassDTO classDTO = new ClassDTO();
+                ClassInfoVO classInfoVO = new ClassInfoVO();
                 //获得对应的文档
                 Document doc = indexSearcher.doc(scoreDoc.doc);
                 String className = doc.get("className");
-                classDTO.setValue(className);
+                classInfoVO.setValue(className);
                 //暂不高亮处理
                 TokenStream tokenStream = analyzer.tokenStream("className", new StringReader(className));
-                classDTO.setHightLineKey(highlighter.getBestFragment(tokenStream, className));
-                result.add(classDTO);
+                classInfoVO.setHightLineKey(highlighter.getBestFragment(tokenStream, className));
+                result.add(classInfoVO);
             }
-            luceneDTO.setListData(result);
-            luceneDTO.setTotole(topDocs.totalHits);
         } catch (IOException | ParseException | InvalidTokenOffsetsException e) {
             logger.error("waylocal : Error Lucene error");
         } finally {
@@ -73,7 +93,7 @@ public class SearchCommandService {
                 }
             }
         }
-        return luceneDTO;
+        return result;
     }
 
     /**
@@ -83,11 +103,10 @@ public class SearchCommandService {
      * @param size
      * @return
      */
-    public LuceneDTO getMethodDir (String key, String value, Integer size) {
-        LuceneDTO luceneDTO = new LuceneDTO();
+    public List<MethodInfoVO> getMethodDir(String key, String value, Integer size) {
         IndexReader indexReader = null;
+        List<MethodInfoVO> result = new ArrayList<>();
         try {
-            List<MethodInfoDTO> result = new ArrayList();
             Analyzer analyzer = new SpiltCharAnalyzer();
             //关键词
             QueryParser qp = new QueryParser(key, analyzer);
@@ -117,9 +136,8 @@ public class SearchCommandService {
                 String methodName = doc.get("methodName");
                 //高亮处理
                 TokenStream tokenStream = analyzer.tokenStream("methodName", new StringReader(methodName));
-                MethodInfoDTO method = new MethodInfoDTO();
                 String json = doc.get("value");
-                method = JSON.parseObject(json, MethodInfoDTO.class);
+                MethodInfoVO method = JSON.parseObject(json, MethodInfoVO.class);
                 String returnName = "void";
                 if (null != method.getReturnParams()) {
                     returnName = method.getReturnParams().getName();
@@ -131,8 +149,6 @@ public class SearchCommandService {
                 method.setHightLineKey(returnName + "  " + methodName + "(" + ParamsUtil.getParams(method.getParams()) + ")");
                 result.add(method);
             }
-            luceneDTO.setListData(result);
-            luceneDTO.setTotole(topDocs.totalHits);
         } catch (IOException | ParseException | InvalidTokenOffsetsException e) {
             logger.error("waylocal : Error Lucene error");
         } finally {
@@ -144,19 +160,19 @@ public class SearchCommandService {
                 }
             }
         }
-        return luceneDTO;
+        return result;
     }
 
-    public LuceneDTO getMethodDirBooleanQuery (String className, String methodName) {
+    public List<MethodInfoVO> getMethodDirBooleanQuery(String className, String methodName) {
         LuceneDTO luceneDTO = new LuceneDTO();
         IndexReader indexReader = null;
+        List<MethodInfoVO> result = new ArrayList<>();
         try {
-            List<MethodInfoDTO> result = new ArrayList();
             Analyzer analyzer = new SpiltCharAnalyzer();
             //关键词
             BooleanQuery.Builder booleanQueryBuilder = new BooleanQuery.Builder();
             QueryParser query = new QueryParser("methodName", analyzer);
-            Query parse = query.parse("methodName:"+methodName);
+            Query parse = query.parse("methodName:" + methodName);
             Query query2 = new TermQuery(new Term("className", className));
 
             booleanQueryBuilder.add(parse, BooleanClause.Occur.MUST);
@@ -188,7 +204,7 @@ public class SearchCommandService {
                 //高亮处理
                 TokenStream tokenStream = analyzer.tokenStream("methodName", new StringReader(methodName));
                 String json = doc.get("value");
-                MethodInfoDTO method = JSON.parseObject(json, MethodInfoDTO.class);
+                MethodInfoVO method = JSON.parseObject(json, MethodInfoVO.class);
                 String returnName = "void";
                 if (null != method.getReturnParams()) {
                     returnName = method.getReturnParams().getName();
@@ -199,8 +215,6 @@ public class SearchCommandService {
                 method.setHightLineKey(returnName + "  " + methodName + "(" + ParamsUtil.getParams(method.getParams()) + ")");
                 result.add(method);
             }
-            luceneDTO.setListData(result);
-            luceneDTO.setTotole(topDocs.totalHits);
         } catch (IOException | ParseException | InvalidTokenOffsetsException e) {
             logger.error("waylocal : Error Lucene error");
         } finally {
@@ -211,6 +225,6 @@ public class SearchCommandService {
                 }
             }
         }
-        return luceneDTO;
+        return result;
     }
 }

@@ -1,6 +1,5 @@
 package com.leyunone.waylocal.service.impl.param;
 
-import com.leyunone.waylocal.command.ParamExe;
 import com.leyunone.waylocal.bean.response.DataResponse;
 import com.leyunone.waylocal.service.ParamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,39 +17,34 @@ import java.util.List;
 public class ParamServiceImpl implements ParamService {
 
     @Autowired
-    private ParamExe paramExe;
+    private StructureAnalysisServiceImpl structureAnalysisServiceImpl;
 
     /**
      * 获取入参结构
+     *
      * @return
      */
-    public DataResponse getParam(Class<?> [] cs){
-        List<String> result=new ArrayList<>();
+    public List<String> getParam(Class<?>[] cs) {
+        List<String> result = new ArrayList<>();
         //如果是多参数的情况
-        if(cs.length>=1){
-            for(Class clazz:cs){
-                String json = paramExe.getObjectStructure(clazz);
+        if (cs.length >= 1) {
+            for (Class clazz : cs) {
+                String json = structureAnalysisServiceImpl.getObjectStructure(clazz);
                 result.add(json);
             }
-        }else{
-            return DataResponse.buildSuccess();
         }
         //返回出去的是 以逗号分隔的json格式的参数结构
-        return DataResponse.of(result);
+        return result;
     }
 
     /**
-     *  获取出参结构
+     * 获取出参结构
+     *
      * @param clazz
      * @return
      */
-    public DataResponse getReturnParam(Class<?> clazz){
-
-        if(clazz==null){
-            return DataResponse.buildSuccess();
-        }
-
-        String json = paramExe.getObjectStructure(clazz);
-        return DataResponse.of(json);
+    public String getReturnParam(Class<?> clazz) {
+        String json = structureAnalysisServiceImpl.getObjectStructure(clazz);
+        return json;
     }
 }

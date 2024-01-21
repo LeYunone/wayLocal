@@ -2,6 +2,7 @@ package com.leyunone.waylocal.common;
 
 import com.leyunone.waylocal.bean.dto.MethodExcelDTO;
 import com.leyunone.waylocal.bean.dto.MethodInfoDTO;
+import com.leyunone.waylocal.bean.vo.MethodInfoVO;
 
 import java.util.HashSet;
 import java.util.List;
@@ -24,7 +25,7 @@ public class ServerConstant {
 
     public static String saveMethod = "waylocal-history";
     
-    public static Stack<MethodInfoDTO> historyMethod = null;
+    public static Stack<MethodInfoVO> historyMethod = null;
 
     public static List<MethodExcelDTO> historyExcel = null;
 }

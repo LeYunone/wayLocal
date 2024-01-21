@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix ="waylocal")
 public class WaylocalProperties {
 
-    private String saveType;
+    private String type;
 
     private String savePath;
 
@@ -31,12 +31,12 @@ public class WaylocalProperties {
         this.savePath = savePath;
     }
 
-    public String getSaveType () {
-        return saveType;
+    public String getType () {
+        return type;
     }
 
-    public WaylocalProperties setSaveType (String saveType) {
-        this.saveType = saveType;
+    public WaylocalProperties setSaveType (String type) {
+        this.type = type;
         return this;
     }
 }

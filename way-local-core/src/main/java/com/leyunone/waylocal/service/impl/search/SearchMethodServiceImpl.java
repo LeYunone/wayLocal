@@ -1,20 +1,18 @@
-package com.leyunone.waylocal.command;
+package com.leyunone.waylocal.service.impl.search;
 
 import com.leyunone.waylocal.bean.dto.MethodInfoDTO;
 import com.leyunone.waylocal.util.StringResoleUtil;
-import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * @author leyunone
- * @create 2022-03-04 10:00
- * 定位指令
+ * :)
+ *
+ * @author LeYunone
+ * @email 365627310@qq.com
+ * @date 2024/1/21
  */
-@Service
-public class LocationExe {
+public class SearchMethodServiceImpl {
 
     /**
      * 定位方法
@@ -39,14 +37,5 @@ public class LocationExe {
         } catch (ClassNotFoundException | NoSuchMethodException e) {
         }
         return null;
-    }
-
-    private List<String> getParams(Method method){
-        List<String> result=new ArrayList<>();
-        Class<?>[] parameterTypes = method.getParameterTypes();
-        for(Class clazz:parameterTypes){
-            result.add(clazz.getName());
-        }
-        return result;
     }
 }

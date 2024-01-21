@@ -1,7 +1,7 @@
 package com.leyunone.waylocal.system.autoconfig;
 
 import com.github.shyiko.mysql.binlog.BinaryLogClient;
-import com.leyunone.waylocal.config.BingLogEventListener;
+import com.leyunone.waylocal.system.config.BingLogEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;

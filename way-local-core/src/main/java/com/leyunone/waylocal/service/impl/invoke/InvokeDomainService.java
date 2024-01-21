@@ -1,9 +1,9 @@
-package com.leyunone.waylocal.domainservice;
+package com.leyunone.waylocal.service.impl.invoke;
 
 import com.alibaba.fastjson.JSONObject;
-import com.leyunone.waylocal.command.LocationExe;
 import com.leyunone.waylocal.common.SqlInvokeConstant;
 import com.leyunone.waylocal.bean.dto.MethodInfoDTO;
+import com.leyunone.waylocal.service.impl.search.SearchMethodServiceImpl;
 import com.leyunone.waylocal.util.SpringContextUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ import java.util.List;
 public class InvokeDomainService {
 
     @Autowired
-    private LocationExe locationExe;
+    private SearchMethodServiceImpl searchMethodService;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -38,7 +38,7 @@ public class InvokeDomainService {
         //返回参数
         Object result = null;
         //定位到具体方法
-        Method method = locationExe.locationMethod(methodInfo);
+        Method method = searchMethodService.locationMethod(methodInfo);
 
         if (null == method) {
             result = "系统无法定位到具体方法";

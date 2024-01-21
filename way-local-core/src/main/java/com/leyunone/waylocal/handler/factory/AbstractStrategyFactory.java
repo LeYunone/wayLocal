@@ -1,5 +1,7 @@
 package com.leyunone.waylocal.handler.factory;
 
+import com.leyunone.waylocal.handler.history.HistoryHandler;
+
 import java.util.Map;
 
 /**
@@ -12,4 +14,6 @@ import java.util.Map;
 public abstract class AbstractStrategyFactory<T> {
 
     public abstract Map<String,T> strategyStore();
+
+    abstract T getStrategyStore(String key);
 }

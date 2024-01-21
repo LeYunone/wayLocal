@@ -1,6 +1,6 @@
 package com.leyunone.waylocal.config;
 
-import com.leyunone.waylocal.service.impl.search.SearchLibraryServiceImpl;
+import com.leyunone.waylocal.service.impl.search.LibraryServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class ClazzOrderRunner implements ApplicationRunner {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private SearchLibraryServiceImpl searchService;
+    private LibraryServiceImpl searchService;
 
     @Override
     public void run (ApplicationArguments args) throws Exception {

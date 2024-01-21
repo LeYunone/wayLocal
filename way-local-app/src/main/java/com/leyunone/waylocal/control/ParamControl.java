@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 
 /**
  * @author leyunone
@@ -21,9 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class ParamControl {
 
     @Autowired
-    private LocationService locationService;
-
-    @Autowired
     private ParamServiceImpl paramServiceImpl;
 
     /**
@@ -33,8 +32,9 @@ public class ParamControl {
      * @return
      */
     @PostMapping("/getParam")
-    public DataResponse getParam (@RequestBody MethodInfoDTO methodInfo) {
-        return paramServiceImpl.getParam(methodInfo.getParams());
+    public DataResponse<List<String>> getParam(@RequestBody MethodInfoDTO methodInfo) {
+        List<String> param = paramServiceImpl.getParam(methodInfo.getParams());
+        return DataResponse.of(param);
     }
 
     /**
@@ -44,7 +44,8 @@ public class ParamControl {
      * @return
      */
     @PostMapping("/getReturnParam")
-    public DataResponse getReturnParam (@RequestBody MethodInfoDTO methodInfo) {
-        return paramServiceImpl.getReturnParam(methodInfo.getReturnParams());
+    public DataResponse<String> getReturnParam(@RequestBody MethodInfoDTO methodInfo) {
+        String returnParam = paramServiceImpl.getReturnParam(methodInfo.getReturnParams());
+        return DataResponse.of(returnParam);
     }
 }

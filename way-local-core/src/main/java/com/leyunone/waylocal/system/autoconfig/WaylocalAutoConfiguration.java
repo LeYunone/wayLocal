@@ -31,7 +31,7 @@ public class WaylocalAutoConfiguration {
 
     public WaylocalAutoConfiguration(WaylocalProperties waylocalProperties, BinaryLogClient binaryLogClient) throws IOException {
         //保存类型，由用户决定保存方式：session cookie file
-        String saveType = waylocalProperties.getSaveType();
+        String saveType = waylocalProperties.getType();
         String savePath = waylocalProperties.getSavePath();
         solveSave(saveType,savePath);
         Boolean bingLog = waylocalProperties.getBingLog();

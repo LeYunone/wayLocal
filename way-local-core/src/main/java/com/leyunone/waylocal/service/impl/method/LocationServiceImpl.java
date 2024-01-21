@@ -1,17 +1,18 @@
 package com.leyunone.waylocal.service.impl.method;
 
-import com.leyunone.waylocal.command.ClassExe;
-import com.leyunone.waylocal.command.LocationExe;
+import cn.hutool.core.collection.CollectionUtil;
+import com.leyunone.waylocal.bean.vo.ClassInfoVO;
+import com.leyunone.waylocal.bean.vo.MethodInfoVO;
 import com.leyunone.waylocal.service.HistoryService;
 import com.leyunone.waylocal.service.LocationService;
-import com.leyunone.waylocal.support.lucene.WaylocalLuceneExe;
-import com.leyunone.waylocal.constant.enums.ResolveHistoryTypeEnum;
+import com.leyunone.waylocal.service.impl.search.SearchMethodServiceImpl;
+import com.leyunone.waylocal.support.lucene.SearchCommandService;
 import com.leyunone.waylocal.bean.dto.ClassDTO;
 import com.leyunone.waylocal.bean.dto.LuceneDTO;
 import com.leyunone.waylocal.bean.dto.MethodInfoDTO;
 import com.leyunone.waylocal.bean.response.DataResponse;
+import com.leyunone.waylocal.util.UniqueSet;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -26,17 +27,15 @@ import java.util.*;
 @Service
 public class LocationServiceImpl implements LocationService {
 
-    @Autowired
-    private WaylocalLuceneExe luceneExe;
+    private final SearchMethodServiceImpl searchMethodService;
+    private final HistoryService historyService;
+    private final SearchCommandService searchCommandService;
 
-    @Autowired
-    private LocationExe locationExe;
-
-    @Autowired
-    private HistoryService historyService;
-
-    @Autowired
-    private ClassExe classExe;
+    public LocationServiceImpl(SearchMethodServiceImpl searchMethodService, HistoryService historyService, SearchCommandService searchCommandService) {
+        this.searchMethodService = searchMethodService;
+        this.historyService = historyService;
+        this.searchCommandService = searchCommandService;
+    }
 
     /**
      * 只根据方法名模糊
@@ -44,21 +43,17 @@ public class LocationServiceImpl implements LocationService {
      * @param methodName
      * @return
      */
-    public DataResponse getMethod(String methodName, Integer size) {
-        if(StringUtils.isBlank(methodName)){
-            List<MethodInfoDTO> methodInfoDTOS = historyService.resolveHistory(ResolveHistoryTypeEnum.READ, null);
-            Set<MethodInfoDTO> set= new TreeSet(new Comparator<MethodInfoDTO>() {
-                @Override
-                public int compare(MethodInfoDTO o1, MethodInfoDTO o2) { 
-                    return o1.getMethodName().compareTo(o2.getMethodName());
-                }
-            });
-            set.addAll(methodInfoDTOS);
-            return DataResponse.of(new ArrayList(set));
+    public List<MethodInfoVO> getMethod(String methodName, Integer size) {
+        List<MethodInfoVO> result = null;
+        if (StringUtils.isBlank(methodName)) {
+            List<MethodInfoVO> methodInfoVOS = historyService.readHistory();
+            UniqueSet<String, MethodInfoVO> set = new UniqueSet<>(MethodInfoVO::getMethodName);
+            set.addAll(methodInfoVOS);
+            result = CollectionUtil.newArrayList(set);
+        } else {
+            result = searchCommandService.getMethodDir("methodName", methodName, size);
         }
-        //默认走索引库搜索拿出最近十条匹配的数据展示
-        LuceneDTO methodDirByMethodName = luceneExe.getMethodDir("methodName", methodName, size);
-        return DataResponse.of(methodDirByMethodName.getListData());
+        return result;
     }
 
     /**
@@ -68,36 +63,9 @@ public class LocationServiceImpl implements LocationService {
      * @param method
      * @return
      */
-    public DataResponse getMethod(String className, String method, boolean accuracy) {
-        List<MethodInfoDTO> result = null;
-        LuceneDTO luceneDTO = null;
-        if (accuracy) {
-            if (StringUtils.isBlank(method)) {
-                result = classExe.getMethodInfoInClass(className);
-            } else {
-                luceneDTO = luceneExe.getMethodDirBooleanQuery(className, method);
-                result = luceneDTO.getListData();
-            }
-        } else {
-            //先根据类名从搜索库查到最接近的类
-            luceneDTO = luceneExe.getClassDir(className, 1);
-            List<ClassDTO> listData =
-                    luceneDTO.getListData();
-            if (CollectionUtils.isEmpty(listData)) {
-                return DataResponse.buildSuccess();
-            }
-            //最接近的类名
-            ClassDTO classDTO = listData.get(0);
-            className = classDTO.getValue();
-            if (StringUtils.isBlank(method)) {
-                //如果方法名为空，则展示该内中所有方法
-                result = classExe.getMethodInfoInClass(className);
-            } else {
-                luceneDTO = luceneExe.getMethodDirBooleanQuery(className, method);
-                result = luceneDTO.getListData();
-            }
-        }
-        return DataResponse.of(result);
+    public List<MethodInfoVO> getMethod(String className, String method) {
+        List<MethodInfoVO> result = searchCommandService.getMethodDirBooleanQuery(className, method);
+        return result;
     }
 
     /**
@@ -106,8 +74,9 @@ public class LocationServiceImpl implements LocationService {
      * @param methodInfo
      * @return
      */
-    public DataResponse<Method> getMethod(MethodInfoDTO methodInfo) {
-        return DataResponse.of(locationExe.locationMethod(methodInfo));
+    public Method getMethod(MethodInfoDTO methodInfo) {
+        Method method = searchMethodService.locationMethod(methodInfo);
+        return method;
     }
 
     /**
@@ -117,39 +86,25 @@ public class LocationServiceImpl implements LocationService {
      * @param size
      * @return
      */
-    public DataResponse getClassName(String className, Integer size) {
-        return DataResponse.of(luceneExe.getClassDir(className, size));
+    @Override
+    public List<ClassInfoVO> getClassName(String className, Integer size) {
+        List<ClassInfoVO> classDir = searchCommandService.getClassDir(className, size);
+        return classDir;
     }
 
-    public DataResponse getOptimalMatch(String className, String methodName) {
-
-        if (StringUtils.isBlank(className) && StringUtils.isBlank(methodName)) {
-            //如果类名和方法名都是空时
-            List<MethodInfoDTO> methodInfoDTOS = historyService.resolveHistory(ResolveHistoryTypeEnum.READ, null);
-            if (!CollectionUtils.isEmpty(methodInfoDTOS)) {
-                return DataResponse.of(methodInfoDTOS.get(0));
-            }
-        } else if (StringUtils.isBlank(className)) {
-            //如果类名为空时
-            LuceneDTO methodDirByMethodName = luceneExe.getMethodDir("methodName", methodName, 1);
-            List listData = methodDirByMethodName.getListData();
-            if (!CollectionUtils.isEmpty(listData)) {
-                return DataResponse.of(listData.get(0));
-            }
-        } else if (StringUtils.isBlank(methodName)) {
-            //如果方法名为空时
-            List<MethodInfoDTO> methodInfoInClass = classExe.getMethodInfoInClass(className);
-            if (!CollectionUtils.isEmpty(methodInfoInClass)) {
-                return DataResponse.of(methodInfoInClass.get(0));
-            }
-        } else {
-            //如果两者都存在时
-            LuceneDTO methodDirBooleanQuery = luceneExe.getMethodDirBooleanQuery(className, methodName);
-            List listData = methodDirBooleanQuery.getListData();
-            if (!CollectionUtils.isEmpty(listData)) {
-                return DataResponse.of(listData.get(0));
-            }
+    /**
+     * TODO 搜索优化
+     * @param className
+     * @param methodName
+     * @return
+     */
+    public MethodInfoVO getOptimalMatch(String className, String methodName) {
+        MethodInfoVO methodInfoVO = null;
+        //如果两者都存在时
+        List<MethodInfoVO> methodDirBooleanQuery = searchCommandService.getMethodDirBooleanQuery(className, methodName);
+        if (!CollectionUtils.isEmpty(methodDirBooleanQuery)) {
+            methodInfoVO = methodDirBooleanQuery.get(0);
         }
-        return DataResponse.buildFailure("竟然没有找到最优解");
+        return methodInfoVO;
     }
 }

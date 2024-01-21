@@ -1,5 +1,6 @@
 package com.leyunone.waylocal.control;
 
+import com.leyunone.waylocal.bean.vo.MethodInfoVO;
 import com.leyunone.waylocal.constant.enums.ResolveHistoryTypeEnum;
 import com.leyunone.waylocal.common.SqlInvokeConstant;
 import com.leyunone.waylocal.bean.dto.MethodInfoDTO;
@@ -31,9 +32,10 @@ public class MethodControl {
      *
      * @return
      */
-    @RequestMapping("/getHistory")
-    public DataResponse getHistory () {
-        return DataResponse.of(historyService.resolveHistory(ResolveHistoryTypeEnum.READ,null));
+    @GetMapping("/getHistory")
+    public DataResponse<List<MethodInfoVO>> getHistory() {
+        List<MethodInfoVO> methodInfoVOS = historyService.readHistory();
+        return DataResponse.of(methodInfoVOS);
     }
 
 
@@ -44,7 +46,7 @@ public class MethodControl {
      * @return
      */
     @PostMapping("/invokeMethod")
-    public DataResponse invokeMethod (@RequestBody MethodInfoDTO methodInfo) {
+    public DataResponse invokeMethod(@RequestBody MethodInfoDTO methodInfo) {
         if (SqlInvokeConstant.isGO) {
             return DataResponse.buildFailure("有一个数据库事务在进行");
         }
@@ -60,7 +62,7 @@ public class MethodControl {
     }
 
     @PostMapping("/export")
-    public void export (@RequestBody List<MethodInfoDTO> methodInfoDTO) {
+    public void export(@RequestBody List<MethodInfoDTO> methodInfoDTO) {
         historyService.export(methodInfoDTO);
     }
 }

@@ -40,6 +40,6 @@ public class ObjectSaveHandler extends HistorySaveHandler<Object,List<MethodInfo
 
         //存储本次调用记录
         methodInfos.forEach(co->co.setInvokeTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))));
-        ServerConstant.historyMethod.addAll(methodInfos);
+//TODO        ServerConstant.historyMethod.addAll();
     }
 }

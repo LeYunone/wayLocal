@@ -1,6 +1,7 @@
 package com.leyunone.waylocal.control;
 
 import com.leyunone.waylocal.bean.response.DataResponse;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,7 +17,7 @@ public class SqlControl {
      * 回滚指定sql
      * @return
      */
-    @RequestMapping("/sqlRollBack")
+    @PostMapping("/sqlRollBack")
     public DataResponse sqlRollBack(String sql){
         return DataResponse.buildSuccess();
     }

@@ -1,17 +1,18 @@
 package com.leyunone.waylocal.control;
 
-import com.leyunone.waylocal.constant.enums.ResolveHistoryTypeEnum;
-import com.leyunone.waylocal.bean.dto.ClassDTO;
-import com.leyunone.waylocal.bean.dto.LuceneDTO;
-import com.leyunone.waylocal.bean.dto.MethodInfoDTO;
+import com.leyunone.waylocal.bean.query.ClassQuery;
+import com.leyunone.waylocal.bean.vo.ClassInfoVO;
 import com.leyunone.waylocal.bean.response.DataResponse;
+import com.leyunone.waylocal.bean.vo.MethodInfoVO;
 import com.leyunone.waylocal.service.HistoryService;
 import com.leyunone.waylocal.service.LocationService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -31,65 +32,66 @@ public class LocationControl {
 
     /**
      * 类名框搜索定位
-     * @param className
-     * @param size
+     *
      * @return
      */
-    @RequestMapping("/getClassName")
-    public DataResponse getClassName (String className,
-                                      @RequestParam(required = false, defaultValue = "10") Integer size) {
-        if (!StringUtils.isEmpty(className)) {
+    @GetMapping("/getClassName")
+    public DataResponse<List<ClassInfoVO>> getClassName(ClassQuery query) {
+        List<ClassInfoVO> result = null;
+        if (StringUtils.isNotBlank(query.getClassName())) {
             //模糊查询类
-            return locationService.getClassName(className, size);
+            result = locationService.getClassName(query.getClassName(), query.getPageSize());
+        } else {
+            result = this.getHistoryName();
         }
-        //查找历史使用类
-        LuceneDTO luceneDTO = new LuceneDTO();
-        luceneDTO.setListData(this.getHistoryName());
-        return DataResponse.of(luceneDTO);
+        return DataResponse.of(result);
     }
 
     /**
      * 方法框搜索定位
-     * @param className
-     * @param methodName
-     * @param size
+     *
      * @return
      */
-    @RequestMapping("/getMethod")
-    public DataResponse getMethod (String className, String methodName, @RequestParam(required = false, defaultValue = "10") Integer size) {
+    @GetMapping("/getMethod")
+    public DataResponse<List<MethodInfoVO>> getMethod(ClassQuery query) {
+        List<MethodInfoVO> result = null;
+        String className = query.getClassName();
+        String methodName = query.getMethodName();
         //如果没有指明类
-        if (StringUtils.isEmpty(className)) {
-            return locationService.getMethod(methodName, size);
-        }  
-        try {
-            //如果指明类非常清晰
-            Class.forName(className);
-            return locationService.getMethod(className, methodName, true);
-        } catch (ClassNotFoundException e) {
-            //如果指明类为模糊查询
-            return locationService.getMethod(className, methodName, false);
+        if (StringUtils.isBlank(className)) {
+            result = locationService.getMethod(methodName, query.getPageSize());
+        } else {
+            try {
+                //如果指明类非常清晰
+                Class.forName(className);
+                result = locationService.getMethod(className, methodName);
+            } catch (ClassNotFoundException e) {
+                //TODO 类名错误
+            }
         }
+        return DataResponse.of(result);
     }
 
     /**
      * 最佳匹配搜索定位
-     * @param className
+     *
      * @return
      */
     @GetMapping("/getOptimalMatch")
-    public DataResponse getOptimalMatch(String className,String methodName){
-        return locationService.getOptimalMatch(className,methodName); 
+    public DataResponse<MethodInfoVO> getOptimalMatch(ClassQuery query) {
+        MethodInfoVO optimalMatch = locationService.getOptimalMatch(query.getClassName(), query.getMethodName());
+        return DataResponse.of(optimalMatch);
     }
-    
-    private List<ClassDTO> getHistoryName(){
-        List<MethodInfoDTO> list = historyService.resolveHistory(ResolveHistoryTypeEnum.READ, null);
-        Set<String> collect = list.stream().map(MethodInfoDTO::getClassName).collect(Collectors.toSet());
-        List<ClassDTO> result = new ArrayList<>();
-        for(String name:collect){
-            ClassDTO classDTO = new ClassDTO();
-            classDTO.setValue(name);
-            classDTO.setHightLineKey(name);
-            result.add(classDTO);
+
+    private List<ClassInfoVO> getHistoryName() {
+        List<MethodInfoVO> list = historyService.readHistory();
+        Set<String> collect = list.stream().map(MethodInfoVO::getClassName).collect(Collectors.toSet());
+        List<ClassInfoVO> result = new ArrayList<>();
+        for (String name : collect) {
+            ClassInfoVO classInfoVO = new ClassInfoVO();
+            classInfoVO.setValue(name);
+            classInfoVO.setHightLineKey(name);
+            result.add(classInfoVO);
         }
         return result;
     }

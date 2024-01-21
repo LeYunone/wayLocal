@@ -1,8 +1,9 @@
-package com.leyunone.waylocal.command;
+package com.leyunone.waylocal.service.impl.param;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.leyunone.waylocal.common.ServerConstant;
+import com.leyunone.waylocal.service.StructureAnalysisService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,9 +21,9 @@ import java.util.*;
  * 参数指令
  */
 @Service
-public class ParamExe {
+public class StructureAnalysisServiceImpl implements StructureAnalysisService {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * 获取对象的完整结构

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.leyunone.waylocal.annotate.StrategyKey;
 import com.leyunone.waylocal.bean.dto.MethodExcelDTO;
 import com.leyunone.waylocal.bean.dto.MethodInfoDTO;
+import com.leyunone.waylocal.bean.vo.MethodInfoVO;
 import com.leyunone.waylocal.common.ServerConstant;
 import com.leyunone.waylocal.constant.global.WayLocalConstants;
 import com.leyunone.waylocal.handler.factory.AbstractStrategyFactory;
@@ -25,7 +26,7 @@ import java.util.List;
  */
 @StrategyKey(key = WayLocalConstants.FILE + "_READ")
 @RequiredArgsConstructor
-public class FileReadHandler extends HistoryReadHandler<MethodInfoDTO,Object> {
+public class FileReadHandler extends HistoryReadHandler<MethodInfoVO,Object> {
 
     private final HistoryHandlerFactory historyHandlerFactory;
 
@@ -35,11 +36,11 @@ public class FileReadHandler extends HistoryReadHandler<MethodInfoDTO,Object> {
     }
 
     @Override
-    public List<MethodInfoDTO> get() {
-        List<MethodInfoDTO> result = new ArrayList<>();
+    public List<MethodInfoVO> get() {
+        List<MethodInfoVO> result = new ArrayList<>();
         List<MethodExcelDTO> historyExcel = ServerConstant.historyExcel;
         historyExcel.stream().forEach(co ->{
-            MethodInfoDTO methodInfoDTO = new MethodInfoDTO();
+            MethodInfoVO methodInfoDTO = new MethodInfoVO();
             methodInfoDTO.setClassName(co.getClassName());
             methodInfoDTO.setInvokeTime(co.getInvokeTime());
             methodInfoDTO.setMethodName(co.getMethodName());
