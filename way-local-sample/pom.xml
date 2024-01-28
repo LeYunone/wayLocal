@@ -4,8 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.leyunone</groupId>
+    <parent>
+        <groupId>com.leyunone</groupId>
+        <artifactId>way-local</artifactId>
+        <version>0.0.1-RELEASE</version>
+    </parent>
+
     <artifactId>way-local-sample</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>way-local-sample</name>
     <description>Demo project for Spring Boot</description>
     <properties>
@@ -17,6 +22,20 @@
             <artifactId>way-local-core</artifactId>
             <version>0.0.1-RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.3.1</version>
+        </dependency>
     </dependencies>
 
 </project>
+

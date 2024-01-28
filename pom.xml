@@ -18,7 +18,7 @@
     </properties>
 
     <modules>
-        <module>way-local-start</module>
+        <module>way-local-sample</module>
         <module>way-local-app</module>
         <module>way-local-core</module>
         <module>way-local-common</module>
