@@ -1,11 +1,8 @@
 package com.leyunone.waylocal.service.impl.method;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.alibaba.excel.EasyExcel;
 import com.alibaba.fastjson.JSONObject;
 import com.leyunone.waylocal.bean.vo.MethodInfoVO;
-import com.leyunone.waylocal.constant.enums.ResolveHistoryTypeEnum;
-import com.leyunone.waylocal.common.ServerConstant;
 import com.leyunone.waylocal.bean.dto.MethodExcelDTO;
 import com.leyunone.waylocal.bean.dto.MethodInfoDTO;
 import com.leyunone.waylocal.handler.factory.HistoryHandlerFactory;
@@ -17,15 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,8 +55,6 @@ public class HistoryServiceImpl implements HistoryService {
                 methodExcelDTO.setReturnParamValue(co.getReturnParamValue());
                 exportData.add(methodExcelDTO);
             });
-
-            EasyExcel.write(outputStream, MethodExcelDTO.class).sheet().doWrite(exportData);
         } catch (IOException e) {
             logger.error("waylocal : Error export Error");
         }

@@ -14,9 +14,7 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 public @interface LocalEasyStart {
 
-    boolean MySql() default false;
+    MySqlConfig mysql() default @MySqlConfig;
 
-    boolean Nacos() default false;
-
-    boolean RabbitMq() default false;
+    RabbitMqConfig rabbitmq() default @RabbitMqConfig;
 }

@@ -1,6 +1,5 @@
 package com.leyunone.waylocal.handler.history;
 
-import com.alibaba.excel.EasyExcel;
 import com.alibaba.fastjson.JSONObject;
 import com.leyunone.waylocal.annotate.StrategyKey;
 import com.leyunone.waylocal.bean.dto.MethodExcelDTO;
@@ -11,13 +10,9 @@ import com.leyunone.waylocal.handler.factory.AbstractStrategyFactory;
 import com.leyunone.waylocal.handler.factory.HistoryHandlerFactory;
 import lombok.RequiredArgsConstructor;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,6 +47,6 @@ public class FileSaveHandler extends HistorySaveHandler<Object,List<MethodInfoDT
         }
 
         //写文档
-        EasyExcel.write(file, MethodExcelDTO.class).sheet().doWrite(ServerConstant.historyExcel);
+//        EasyExcel.write(file, MethodExcelDTO.class).sheet().doWrite(ServerConstant.historyExcel);
     }
 }

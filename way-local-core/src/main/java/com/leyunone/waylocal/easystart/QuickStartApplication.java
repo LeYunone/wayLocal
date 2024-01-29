@@ -1,17 +1,14 @@
-package com.leyunone.waylocal.start;
+package com.leyunone.waylocal.easystart;
 
 import com.leyunone.waylocal.annotate.LocalEasyStart;
+import com.leyunone.waylocal.annotate.MySqlConfig;
 import com.leyunone.waylocal.bean.CustomStartInfo;
 import org.springframework.boot.SpringApplication;
 
 /**
- * 快速启动 - 简易配置
+ * 快速启动 - 本地化简易配置
  */
 public class QuickStartApplication {
-
-    public static void easyStart(Class<?> applicationClass) {
-        SpringApplication.run(applicationClass);
-    }
 
     public static void easyStart(Class<?> applicationClass, String... args) {
         /**
@@ -22,9 +19,7 @@ public class QuickStartApplication {
          */
         LocalEasyStart annotation = applicationClass.getAnnotation(LocalEasyStart.class);
         if (annotation != null) {
-            CustomStartInfo customStartInfo = new CustomStartInfo();
-            customStartInfo.setMysqlIp("123");
-            LocalEasyStartConstants.customStartInfo = customStartInfo;
+            LocalEasyStartConstants.customStartInfo = CustomStartInfo.build(annotation);
         }
         SpringApplication.run(applicationClass, args);
     }

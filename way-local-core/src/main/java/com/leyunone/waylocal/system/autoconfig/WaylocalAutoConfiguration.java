@@ -1,11 +1,7 @@
 package com.leyunone.waylocal.system.autoconfig;
 
-import com.alibaba.excel.EasyExcel;
-import com.github.shyiko.mysql.binlog.BinaryLogClient;
-import com.leyunone.waylocal.bean.dto.MethodExcelDTO;
+import cn.hutool.core.util.StrUtil;
 import com.leyunone.waylocal.common.ServerConstant;
-import com.leyunone.waylocal.system.config.EasyExcelOrderListener;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -29,7 +25,7 @@ public class WaylocalAutoConfiguration {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public WaylocalAutoConfiguration(WaylocalProperties waylocalProperties, BinaryLogClient binaryLogClient) throws IOException {
+    public WaylocalAutoConfiguration(WaylocalProperties waylocalProperties) throws IOException {
         //保存类型，由用户决定保存方式：session cookie file
         String saveType = waylocalProperties.getType();
         String savePath = waylocalProperties.getSavePath();
@@ -38,7 +34,7 @@ public class WaylocalAutoConfiguration {
 
         //判断是否开启Binglog日志监听
         if(null!=bingLog && bingLog){
-            binaryLogClient.connect();
+//            binaryLogClient.connect();
         }
     }
 
@@ -47,7 +43,7 @@ public class WaylocalAutoConfiguration {
      * @param saveType
      */
     private void solveSave(String saveType,String savePath){
-        if(StringUtils.isNotBlank(saveType)){
+        if(StrUtil.isNotBlank(saveType)){
             ServerConstant.saveType = saveType;
             if(saveType.equals("object")){
                 //初始化站内记录
@@ -73,7 +69,7 @@ public class WaylocalAutoConfiguration {
      */
     private void solveFileSave(String savePath){
         ServerConstant.savePath = "C:/waylocal/";
-        if(StringUtils.isNotBlank(savePath)){
+        if(StrUtil.isNotBlank(savePath)){
             ServerConstant.savePath = savePath;
         }
 
@@ -100,7 +96,7 @@ public class WaylocalAutoConfiguration {
         }
         if(history.length()!=0){
             //读取文档的同时，组装新文档
-            EasyExcel.read(fileName, MethodExcelDTO.class,new EasyExcelOrderListener()).sheet().doRead();
+//            EasyExcel.read(fileName, MethodExcelDTO.class,new EasyExcelOrderListener()).sheet().doRead();
         }
     }
 }

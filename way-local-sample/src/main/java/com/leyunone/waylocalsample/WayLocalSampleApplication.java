@@ -1,18 +1,16 @@
 package com.leyunone.waylocalsample;
 
 import com.leyunone.waylocal.annotate.LocalEasyStart;
-import com.leyunone.waylocal.start.QuickStartApplication;
-import org.springframework.boot.SpringApplication;
+import com.leyunone.waylocal.annotate.MySqlConfig;
+import com.leyunone.waylocal.easystart.QuickStartApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@LocalEasyStart
+@LocalEasyStart(mysql = @MySqlConfig(url = "127.0.0.1:3306/test?seUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false"))
 public class WayLocalSampleApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(WayLocalSampleApplication.class,args);
-
-//        QuickStartApplication.easyStart(WayLocalSampleApplication.class);
+        QuickStartApplication.easyStart(WayLocalSampleApplication.class);
     }
 
 }

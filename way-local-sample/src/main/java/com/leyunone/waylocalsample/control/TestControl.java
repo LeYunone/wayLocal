@@ -1,5 +1,7 @@
 package com.leyunone.waylocalsample.control;
 
+import com.leyunone.waylocalsample.control.service.TestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,10 +18,12 @@ import javax.sound.midi.Soundbank;
 @RequestMapping("/test")
 public class TestControl {
 
-    @Value("${spring.datasource.main.jdbc-url}")
+    @Value("${spring.datasource.url:}")
     private String mysqlUrl;
-    @Value("${spring.main.lazy-initialization}")
+    @Value("${spring.main.lazy-initialization:}")
     private String laze;
+    @Autowired
+    private TestService testService;
 
     @RequestMapping("/syso")
     public void test(){

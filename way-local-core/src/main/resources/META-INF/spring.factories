@@ -2,4 +2,4 @@
 #org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 
 org.springframework.boot.env.EnvironmentPostProcessor=\
-com.leyunone.waylocal.start.LocalMiddlewareConfigure
+com.leyunone.waylocal.easystart.LocalMiddlewareConfigure

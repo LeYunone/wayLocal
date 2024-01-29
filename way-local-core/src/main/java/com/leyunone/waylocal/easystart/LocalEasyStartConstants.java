@@ -1,4 +1,4 @@
-package com.leyunone.waylocal.start;
+package com.leyunone.waylocal.easystart;
 
 import com.leyunone.waylocal.bean.CustomStartInfo;
 

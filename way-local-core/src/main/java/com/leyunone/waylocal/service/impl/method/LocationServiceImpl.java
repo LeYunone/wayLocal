@@ -1,18 +1,15 @@
 package com.leyunone.waylocal.service.impl.method;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import com.leyunone.waylocal.bean.vo.ClassInfoVO;
 import com.leyunone.waylocal.bean.vo.MethodInfoVO;
 import com.leyunone.waylocal.service.HistoryService;
 import com.leyunone.waylocal.service.LocationService;
 import com.leyunone.waylocal.service.impl.search.SearchMethodServiceImpl;
 import com.leyunone.waylocal.support.lucene.SearchCommandService;
-import com.leyunone.waylocal.bean.dto.ClassDTO;
-import com.leyunone.waylocal.bean.dto.LuceneDTO;
 import com.leyunone.waylocal.bean.dto.MethodInfoDTO;
-import com.leyunone.waylocal.bean.response.DataResponse;
 import com.leyunone.waylocal.util.UniqueSet;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -45,7 +42,7 @@ public class LocationServiceImpl implements LocationService {
      */
     public List<MethodInfoVO> getMethod(String methodName, Integer size) {
         List<MethodInfoVO> result = null;
-        if (StringUtils.isBlank(methodName)) {
+        if (StrUtil.isBlank(methodName)) {
             List<MethodInfoVO> methodInfoVOS = historyService.readHistory();
             UniqueSet<String, MethodInfoVO> set = new UniqueSet<>(MethodInfoVO::getMethodName);
             set.addAll(methodInfoVOS);

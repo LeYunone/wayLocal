@@ -1,7 +1,9 @@
 package com.leyunone.waylocal.bean;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.leyunone.waylocal.annotate.LocalEasyStart;
+import com.leyunone.waylocal.annotate.MySqlConfig;
+import com.leyunone.waylocal.annotate.RabbitMqConfig;
+import lombok.*;
 
 /**
  * :)
@@ -14,21 +16,14 @@ import lombok.Setter;
 @Setter
 public class CustomStartInfo {
 
-    private boolean mysql;
+    private MySqlConfig mySqlConfig;
 
-    private boolean nacos;
+    private RabbitMqConfig rabbitMqConfig;
 
-    private boolean rabbitMq;
-
-    private String mysqlIp;
-
-    private Integer mysqlPort;
-
-    private String nacosIp;
-
-    private Integer nacosPort;
-
-    private String rabbitMqIp;
-
-    private Integer rabbitMqPort;
+    public static CustomStartInfo build(LocalEasyStart localEasyStart) {
+        CustomStartInfo customStartInfo = new CustomStartInfo();
+        customStartInfo.setMySqlConfig(localEasyStart.mysql());
+        customStartInfo.setRabbitMqConfig(localEasyStart.rabbitmq());
+        return customStartInfo;
+    }
 }
