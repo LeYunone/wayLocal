@@ -47,10 +47,9 @@ public class MethodControl {
      */
     @PostMapping("/invokeMethod")
     public DataResponse invokeMethod(@RequestBody MethodInfoDTO methodInfo) {
-        if (SqlInvokeConstant.isGO) {
-            return DataResponse.buildFailure("有一个数据库事务在进行");
-        }
         //开启本次测试流程
+        String uuId = UUID.randomUUID().toString();
+        
         SqlInvokeConstant.isGO = true;
         //调用方法
         methodServiceImpl.invokeMethod(methodInfo);
